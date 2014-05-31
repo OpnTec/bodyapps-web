@@ -1,0 +1,15 @@
+{
+  "name": "bodyapps",
+  "description": "Body measurement App",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "mongoose": "^3.9.0",
+    "string" : "latest",
+    "node-uuid" : "latest",
+    "supertest" : "latest",
+    "mocha" : "latest"
+  }
+}

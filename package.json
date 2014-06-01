@@ -10,6 +10,7 @@
     "string" : "latest",
     "node-uuid" : "latest",
     "supertest" : "latest",
-    "mocha" : "latest"
+    "mocha" : "latest",
+    "chai" : "latest"
   }
 }

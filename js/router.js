@@ -9,7 +9,7 @@ exports.insertUser = function (req, res, next) {
 		if(user) return res.send("already exist");
 		model.userModel.create( body, function (err, doc) {
 			if (err) return next(err);
-			res.send(doc);
+			res.send(doc._id);
 		})
 	})
 }
@@ -33,9 +33,10 @@ exports.findMeasurementRecord = function(req, res) {
 }
 
 exports.insertMeasurementRecord = function(req, res) {
+	var body = req.body;
 	model.measurementModel.create(body, function(err, doc) {
-			if(err) return next(err)
-				res.send(doc);
-				console.log(body);
+		if(err) return next(err)
+		res.send(doc.m_id);
+		console.log(body);
 		})
 }

@@ -4,25 +4,25 @@ var request = require('supertest')
   var app = require('../js/server.js').server;
 
   describe('GET / all the measurements', function(){
-    it('respond with plain text', function(done){
+    it('respond with users all measurements', function(done){
       request(app)
         .get('/user/:user_id/measurements')
-        .expect('Content-Type', /json/)
-        .expect(200, done);
+        .expect('Content-Type', 'application/json; charset=utf-8')
+        .expect(200,done);
     })
   })
 
     describe('GET / a measurement record', function(){
-    it('respond with plain text', function(done){
+    it('respond with a measurement record', function(done){
       request(app)
         .get('/user/:user_id/measurements/:measurement_id')
-        .expect('Content-Type', /json/)
+        .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(200, done);
     })
   })
 
-	describe("POST test with supertest", function (){
-	it("posts a new user to /user", function(done){
+	describe("POST / a user", function (){
+	it("creates a new user via /user", function(done){
     var user = { name: "vishv2", age: "22", dob:"12/10/1990", emailId:"vishv6brahmbhatt@yahoo.com"};
   	request("http://localhost:8020")
   	.post("/user")
@@ -32,8 +32,8 @@ var request = require('supertest')
   })
 })
 
-  describe("POST test with supertest", function (){
-  it("posts a new user to /user/:user_id/measurements", function(done){
+  describe("POST / a measurement record", function (){
+  it("creates a new measurement via /user/measurements", function(done){
     var measurement = { "m_unit": "cm", "mid_neck_girth" : "10", "bust__girth" :"10", "waist_girth" : "10", 
     "hip_girth" : "10", "across_back_shoulder_width" : "10", "shoulder_drop" : "10", 
     "shoulder_slope_degrees" :"10", "arm_length" :"10", "wrist_girth" : "10", "upper_arm_girth" : "10", 

@@ -10,7 +10,7 @@ var routes = require('./router');
 var app = express();
 app.use(bodyParser());
 
-app.post('/user/:user_id/measurements', routes.insertMeasurementRecord);
+app.post('/user/measurements', routes.insertMeasurementRecord);
 app.get('/user/:user_id/measurements', routes.findMeasurementRecords); // this one requires some modifications, will be pushing the changes soon
 app.get('/user/:user_id/measurements/:measurement_id', routes.findMeasurementRecord);
 app.post('/user', routes.insertUser);

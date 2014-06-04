@@ -7,6 +7,10 @@ Web service and web application components of #bodyapps project
 * First install 'NodeJs' and 'mongoDb'in your maschine. 
 * Then run 'npm install' in this directory and all the dependencies will be automatically downloaded.
 
+## Run the server
+
+* To start the server, run 'node server.js'
+
 ## Test
 
 * Test file is in the 'test' directory. So you can run 'mocha test/test.js' to check the test.

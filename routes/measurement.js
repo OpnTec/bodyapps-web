@@ -1,22 +1,8 @@
-var model = require('./models');
-
-// var S = require('string'); // will be using this 'string' module for string manipulations
-
-exports.insertUser = function (req, res, next) {
-		var body = req.body;
-		var email = body.emailId;
-		model.userModel.findOne({ emailId: email}, function(err,user) {
-		if(user) return res.send("already exist");
-		model.userModel.create( body, function (err, doc) {
-			if (err) return next(err);
-			res.send(doc._id);
-		})
-	})
-}
+var model = require('../models/measurement');
 
 exports.findMeasurementRecords = function(req, res,next) {
 	var userid = req.params.user_id;
-    console.log('Retrieving all measurement: ' + userid);
+	console.log('Retrieving all measurement: ' + userid);
 	model.measurementModel.find({ user_id: userid}, function(err,user) {
 		if(err) return next(err);
 		res.send(user);

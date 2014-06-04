@@ -11,6 +11,7 @@
     "node-uuid" : "latest",
     "supertest" : "latest",
     "mocha" : "latest",
-    "chai" : "latest"
+    "chai" : "latest",
+    "less-middleware" : "latest"
   }
 }

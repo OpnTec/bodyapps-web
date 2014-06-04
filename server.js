@@ -17,7 +17,7 @@ app.get('/user/:user_id/measurements/:measurement_id', measurementRoutes.findMea
 app.post('/user', userRoutes.insertUser);
 
 app.listen(8020, function () {
-	console.log('listening on http://localhost:8020');
+  console.log('listening on http://localhost:8020');
 });
 
 module.exports.server = app;

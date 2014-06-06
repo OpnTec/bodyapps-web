@@ -10,6 +10,7 @@ var measurementRoutes = require('./routes/measurement');
 
 var app = express();
 app.use(bodyParser());
+app.use(express.static(__dirname + '/public'));
 
 app.post('/user/measurements', measurementRoutes.insertMeasurementRecord);
 app.get('/user/:user_id/measurements', measurementRoutes.findMeasurementRecords); // this one requires some modifications, will be pushing the changes soon

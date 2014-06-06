@@ -20,7 +20,8 @@ var Measurement = new Schema({
   ,hip_height :Number
   ,person : {
     name: String
-    ,email_id:String
+    ,email_id: String
+    ,gender: String
     ,dob: { type: Date}
   }
   ,user_id : {type: String} //Schema.Types.ObjectId

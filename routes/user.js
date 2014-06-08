@@ -18,7 +18,7 @@ exports.insertUser = function (req, res, next) {
   if(user) return res.json({user_id: user._id});
   User.create( body, function (err, doc) {
     if (err) return next(err);
-    res.send(doc._id);
+    res.json({user_id: doc._id});
     })
   })
 }

@@ -9,8 +9,7 @@ Web service and web application components of #bodyapps project
 
 ## Run the server
 
-* To start the server, run 'node server.js' and if you want to start server on specific port number,
-you can run 'PORT=8020 node server.js'
+* To start the server, run 'node server.js' and if you want to start server on specific port number such as '8020',you can run 'PORT=8020 node server.js'.
 
 ## Test
 

@@ -1,24 +1,16 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+/*
+ * Copyright (c) 2014, Fashiontec (http://fashiontec.org)
+ * Licensed under LGPL, Version 3
+ */
 
-var uri = 'mongodb://localhost/mongoose-shared-connection'; //temporary assigned location for mongoose
-global.db = mongoose.createConnection(uri);
+/*
+ * Server of the bodyapps backend.
+ */
 
-var userRoutes = require('./routes/user');
-var measurementRoutes = require('./routes/measurement');
-
-var app = express();
-app.use(bodyParser());
-app.use(express.static(__dirname + '/public'));
-
-app.post('/user/measurements', measurementRoutes.insertMeasurementRecord);
-app.get('/user/:user_id/measurements', measurementRoutes.findMeasurementRecords); // this one requires some modifications, will be pushing the changes soon
-app.get('/user/:user_id/measurements/:measurement_id', measurementRoutes.findMeasurementRecord);
-app.post('/user', userRoutes.insertUser);
-
-app.listen(8020, function () {
-  console.log('listening on http://localhost:8020');
+var app = require('./app');
+ 
+app.set('port', process.env.PORT || 3000);
+ 
+app.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
 });
-
-module.exports.server = app;

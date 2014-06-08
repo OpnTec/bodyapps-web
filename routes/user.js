@@ -1,14 +1,24 @@
-var model = require('../models/user');
+/*
+ * Copyright (c) 2014, Fashiontec (http://fashiontec.org)
+ * Licensed under LGPL, Version 3
+ */
+
+/*
+ * Router for 'User' resource. 
+ * 
+ * It creates a new record of 'User'
+ */
+
+var User = require('../models/user');
 
 exports.insertUser = function (req, res, next) {
   var body = req.body;
-  var email = body.email_id;
-  model.userModel.findOne({ email_id: email}, function(err,user) {
-  if(user) return res.send(user._id); //before it was a token ,"already exist"
-  model.userModel.create( body, function (err, doc) {
+  var email = body.email;
+  User.findOne({ email: email}, function(err, user) {
+  if(user) return res.json({user_id: user._id});
+  User.create( body, function (err, doc) {
     if (err) return next(err);
     res.send(doc._id);
-    console.log(doc._id);
     })
   })
 }

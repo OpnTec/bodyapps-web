@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2014, Fashiontec (http://fashiontec.org)
+ * Licensed under LGPL, Version 3
+ */
+
+ /*
+ * Application of the frontend.
+ * 
+ * Handles the rendering of the data , i.e. make
+ * calls to database to fetch and save the data.
+ * And display view on the website page.
+ */
+
 var MeasurementModel = Backbone.Model.extend({
     defaults: {
     m_id: '',

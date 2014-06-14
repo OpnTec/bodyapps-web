@@ -11,8 +11,7 @@
     "mongoose": "^3.9.0",
     "morgan": "^1.1.1",
     "node-uuid": "^1.4.1",
-    "string": "^1.8.1",
-    "underscore": "^1.6.0"
+    "string": "^1.8.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",

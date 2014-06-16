@@ -8,10 +8,11 @@
     "express": "^4.4.1",
     "less-middleware": "^1.0.3",
     "lodash": "^2.4.1",
-    "mongoose": "^3.9.0",
+    "mongoose": "3.8.12",
     "morgan": "^1.1.1",
     "node-uuid": "^1.4.1",
-    "string": "^1.8.1"
+    "string": "^1.8.1",
+    "validator": "^3.16.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",

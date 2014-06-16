@@ -23,7 +23,7 @@ describe('User API', function() {
   beforeEach(function(done) {
     User.create({
       name: 'Wile E. Coyote',
-      dob: '17/09/1949',
+      dob: '09/17/1949',
       age: '100',
       email: 'willy.e.coyote@acme.org'
     }, function(err, _user) {
@@ -65,9 +65,9 @@ describe('User API', function() {
   describe('POST /users', function() {
 
     var data = { 
-      name: 'John Doe', 
+      name: 'John Doe',
       age: '22', 
-      dob: '12/10/1990',
+      dob: '10/12/1990',
       email: 'john.doe@example.org'
     };
 
@@ -81,6 +81,7 @@ describe('User API', function() {
           assert.ok(res.body.data.id);
           assert.ok(res.body.data.name);
           assert.ok(res.body.data.email);
+          done();
         });
     });
 
@@ -89,7 +90,7 @@ describe('User API', function() {
       delete(_data.email);
 
       api.post('/users')
-        .send(data)
+        .send(_data)
         .expect('Content-type', /json/)
         .expect(400, done);
     })

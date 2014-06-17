@@ -27,28 +27,6 @@ app.use(bodyParser());
 app.use(morgan());
 app.use(express.static(__dirname + '/public'));
 
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
-
-function logErrors(err, req, res, next) {
-  console.error(err.stack);
-  next(err);
-}
-
-function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.send(500, { error: 'Something went wrong!' });
-  } else {
-    next(err);
-  }
-}
-
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
-
 app.post('/users/measurements', measurement.insertMeasurementRecord);
 app.get('/users/:user_id/measurements',
   measurement.findMeasurementRecords);
@@ -56,5 +34,26 @@ app.get('/users/:user_id/measurements/:measurement_id',
   measurement.findMeasurementRecord);
 app.post('/users', user.insertUser);
 app.get('/users/:user_id', user.findUser);
+
+app.get('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
+
+app.post('*', function(req, res, next) {
+  var err = new Error();
+  err.status = 404;
+  next(err);
+});
+
+// handling 404 errors
+app.use(function(err, req, res, next) {
+  if(err.status !== 404) {
+    return next();
+  }
+ 
+  res.send(err.message || 'No such request found');
+});
 
 module.exports = app;

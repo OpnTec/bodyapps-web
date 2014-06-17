@@ -19,6 +19,7 @@ function returnMeasurementRec(doc) {
     data :{
       m_id : doc.m_id,
       m_unit: doc.m_unit,
+      m_timestamp : doc.m_timestamp,
       mid_neck_girth : doc.mid_neck_girth,
       bust_girth :doc.bust_girth,
       waist_girth : doc.waist_girth, 

@@ -12,36 +12,33 @@
 var User = require('../models/user');
 var validator = require('validator');
 
+function returnUserRec(doc)
+{
+  var userRecord = {
+    data :{
+      name : doc.name,
+      id : doc._id,
+      dob : doc.dob,
+      age :doc.age,
+      email : doc.email
+    }
+  };
+  return userRecord;
+}
 exports.insertUser = function (req, res, next) {
   var body = req.body;
   var email = body.email;
   if(validator.isNull(email)) return res.json(400, {email:null});
   User.findOne({ email: email}, function(err, user) {
-  if(user) {
-    var userRecord = {
-      data :{
-        name : user.name,
-        id : user._id,
-        dob : user.dob,
-        age :user.age,
-        email : user.email
-      }
-    };
-    return res.json(201,userRecord);
-  }
-  User.create( body, function (err, doc) {
-    if (err) return next(err);
-    var userRecord = {
-      data :{
-        name : doc.name,
-        id : doc._id,
-        dob : doc.dob,
-        age :doc.age,
-        email : doc.email
-      }
-    };
-    return res.json(201,userRecord);
-    })
+    if(user) {
+      var userRecord = returnUserRec(user);
+      return res.json(201,userRecord);
+    }
+    User.create( body, function (err, doc) {
+      if (err) return next(err);
+      var userRecord = returnUserRec(doc);
+      return res.json(201,userRecord);
+      })
   })
 }
 
@@ -50,16 +47,8 @@ exports.findUser = function(req, res) {
   User.findOne({_id: id}, function(err, doc) {
     if(doc)
     {
-    var userRecord = {
-      data :{
-        name : doc.name,
-        id : doc._id,
-        dob : doc.dob,
-        age :doc.age,
-        email : doc.email
-      }
-    };
-    return res.json(200,userRecord);
+      var userRecord = returnUserRec(doc);
+      return res.json(200,userRecord);
     }
     return res.json(404,{user:null});
   })

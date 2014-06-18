@@ -8,6 +8,7 @@
  */
 
 module.exports = function(grunt) {
+
   require('load-grunt-tasks')(grunt, {scope: 'devDependencies'});
 
   grunt.initConfig({
@@ -16,8 +17,8 @@ module.exports = function(grunt) {
         serverreload: true,
       },
       express: {
-        files:  ['server.js' , 'app.js'],
-        tasks:  [ 'express:dev' ],
+        files:  ['server.js', 'app.js', 'routes/**/*', 'models/**/*'],
+        tasks:  ['express:dev'],
         options: {
           spawn: true
         }
@@ -26,7 +27,6 @@ module.exports = function(grunt) {
 
     express: {
       options: {
-        // Override defaults here
         port: process.env.PORT || 3000,
       },
       dev: {
@@ -41,13 +41,14 @@ module.exports = function(grunt) {
         options: {
           reporter: 'spec'
         },
-        src: ['test/test.js']
+        src: [ 'test/test.js' ]
       }
     }
 
   });
 
-  grunt.registerTask('default', ['express:dev','watch']);
-  grunt.registerTask('exp', ['express:dev','watch']);
+  grunt.registerTask('run', ['express:dev', 'watch']);
   grunt.registerTask('test', 'mochaTest');
+
+  grunt.registerTask('default', ['run']);
 };

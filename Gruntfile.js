@@ -14,7 +14,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     watch: {
       options: {
-        serverreload: true,
+        livereload: true,
       },
       express: {
         files:  ['server.js', 'app.js', 'routes/**/*', 'models/**/*'],

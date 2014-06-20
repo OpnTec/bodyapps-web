@@ -11,6 +11,8 @@
     "mongoose": "3.8.12",
     "morgan": "^1.1.1",
     "node-uuid": "^1.4.1",
+    "passport": "^0.2.0",
+    "passport-google-oauth": "^0.1.5",
     "string": "^1.8.1",
     "validator": "^3.16.0"
   },

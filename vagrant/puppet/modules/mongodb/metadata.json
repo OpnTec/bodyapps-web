@@ -1,0 +1,175 @@
+{
+  "name": "puppetlabs-mongodb",
+  "version": "0.8.0",
+  "source": "git@github.com:puppetlabs/puppetlabs-mongodb.git",
+  "author": "puppetlabs",
+  "license": "Apache License Version 2.0",
+  "summary": "mongodb puppet module",
+  "description": "10gen mongodb puppet module",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-mongodb",
+  "dependencies": [
+    {
+      "name": "puppetlabs/apt",
+      "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 2.2.0"
+    }
+  ],
+  "types": [
+    {
+      "name": "mongodb_database",
+      "doc": "Manage MongoDB databases.",
+      "properties": [
+        {
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.  Valid values are `present`, `absent`."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The name of the database.  Values can match `/^\\w+$/`."
+        },
+        {
+          "name": "tries",
+          "doc": "The maximum amount of two second tries to wait MongoDB startup.  Values can match `/^\\d+$/`."
+        }
+      ],
+      "providers": [
+        {
+          "name": "mongodb",
+          "doc": "Manages MongoDB database.\n\nRequired binaries: `mongo`.  Default for `kernel` == `Linux`."
+        }
+      ]
+    },
+    {
+      "name": "mongodb_replset",
+      "doc": "Manage a MongoDB replicaSet",
+      "properties": [
+        {
+          "name": "ensure",
+          "doc": "  Valid values are `present`."
+        },
+        {
+          "name": "members",
+          "doc": "The replicaSet members"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The name of the replicaSet"
+        }
+      ],
+      "providers": [
+        {
+          "name": "mongo",
+          "doc": "Manage hosts members for a replicaset.\n\nRequired binaries: `mongo`."
+        }
+      ]
+    },
+    {
+      "name": "mongodb_user",
+      "doc": "Manage a MongoDB user. This includes management of users password as well as privileges.",
+      "properties": [
+        {
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.  Valid values are `present`, `absent`."
+        },
+        {
+          "name": "roles",
+          "doc": "The user's roles.  Values can match `/^\\w+$/`."
+        },
+        {
+          "name": "password_hash",
+          "doc": "The password hash of the user. Use mongodb_password() for creating hash.  Values can match `/^\\w+$/`."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The name of the user."
+        },
+        {
+          "name": "database",
+          "doc": "The user's target database.  Values can match `/^\\w+$/`."
+        },
+        {
+          "name": "tries",
+          "doc": "The maximum amount of two second tries to wait MongoDB startup.  Values can match `/^\\d+$/`."
+        }
+      ],
+      "providers": [
+        {
+          "name": "mongodb",
+          "doc": "Manage users for a MongoDB database.\n\nRequired binaries: `mongo`.  Default for `kernel` == `Linux`."
+        }
+      ]
+    }
+  ],
+  "checksums": {
+    "CHANGELOG": "82afdbd4343e1da3db4c99ef8f99e80c",
+    "Gemfile": "72e07295a542c5a4a25ac43a97b6b036",
+    "Gemfile.lock": "b5dd062d8d1cee8ca5036b767baf9789",
+    "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+    "Modulefile": "75a51daef556a8a2063eab4f09fd300a",
+    "README.md": "58796f524879c07a98f93a5742825cfc",
+    "Rakefile": "0254db5d3fc38c67a2c160d7296a24f8",
+    "lib/puppet/parser/functions/mongodb_password.rb": "34c8532f5f22156efc24c37363d64037",
+    "lib/puppet/provider/mongodb_database/mongodb.rb": "c2fadc877c95f6b972812fc4b8c2f4cf",
+    "lib/puppet/provider/mongodb_replset/mongo.rb": "7e1b5da28713ec4a98cbb740b6a2d629",
+    "lib/puppet/provider/mongodb_user/mongodb.rb": "4b58a30db52f75957e4f0f3c11098ab9",
+    "lib/puppet/type/mongodb_database.rb": "9c89ea9e705dcb70f8cbc0ce2513fa08",
+    "lib/puppet/type/mongodb_replset.rb": "623c0baf279e1938488e9111ce8406c4",
+    "lib/puppet/type/mongodb_user.rb": "8d9aa6d811ab7135f3912c629febe3d4",
+    "manifests/client/install.pp": "e9c2318aed5f8315710c6da6ddd1c396",
+    "manifests/client.pp": "da60e1a7bb8e65d474b745561eee3043",
+    "manifests/db.pp": "7f25d5e0fdf2f9aa80e238f83f26b4d8",
+    "manifests/globals.pp": "61f2cf6aa25bf7bf864479b672f7599a",
+    "manifests/init.pp": "59e12de100652b19c5de5e22d8c1b5ac",
+    "manifests/params.pp": "cf399ee2814cbf3a349fb4ad14f6b274",
+    "manifests/replset.pp": "d2fa369c24c947c9df9ed697c5dcbb69",
+    "manifests/repo/apt.pp": "66b34001d7eeb293944526c2c08ac2db",
+    "manifests/repo/yum.pp": "b0fc3b5904c25090914abd5e7649052c",
+    "manifests/repo.pp": "442fbe043f0917b15bba091b35a5a4dd",
+    "manifests/server/config.pp": "7620e526b4ad9e8d54edf99dd9f81d75",
+    "manifests/server/install.pp": "22974b0ef372941bd5986804aca12eae",
+    "manifests/server/service.pp": "4832a9cb0ead2b0145d3a26aefb92716",
+    "manifests/server.pp": "be3eaedca4dc34939098c0f3a410a77f",
+    "spec/acceptance/nodesets/centos-6-vcloud.yml": "18a0bdee4379c988cd09db72fd682460",
+    "spec/acceptance/nodesets/centos-64-x64-pe.yml": "ec075d95760df3d4702abea1ce0a829b",
+    "spec/acceptance/nodesets/centos-64-x64.yml": "092dd2c588a9f87fa1fb12997c0723ef",
+    "spec/acceptance/nodesets/default.yml": "3e5c36e6aa5a690229e720f4048bb8af",
+    "spec/acceptance/nodesets/fedora-18-x64.yml": "80e41b1ee16ea489f53164bfdae58855",
+    "spec/acceptance/nodesets/multi-centos-6-vcloud.yml": "18a0bdee4379c988cd09db72fd682460",
+    "spec/acceptance/nodesets/multi-centos-64-x64.yml": "092dd2c588a9f87fa1fb12997c0723ef",
+    "spec/acceptance/nodesets/sles-11-x64.yml": "44e4c6c15c018333bfa9840a5e702f66",
+    "spec/acceptance/nodesets/ubuntu-server-10044-x64.yml": "75e86400b7889888dc0781c0ae1a1297",
+    "spec/acceptance/nodesets/ubuntu-server-12042-x64.yml": "d30d73e34cd50b043c7d14e305955269",
+    "spec/acceptance/replset_spec.rb": "3365b499625986940ab0f9a8c5077249",
+    "spec/acceptance/server_spec.rb": "89cf98b2865a5baeae6b50039994094e",
+    "spec/classes/client_install_spec.rb": "05b7332760a8b4c079046d6443a3345b",
+    "spec/classes/repo_spec.rb": "6f2983e93675db13bb89e4cb884055b9",
+    "spec/classes/server_config_spec.rb": "95ce715f5b153dd7d22637e3772f4387",
+    "spec/classes/server_install_spec.rb": "baf2ffb896fad10c79e72683233d610c",
+    "spec/classes/server_spec.rb": "a7b3c5226ba994ac27397d3272e165bf",
+    "spec/defines/db_spec.rb": "a94ff83eef293df563ccc45e4b57d200",
+    "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+    "spec/spec_helper_acceptance.rb": "0186c394203616c242fcb34cdadb37bc",
+    "spec/spec_helper_system.rb": "0e2c886ed3570f4491401a0ceccdf762",
+    "spec/unit/mongodb_password_spec.rb": "99b0d4889eab6459497bad433d7324d2",
+    "spec/unit/puppet/provider/mongodb_database/mongodb_spec.rb": "cfd018de2a8e57fb1a6b4156ac886456",
+    "spec/unit/puppet/provider/mongodb_replset/mongodb_spec.rb": "9e7f2c2e66ce9baac3ef0c73c74e2110",
+    "spec/unit/puppet/provider/mongodb_user/mongodb_spec.rb": "22601ab80d563f76a961aa184b4cf378",
+    "spec/unit/puppet/type/mongodb_database_spec.rb": "83ce664b2bf815aa4cb734639d9cdc7b",
+    "spec/unit/puppet/type/mongodb_replset_spec.rb": "bea6fe1acd3d825c5626b7201bb274c2",
+    "spec/unit/puppet/type/mongodb_user_spec.rb": "990821a7129e58ca45f549d7755d278b",
+    "templates/mongodb.conf.erb": "46066f345bf9f34bb78892e3f7aa05a3",
+    "tests/globals.pp": "1b274b3a5fe7d2347f2f70f285dd7518",
+    "tests/init.pp": "9a09da130383dc0c05eded5ef0744876",
+    "tests/replicaset.pp": "94f661a6e2486eb031edb068e9f76e65",
+    "tests/server.pp": "d4d798edd9e35c283d006d01f6e82f56"
+  }
+}

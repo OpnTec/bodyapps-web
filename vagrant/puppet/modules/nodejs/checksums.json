@@ -1,0 +1,22 @@
+{
+  "CHANGELOG": "2a5216d97d7a2925f24348de48cd0643",
+  "Gemfile": "a25ee68d266f452c3cf19537736e778d",
+  "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+  "README.md": "ebc5776c41bae1454925ef2686c883c1",
+  "Rakefile": "0254db5d3fc38c67a2c160d7296a24f8",
+  "lib/puppet/provider/package/npm.rb": "4e82eaf400ec5af1ed7f2e352cc57061",
+  "manifests/init.pp": "18d07373d5e2bd13911716d3a389efb0",
+  "manifests/npm.pp": "0f3119aa5166655b62b5b9ffaa386182",
+  "manifests/params.pp": "1dffbe30645a8f43213e4b90c9f1306c",
+  "metadata.json": "73935b2b541f57728562272d594d1f97",
+  "spec/classes/nodejs_spec.rb": "59fb8c9f2a48dfbca1f7ac7439b7b770",
+  "spec/fixtures/unit/puppet/provider/pakages/npm/npm_global": "b978830ded964a9000c961528dfd6ef1",
+  "spec/puppetlabs_spec/files.rb": "5f7d2da815b3545f1e3347fac84a36c8",
+  "spec/puppetlabs_spec/fixtures.rb": "795629c4bcad28bf3bb91ff6e5ce97b1",
+  "spec/puppetlabs_spec/matchers.rb": "8e77dc7317de7fc2ff289fb716623b6c",
+  "spec/puppetlabs_spec_helper.rb": "b8e2c657fb91ba7129e679d133169986",
+  "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+  "spec/unit/puppet/provider/pakages/npm_spec.rb": "17335aef5ba1e3289a637fcd705b93f8",
+  "tests/init.pp": "575b1a56d1cbce7c4fb2142b4fabc36a",
+  "tests/npm.pp": "eecedf53999fd2f11b25bd34a543c5d6"
+}

@@ -15,9 +15,10 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+var config = require('config');
 
-var uri = 'mongodb://localhost/mongoose-shared-connection';
-global.db = mongoose.createConnection(uri);
+console.log('Connecting to ' + config.mongo.uri);
+global.db = mongoose.createConnection(config.mongo.uri);
 
 var user = require('./routes/user');
 var measurement = require('./routes/measurement');

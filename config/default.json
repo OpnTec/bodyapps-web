@@ -1,0 +1,5 @@
+{
+  "mongo": {
+    "uri": "mongodb://localhost/bodyapps-service"
+  }
+}

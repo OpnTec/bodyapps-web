@@ -12,6 +12,13 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt, {scope: 'devDependencies'});
 
   grunt.initConfig({
+
+    env: {
+      test: {
+        NODE_ENV: 'test'
+      }
+    },
+
     watch: {
       options: {
         livereload: true,
@@ -48,7 +55,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('run', ['express:dev', 'watch']);
-  grunt.registerTask('test', 'mochaTest');
+  grunt.registerTask('test', ['env:test', 'mochaTest']);
 
   grunt.registerTask('default', ['run']);
 };

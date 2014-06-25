@@ -44,6 +44,7 @@ exports.insertUser = function (req, res, next) {
 
 exports.findUser = function(req, res) {
   var id = req.params.user_id;
+  if (!req.isAuthenticated()) { return res.json(401);}
   User.findOne({_id: id}, function(err, doc) {
     if(doc)
     {

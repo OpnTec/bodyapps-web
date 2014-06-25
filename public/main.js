@@ -12,7 +12,7 @@
  */
 
 var MeasurementModel = Backbone.Model.extend({
-    defaults: {
+  defaults: {
     data : {
       m_id: '',
       m_unit: '',
@@ -38,19 +38,23 @@ var MeasurementModel = Backbone.Model.extend({
       },
       user_id :''
     }
-    }
+  }
   });
 
 var Measurements = Backbone.Collection.extend({
   model:MeasurementModel,
 });
 
-var MeasurementListView = Backbone.View.extend({
-  el:'tbody',
+function json2Array(json){
+    var array = [];
+    var keys = Object.keys(json);
+    keys.forEach(function(key){
+      array.push(json[key]);
+    });
+    return array;
+}
 
-  initialize: function () {
-     this.collection.bind('change', this.render, this);
-  },
+var MeasurementListView = Backbone.View.extend({
 
   render:function(options) {
     var that = this;
@@ -58,12 +62,15 @@ var MeasurementListView = Backbone.View.extend({
       var url = 'http://localhost:3000/users/' + options.id + '/measurements';
       this.collection.url = url;
       this.collection.fetch({
-        success:function(records){
-          records.each(function(ms) {
-            var mview = new MeasurementView({model:ms});
-            that.$el.append(mview.render().el);
-          })
-        that.$el.html();
+        success:function(records, response){
+          if(response==401) {
+            window.location.href = 'http://localhost:3000/index.html#home';
+          } else {
+              var array = json2Array(((records).toJSON()));
+              var template = _.template($('#measurement-list').html(), 
+                {measurements:array});
+              that.$el.html(template);
+          }
         }
       })
       return that;
@@ -75,10 +82,6 @@ var MeasurementView = Backbone.View.extend({
   tagName:'tr',
   template: _.template($('#measurement-list').html()),
 
-  initialize: function() {
-    this.listenTo(this.model, 'change', this.render);
-  },
-
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
     return this;
@@ -88,57 +91,71 @@ var MeasurementView = Backbone.View.extend({
 
 var UserModel = Backbone.Model.extend({
   defaults:{
-    name: 'vis',
-    age: '22',
-    email: 'vishv1brahmbhatt@yahoo.com',
-    dob: '12/10/1990'
-  },urlRoot = 'http://localhost:3000/users/'
-});
-
-var UserView = Backbone.View.extend({
-tagName:'li',
-
-template: _.template($('#user-name').html()),
-
-initialize: function() {
-    this.listenTo(this.model, 'change', this.render);
-  },
-
-render : function(options){
-  var that = this;
-  var url = this.model.urlRoot;
-  this.model.urlRoot = url + options.id;
-  this.model.fetch({
-    success:function(user){
-      that.$el.html(this.template(user.toJSON());
+    data:{
+      name: '',
+      dob: '',
+      age: '',
+      email: ''
     }
-  });
-  return that;
-}
-});
-
-var Router = Backbone.Router.extend({
-  routes: {
-    'homeuser/:id' : 'userhome',
-    'user/:id' : 'user'
   }
 });
 
+var UserView = Backbone.View.extend({
+  template: _.template($('#user-name').html()),
+
+  render : function(options){
+    var that = this;
+
+    this.model.url = 'http://localhost:3000/users/' + options.id;
+    this.model.fetch({
+      success:function(user ,response){
+        if(response==401) {
+          window.location.href = 'http://localhost:3000/index.html#home';
+        } else {
+          that.$el.html(that.template(user.toJSON()));
+        }
+      }
+    });
+    return that;
+  }
+});
+
+var WelcomeView = Backbone.View.extend({
+  template: _.template($('#welcome-message').html()),
+
+  render:function() {
+    this.$el.html(this.template);
+    return this;
+  }
+});
+
+var userModel = new UserModel();
 var measurements = new Measurements();
 var measurementListView = new MeasurementListView({collection:measurements});
 
-var userModel = new UserModel();
 var userView = new UserView({model:userModel});
+var welcomeView = new WelcomeView();
+
+var Router = Backbone.Router.extend({
+  routes: {
+    'home':'firstpage',
+    'user/:id' : 'userhome',
+    'user/measurements/:id' : 'user'
+  },
+
+  firstpage:function(id){
+    $('#welcome-user').append(welcomeView.render().el);
+  },
+
+  userhome:function(id){
+    $('#user-details').append(userView.render({id: id}).el);
+  },
+
+  user:function(id){
+    $('#user-measurment-list').append(measurementListView.render({id: id}).el);
+  }
+});
+
 var router = new Router();
-
-router.on('route:userhome',function(id){
-  $('#user-info').append(userView.render({id: id}).el);
-  console.log("on userhome");
-});
-
-router.on('route:user',function(id){
-  measurementListView.render({id: id});
-  console.log("on routerhome");
-});
 
 Backbone.history.start();

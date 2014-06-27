@@ -55,16 +55,17 @@ function json2Array(json){
 }
 
 var MeasurementListView = Backbone.View.extend({
+  el:'.container',
 
   render:function(options) {
     var that = this;
     if(options.id){
-      var url = 'http://localhost:3000/users/' + options.id + '/measurements';
+      var url = '/users/' + options.id + '/measurements';
       this.collection.url = url;
       this.collection.fetch({
         success:function(records, response){
           if(response==401) {
-            window.location.href = 'http://localhost:3000/index.html#home';
+            window.location.href = '/index.html#home';
           } else {
               var array = json2Array(((records).toJSON()));
               var template = _.template($('#measurement-list').html(), 
@@ -101,16 +102,18 @@ var UserModel = Backbone.Model.extend({
 });
 
 var UserView = Backbone.View.extend({
+  el:'.container',
+
   template: _.template($('#user-name').html()),
 
   render : function(options){
     var that = this;
 
-    this.model.url = 'http://localhost:3000/users/' + options.id;
+    this.model.url = '/users/' + options.id;
     this.model.fetch({
       success:function(user ,response){
         if(response==401) {
-          window.location.href = 'http://localhost:3000/index.html#home';
+          window.location.href = '/index.html#home';
         } else {
           that.$el.html(that.template(user.toJSON()));
         }
@@ -121,6 +124,8 @@ var UserView = Backbone.View.extend({
 });
 
 var WelcomeView = Backbone.View.extend({
+  el:'.container',
+
   template: _.template($('#welcome-message').html()),
 
   render:function() {
@@ -144,15 +149,15 @@ var Router = Backbone.Router.extend({
   },
 
   firstpage:function(id){
-    $('#welcome-user').append(welcomeView.render().el);
+    welcomeView.render();
   },
 
   userhome:function(id){
-    $('#user-details').append(userView.render({id: id}).el);
+    userView.render({id: id});
   },
 
   user:function(id){
-    $('#user-measurment-list').append(measurementListView.render({id: id}).el);
+    measurementListView.render({id: id});
   }
 });
 

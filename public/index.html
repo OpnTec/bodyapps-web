@@ -12,55 +12,78 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css">
 </head>
 <body>
-  <div class="container"> 
+  <div class="container">
+  </div>
+
+  <!-- Template for MeasurmentList view -->
+  <script type="text/template" id="measurement-list">
     <h1>List of Measurements</h1>
+    <a href="/logout" class="btn btn-large"><i class="icon-white icon-heart">
+    </i>Logout</a>
     <hr />
-    <div class="page">
-        <table class="table striped">
+      <table class="table striped">
         <thead>
-        <tr>
-          <th> Name </th>
-          <th> Email:ID </th>
-          <th> Gender </th>
-          <th> Date of Birth </th>
-          <th> MUnit </th>
-          <th> MidNeckGirth</th>
-          <th> BustGirth </th>
-          <th> WaistGirth </th>
-          <th> AcrossBackShoulderWidth </th>
-          <th> ShoulderDrop </th>
-          <th> ArmLength </th>
-          <th> WristGirth </th>
-          <th> UpperArmGirth </th>
-          <th> ArmscyeGirth </th>
-          <th> Height </th>
-          <th> HipHeight </th>
+          <tr>
+            <th> Name </th>
+            <th> Email:ID </th>
+            <th> Gender </th>
+            <th> Date of Birth </th>
+            <th> MUnit </th>
+            <th> MidNeckGirth</th>
+            <th> BustGirth </th>
+            <th> WaistGirth </th>
+            <th> AcrossBackShoulderWidth </th>
+            <th> ShoulderDrop </th>
+            <th> ArmLength </th>
+            <th> WristGirth </th>
+            <th> UpperArmGirth </th>
+            <th> ArmscyeGirth </th>
+            <th> Height </th>
+            <th> HipHeight </th>
         </tr>
-        </thead>
-        <tbody id="#measurementListBody"></tbody>
-      </table>
-    </div>
-    <script type="text/template" id="measurement-list">
-      <td><%= person.name %></td>
-      <td><%= person.email_id %></td>
-      <td><%= person.gender %></td>
-      <td><%= person.dob %></td>
-      <td><%= m_unit%></td>
-      <td><%= mid_neck_girth%></td>
-      <td><%= waist_girth%></td>
-      <td><%= across_back_shoulder_width%></td>
-      <td><%= shoulder_drop%></td>
-      <td><%= person_dob%></td>
-      <td><%= arm_length%></td>
-      <td><%= wrist_girth%></td>
-      <td><%= upper_arm_girth%></td>
-      <td><%= armscye_girth%></td>
-      <td><%= height%></td>
-      <td><%= hip_height%></td>
-    </script>
-    <script src="lib/jquery-1.11.1.js"></script>
-    <script src="lib/underscore.js"></script>
-    <script src="lib/backbone.js"></script>
-    <script src="./main.js"></script> 
+      </thead>
+      <tbody>
+        <% _.each(measurements, function(measurement) { %>
+          <tr>
+            <td><%= measurement.data.person.name %></td>
+            <td><%= measurement.data.person.email %></td>
+            <td><%= measurement.data.person.gender %></td>
+            <td><%= measurement.data.person.dob %></td>
+            <td><%= measurement.data.m_unit%></td>
+            <td><%= measurement.data.mid_neck_girth%></td>
+            <td><%= measurement.data.waist_girth%></td>
+            <td><%= measurement.data.across_back_shoulder_width%></td>
+            <td><%= measurement.data.shoulder_drop%></td>
+            <td><%= measurement.data.shoulder_slope_degrees%></td>
+            <td><%= measurement.data.arm_length%></td>
+            <td><%= measurement.data.wrist_girth%></td>
+            <td><%= measurement.data.upper_arm_girth%></td>
+            <td><%= measurement.data.armscye_girth%></td>
+            <td><%= measurement.data.height%></td>
+            <td><%= measurement.data.hip_height%></td>
+          </tr>
+      </tbody>
+      <% }); %>
+    </table>
+  </script>
+
+  <!-- Template for User's Home view -->
+  <script type="text/template" id="user-name">
+    <h1>Welcome <%=data.name%></h1>
+    <a href="#user/measurements/<%=data.id%>" class="btn btn-primary btn-large"><i class="measurement"></i> Measurement List</a>
+    <a href="/logout" class="btn btn-large"><i class="icon-white icon-heart"></i>Logout</a>
+  </script>
+
+  <!-- Template for Web Services Home view -->
+  <script type="text/template" id="welcome-message">
+    <h1> Welcome to body apps </h1>
+    <a href="/auth/google" class="btn btn-danger"><span class="google-plus">
+    </span> Google Sign in</a>
+  </script>
+
+  <script src="lib/jquery-1.11.1.js"></script>
+  <script src="lib/underscore.js"></script>
+  <script src="lib/backbone.js"></script>
+  <script src="./main.js"></script>
 </body>
 </html>

@@ -46,7 +46,6 @@ function returnMeasurementRec(doc) {
 
 exports.findMeasurementRecords = function(req, res, next) {
   var userid = req.params.user_id;
-
   Measurement.find({ user_id: userid}, function(err, docs) {
     if(err)  return next(err);
     var measurementList = [];

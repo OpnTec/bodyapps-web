@@ -52,7 +52,7 @@ app.get('/users/:user_id/measurements/:measurement_id',
   measurement.findMeasurementRecord);
 app.post('/users', user.insertUser);
 app.get('/users/:user_id', user.findUser);
-app.get('/logout', function(req, res){
+app.get('/logout', function(req, res) {
   req.session.destroy(function (err) {
     res.redirect('/index.html');
   });

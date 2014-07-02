@@ -12,7 +12,7 @@ var assert = require('assert');
 var _ = require('lodash');
 
 var app = require('../app.js');
-var User = require('../models/user');
+var User = require('../app/models/user');
 
 describe('User API', function() {
 

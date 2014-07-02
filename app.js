@@ -20,16 +20,12 @@ var config = require('config');
 console.log('Connecting to ' + config.mongo.uri);
 global.db = mongoose.createConnection(config.mongo.uri);
 
-var user = require('./routes/user');
-var measurement = require('./routes/measurement');
-
 var session = require('express-session');
 var cookieParser = require('cookie-parser');  
-var passport = require('passport');
 
 var app = express();
 // configure Express
-require('./passport_config/passport')(passport);
+var passport = require('./app/passport');
 
 app.use(morgan());
 app.use(cookieParser());
@@ -42,16 +38,11 @@ app.use(passport.session());
 
 app.use(express.static(__dirname + '/public'));
 
-require('./routes/passport.js')(app, passport); //load routes and pass in 'app'
+require('./app/routes/passport.js')(app); //load routes and pass in 'app'
 // and configured passport
 
-app.post('/users/measurements', measurement.insertMeasurementRecord);
-app.get('/users/:user_id/measurements',
-  measurement.findMeasurementRecords);
-app.get('/users/:user_id/measurements/:measurement_id',
-  measurement.findMeasurementRecord);
-app.post('/users', user.insertUser);
-app.get('/users/:user_id', user.findUser);
+require('./app/routes/user.js')(app);
+require('./app/routes/measurement.js')(app);
 app.get('/logout', function(req, res) {
   req.session.destroy(function (err) {
     res.redirect('/index.html');

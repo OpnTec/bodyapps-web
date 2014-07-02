@@ -143,12 +143,12 @@ var welcomeView = new WelcomeView();
 
 var Router = Backbone.Router.extend({
   routes: {
-    '':'firstpage',
+    '':'homepage',
     'user/:id' : 'userhome',
     'user/measurements/:id' : 'user'
   },
 
-  firstpage:function(id){
+  homepage:function(id){
     welcomeView.render();
   },
 

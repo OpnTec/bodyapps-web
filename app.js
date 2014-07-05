@@ -31,7 +31,7 @@ app.use(morgan());
 app.use(cookieParser());
 app.use(bodyParser());
 
-app.use(session({ secret: 'bodyappsecretwebapp' }));
+app.use(session({ secret: 'bodyappsecretwebapp', cookie:{maxAge:86400000} }));
 
 app.use(passport.initialize());
 app.use(passport.session());

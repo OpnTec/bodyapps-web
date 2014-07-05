@@ -14,7 +14,7 @@ var User = require('./models/user');
 var passport = require('passport');
 var config = require('config');
 
-function authCheck(gmail, done) {
+function authCheck(gmail, profile, done) {
   User.findOne({ email: gmail}, function(err, gUser) {
     if (err)
         return done(err);
@@ -58,7 +58,7 @@ passport.use(new GoogleStrategy({
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
       var gmail = profile.emails[0].value;
-      return authCheck(gmail, done);
+      return authCheck(gmail, profile, done);
     });
   }
 ));

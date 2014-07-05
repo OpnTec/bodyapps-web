@@ -44,7 +44,8 @@ module.exports = function(app) {
     })
   });
 
-  app.get('/users/:user_id', function (req, res, next) { 
+  app.get('/users/:user_id', function (req, res, next) {
+    if (!req.isAuthenticated())  return res.json(401, {user : unAuthenticated});
     var id = req.params.user_id;
     User.findOne({_id: id}, function(err, doc) {
       if(doc) {

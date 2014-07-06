@@ -11,9 +11,9 @@ var request = require('supertest');
 var assert = require('assert');
 var _ = require('lodash');
 
-var app = require('../app.js');
-var User = require('../app/models/user');
-var Measurement = require('../app/models/measurement');
+var app = require('../../app.js');
+var User = require('../../app/models/user');
+var Measurement = require('../../app/models/measurement');
 var measurement;
 var user;
 var data;

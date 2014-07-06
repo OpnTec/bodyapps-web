@@ -9,7 +9,7 @@
 
 var request = require('supertest');
 
-var app = require('../app.js');
+var app = require('../../app.js');
 
 describe('GET google o auth', function() {
   var api = request(app);

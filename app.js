@@ -19,7 +19,7 @@ var config = require('config');
 var logger = require('./logger');
 var uuid = require('node-uuid');
 
-logger.info('Connecting to ' + config.mongo.uri);
+logger.debug('Connecting to ' + config.mongo.uri);
 mongoose.connect(config.mongo.uri);
 
 var session = require('express-session');
@@ -32,7 +32,7 @@ var secret = uuid();
 
 var winstonStream = {
   write: function(message){
-    logger.debug(message);
+    logger.info(message);
   }
 };
 app.use(morgan({stream:winstonStream}));

@@ -14,6 +14,16 @@
 var Measurement = require('../models/measurement');
 var validator = require('validator');
 
+function responseMessage(message, status) {
+  var message = {
+    error: {
+      message: message,
+      status: status
+    }
+  };
+  return message;
+}
+
 function returnMeasurementRec(doc) {
   var measurementRecord = {
     data :{
@@ -50,7 +60,10 @@ module.exports = function(app) {
     Measurement.find({ user_id: userid}, function(err, docs) {
       if(err)  return next(err);
       var measurementList = [];
-      if(docs.length==0)  return res.json(404, {measurements:null});
+      if(docs.length==0)  {
+        return res.json(404, 
+          responseMessage("Measurement records not found", 404));
+      }
       docs.forEach(function(doc) {
         var measurementRecord = returnMeasurementRec(doc);
         measurementList.push(measurementRecord);
@@ -68,18 +81,22 @@ module.exports = function(app) {
         var measurementRecord = returnMeasurementRec(doc);
         return res.json(measurementRecord);
       }
-      return res.json(404, {measurement:null});
+      return res.json(404,
+        responseMessage("Measurement record not found", 404));
     })
   });
 
-  app.post('/users/measurements', function(req, res) {
+  app.post('/users/:user_id/measurements', function(req, res) {
     var body = req.body;
     var personName = body.person.name;
     var personDob = body.person.dob;
     var personGender = body.person.gender;
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
-      || validator.isNull(personGender))  return res.json(400, {email:null});
+      || validator.isNull(personGender)) {
+        return res.json(400,
+          responseMessage("Email not found", 400));
+    }
 
     Measurement.create(body, function(err, doc) {
       if(err)  return next(err);

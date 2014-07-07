@@ -8,13 +8,13 @@
  */
 var passport = require('passport');
 
-var profile = 'https://www.googleapis.com/auth/plus.me';
-var email = 'https://www.googleapis.com/auth/userinfo.email';
+var PROFILE = 'https://www.googleapis.com/auth/plus.me';
+var EMAIL = 'https://www.googleapis.com/auth/userinfo.email';
 
 module.exports = function(app) {
   app.get('/auth/google',
     passport.authenticate('google', 
-      { scope: [profile, email] })
+      { scope: [PROFILE, EMAIL] })
   );
 
   app.get('/auth/google/callback', 

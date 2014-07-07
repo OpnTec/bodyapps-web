@@ -1,5 +1,8 @@
 {
   "mongo": {
     "uri": "mongodb://localhost/bodyapps-service-test"
+  },
+  "winston" : {
+    "level" : "error"
   }
 }

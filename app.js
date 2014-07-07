@@ -16,9 +16,11 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var config = require('config');
+var logger = require('./logger');
+var uuid = require('node-uuid');
 
-console.log('Connecting to ' + config.mongo.uri);
-global.db = mongoose.createConnection(config.mongo.uri);
+logger.info('Connecting to ' + config.mongo.uri);
+mongoose.connect(config.mongo.uri);
 
 var session = require('express-session');
 var cookieParser = require('cookie-parser');  
@@ -26,23 +28,31 @@ var cookieParser = require('cookie-parser');
 var app = express();
 // configure Express
 var passport = require('./app/passport');
+var secret = uuid();
 
-app.use(morgan());
+var winstonStream = {
+  write: function(message){
+    logger.debug(message);
+  }
+};
+app.use(morgan({stream:winstonStream}));
+
 app.use(cookieParser());
 app.use(bodyParser());
 
-app.use(session({ secret: 'bodyappsecretwebapp', cookie:{maxAge:86400000} }));
+app.use(session({ secret: secret, saveUninitialized: true, 
+  resave: true, cookie:{maxAge:86400000} }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(__dirname + '/public'));
 
-require('./app/routes/passport.js')(app); //load routes and pass in 'app'
+require('./app/routes/passport')(app); //load routes and pass in 'app'
 // and configured passport
 
-require('./app/routes/user.js')(app);
-require('./app/routes/measurement.js')(app);
+require('./app/routes/user')(app);
+require('./app/routes/measurement')(app);
 app.get('/logout', function(req, res) {
   req.session.destroy(function (err) {
     res.redirect('/index.html');

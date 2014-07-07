@@ -11,7 +11,7 @@ var request = require('supertest');
 
 var app = require('../../app.js');
 
-describe('GET google o auth', function() {
+describe('GET google oauth', function() {
   var api = request(app);
   describe('GET /auth/google', function() {
 
@@ -23,7 +23,6 @@ describe('GET google o auth', function() {
       +'%2Fauth%2Fplus.me%20https%3A%2F%2Fwww.googleapis.com%2Fauth'
       + '%2Fuserinfo.email&client_id=227579141651-'
       +'m1g4kcorqjh94efr6hli36lul84gnfp8.apps.googleusercontent.com';
-      console.log('GET ' + url);
       api.get(url)
         .expect(302)
         .expect('location', location)
@@ -42,7 +41,6 @@ describe('GET google o auth', function() {
       +'auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000'
       + '%2Fauth%2Fgoogle%2Fcallback&client_id=227579141651-'
       +'m1g4kcorqjh94efr6hli36lul84gnfp8.apps.googleusercontent.com';
-      console.log('GET ' + url);
       api.get(url)
         .expect(302)
         .expect('location', location)

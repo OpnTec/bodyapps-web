@@ -9,8 +9,9 @@
  * Model is defined via Mongoose. Users can be uniquely identified 
  * by their email-address.
  */
+var mongoose = require('mongoose');
 
-module.exports = db.model('User', {
+module.exports = mongoose.model('User', {
   name: String
   ,dob: { type: Date}
   ,age: Number

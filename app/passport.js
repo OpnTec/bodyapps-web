@@ -51,14 +51,14 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: config.google_o_auth.client_id,
-    clientSecret: config.google_o_auth.client_secret,
-    callbackURL: "http://localhost:3000/auth/google/callback"
+    clientID: config.google_oauth.client_id,
+    clientSecret: config.google_oauth.client_secret,
+    callbackURL: "/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
       var gmail = profile.emails[0].value;
-      return authCheck(gmail, profile, done);
+      return passport.authCheck(gmail, profile, done);
     });
   }
 ));

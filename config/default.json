@@ -2,8 +2,11 @@
   "mongo": {
     "uri": "mongodb://localhost/bodyapps-service"
   },
-  "google_o_auth" : {
-  	"client_id": "227579141651-m1g4kcorqjh94efr6hli36lul84gnfp8.apps.googleusercontent.com",
-  	"client_secret": "PlPel6Ol65zAwjiGPF-wJZD-"
+  "google_oauth" : {
+    "client_id": "227579141651-m1g4kcorqjh94efr6hli36lul84gnfp8.apps.googleusercontent.com",
+    "client_secret": "PlPel6Ol65zAwjiGPF-wJZD-"
+  },
+  "winston" : {
+    "level" : "debug"
   }
 }

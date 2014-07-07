@@ -6,19 +6,19 @@ var sinon = require('sinon');
 
 describe('Passport', function() {
 
-  describe('authCheck', function() {
+  var user;
 
-    var user;
+  beforeEach(function(done) {
 
-    beforeEach(function(done) {
-
-      User.find().remove(function(err) {
-        user = new User();
-        user.name = 'John Doe';
-        user.email = 'john.doe@acme.org';
-        user.save(done);
-      });
+    User.find().remove(function(err) {
+      user = new User();
+      user.name = 'John Doe';
+      user.email = 'john.doe@acme.org';
+      user.save(done);
     });
+  });
+
+  describe('authCheck', function() {
 
     // Simplest case: test if authCheck returns the existing user
     it('should return existing user', function(done) {
@@ -68,15 +68,42 @@ describe('Passport', function() {
 
   });
 
-  // TODO: please implement these pending tests
   describe('serializeUser', function() {
-    it('should yield the user id');
+
+    it('should yield the user id', function(done) {
+      passport.serializeUser(user, function(err, result) {
+        if (err) return done(err);
+        expect(result).not.to.be.undefined;
+        expect(result).not.to.be.null;
+        expect(result).to.eql(user._id);
+        done();
+      });
+    })
   });
 
-  // TODO: please implement these pending tests
   describe('deserializeUser', function() {
-    it('should find an existing user');
 
-    it('should yield an error if user was not found');
+    it('should find an existing user', function(done) {
+      passport.deserializeUser(user._id, function(err, result) {
+        if (err) return done(err);
+        expect(result).not.to.be.undefined;
+        expect(result).not.to.be.null;
+        expect(result.name).to.eql(user.name);
+        expect(result.email).to.eql(user.email);
+        done();
+      });
+    });
+
+    it('should yield an error if user was not found', function(done) {
+      var err = Error('user not found');
+
+      sinon.stub(User, 'findById').yields(err);
+      passport.deserializeUser(user._id, function(err, result) {
+        expect(err).to.equal(err);
+        User.findById.restore();
+        done();
+      });
+    });
   });
+
 });

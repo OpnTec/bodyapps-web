@@ -12,6 +12,16 @@
 var User = require('../models/user');
 var validator = require('validator');
 
+function responseMessage(message, status) {
+  var message = {
+    error: {
+      message: message,
+      status: status
+    }
+  };
+  return message;
+}
+
 function returnUserRec(doc)
 {
   var userRecord = {
@@ -30,7 +40,10 @@ module.exports = function(app) {
   app.post('/users', function (req, res, next) { 
     var body = req.body;
     var email = body.email;
-    if(validator.isNull(email)) return res.json(400, {email:null});
+    if(validator.isNull(email)){
+      return res.json(400,
+        responseMessage("Email not found", 400));
+    }
     User.findOne({ email: email}, function(err, user) {
       if(user) {
         var userRecord = returnUserRec(user);
@@ -45,14 +58,14 @@ module.exports = function(app) {
   });
 
   app.get('/users/:user_id', function (req, res, next) {
-    if (!req.isAuthenticated())  return res.json(401, {user : unAuthenticated});
     var id = req.params.user_id;
     User.findOne({_id: id}, function(err, doc) {
       if(doc) {
         var userRecord = returnUserRec(doc);
         return res.json(200,userRecord);
       }
-      return res.json(404,{user:null});
+      return res.json(404,
+        responseMessage("User not found", 404));
     })
   });
 }

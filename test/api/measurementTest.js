@@ -77,7 +77,6 @@ describe('Measurement API', function() {
 
     it('should return a single measurement record', function(done) {
       var url = '/users/' + user.id + '/measurements/' + measurement.m_id;
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -104,7 +103,6 @@ describe('Measurement API', function() {
 
     it('should return a list of measurement records', function(done) {
       var url = '/users/' + user.id + '/measurements';
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -136,7 +134,8 @@ describe('Measurement API', function() {
   describe('POST /users/measurements', function() {
 
   it('should create a new measurement record', function(done) {
-    api.post('/users/measurements')
+    var url = '/users/' + user.id + '/measurements';
+    api.post(url)
       .send(data)
       .expect('Content-type', /json/)
       .expect(201)
@@ -152,12 +151,13 @@ describe('Measurement API', function() {
     });
 
     it('should reject a measurement w/o name and dob and gender', function(done) {
+      var url = '/users/' + user.id + '/measurements';
       var _data = _.clone(data);
       delete(_data.person.name);
       delete(_data.person.dob);
       delete(_data.person.gender);
 
-      api.post('/users/measurements')
+      api.post(url)
         .send(_data)
         .expect('Content-type', /json/)
         .expect(400, done);

@@ -41,7 +41,6 @@ describe('User API', function() {
 
     it('should return a single user', function(done) {
       var url = '/users/' + user.id;
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)

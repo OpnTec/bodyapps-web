@@ -14,7 +14,7 @@
 var Measurement = require('../models/measurement');
 var validator = require('validator');
 
-function responseMessage(message, status) {
+function errorResponse(message, status) {
   var message = {
     error: {
       message: message,
@@ -61,8 +61,7 @@ module.exports = function(app) {
       if(err)  return next(err);
       var measurementList = [];
       if(docs.length==0)  {
-        return res.json(404, 
-          responseMessage("Measurement records not found", 404));
+        return res.json({ data: measurementList});
       }
       docs.forEach(function(doc) {
         var measurementRecord = returnMeasurementRec(doc);
@@ -82,7 +81,7 @@ module.exports = function(app) {
         return res.json(measurementRecord);
       }
       return res.json(404,
-        responseMessage("Measurement record not found", 404));
+        errorResponse("Measurement record not found", 404));
     })
   });
 
@@ -95,7 +94,7 @@ module.exports = function(app) {
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
         return res.json(400,
-          responseMessage("Email not found", 400));
+          errorResponse("Email not found", 400));
     }
 
     Measurement.create(body, function(err, doc) {

@@ -123,10 +123,15 @@ describe('Measurement API', function() {
         });
     });
 
-    it('should respond 404 if a measurement was not found', function(done) {
+    it('should respond empty list if records were not found', function(done) {
       api.get('/users/abc123/measurements')
         .expect('Content-type', /json/)
-        .expect(404, done);
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(0, res.body.data.length);
+          done();
+        });        
     });
 
   });

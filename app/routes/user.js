@@ -42,7 +42,7 @@ module.exports = function(app) {
     var email = body.email;
     if(validator.isNull(email)){
       return res.json(400,
-        errorResponse("Email not found", 400));
+        errorResponse('Email not found', 400));
     }
     User.findOne({ email: email}, function(err, user) {
       if(user) {
@@ -65,7 +65,7 @@ module.exports = function(app) {
         return res.json(200,userRecord);
       }
       return res.json(404,
-        errorResponse("User not found", 404));
+        errorResponse('User not found', 404));
     })
   });
 }

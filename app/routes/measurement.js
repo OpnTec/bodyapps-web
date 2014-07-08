@@ -81,7 +81,7 @@ module.exports = function(app) {
         return res.json(measurementRecord);
       }
       return res.json(404,
-        errorResponse("Measurement record not found", 404));
+        errorResponse('Measurement record not found', 404));
     })
   });
 
@@ -94,7 +94,7 @@ module.exports = function(app) {
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
         return res.json(400,
-          errorResponse("Email not found", 400));
+          errorResponse('Email not found', 400));
     }
 
     Measurement.create(body, function(err, doc) {

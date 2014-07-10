@@ -2,7 +2,7 @@
   "mongo": {
     "uri": "mongodb://localhost/bodyapps-service-test"
   },
-  "winston" : {
+  "logging" : {
     "level" : "error"
   }
 }

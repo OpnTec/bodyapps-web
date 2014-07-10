@@ -23,4 +23,10 @@ module.exports = function(app) {
       var url = '/index.html#/user/' + req.user._id;
       res.redirect(url);
     });
+
+  app.get('/logout', function(req, res) {
+    req.session.destroy(function (err) {
+      res.redirect('/index.html');
+    });
+  });
 }

@@ -6,7 +6,10 @@
     "client_id": "227579141651-m1g4kcorqjh94efr6hli36lul84gnfp8.apps.googleusercontent.com",
     "client_secret": "PlPel6Ol65zAwjiGPF-wJZD-"
   },
-  "winston" : {
+  "logging" : {
     "level" : "debug"
+  },
+  "session" : {
+    "secret" : "65c1b73c-46b4-404a-a71c-761c6b940d84"
   }
 }

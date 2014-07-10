@@ -12,7 +12,7 @@ var config = require('config');
 
 var logger = new (winston.Logger)({
   transports: [
-    new (winston.transports.Console) ({level:config.winston.level})
+    new (winston.transports.Console) ({level:config.logging.level})
   ]
 });
 

@@ -17,7 +17,6 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var config = require('config');
 var logger = require('./logger');
-var uuid = require('node-uuid');
 
 logger.debug('Connecting to ' + config.mongo.uri);
 mongoose.connect(config.mongo.uri);
@@ -28,7 +27,6 @@ var cookieParser = require('cookie-parser');
 var app = express();
 // configure Express
 var passport = require('./app/passport');
-var secret = uuid();
 
 var winstonStream = {
   write: function(message){
@@ -40,7 +38,7 @@ app.use(morgan({stream:winstonStream}));
 app.use(cookieParser());
 app.use(bodyParser());
 
-app.use(session({ secret: secret, saveUninitialized: true, 
+app.use(session({ secret: config.session.secret, saveUninitialized: true, 
   resave: true, cookie:{maxAge:86400000} }));
 
 app.use(passport.initialize());
@@ -53,11 +51,6 @@ require('./app/routes/passport')(app); //load routes and pass in 'app'
 
 require('./app/routes/user')(app);
 require('./app/routes/measurement')(app);
-app.get('/logout', function(req, res) {
-  req.session.destroy(function (err) {
-    res.redirect('/index.html');
-  });
-});
 
 app.get('*', function(req, res, next) {
   var err = new Error();

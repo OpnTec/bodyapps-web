@@ -26,6 +26,11 @@ curl -i -X POST -H 'Content-Type: application/json' -d '{ "name": "vishv2", "age
 curl -X POST -H 'Content-Type: application/json' -d '{"m_unit": "cm", "mid_neck_girth" : "10", "bust_girth" :"10", "waist_girth" : "10", "hip_girth" : "10", "across_back_shoulder_width" : "10", "shoulder_drop" : "10", "shoulder_slope_degrees" :"10", "arm_length" :"10", "wrist_girth" : "10", "upper_arm_girth" : "10", "armscye_girth" : "10", "height" : "10", "hip_height" :"10", "user_id" : "53a4ac3dd1a9927017910f09", "person":{"name": "San", "email":"san@hotmail.com", "gender":"male", "dob": "12/10/1990"}}' http://localhost:3000/users/53a4ac3dd1a9927017910f09/measurements
 ```
 
+
+```bash
+curl -X POST -H 'Content-Type: application/json' -d '{ "type": "png", "binary_data":"binary_data" }' http://localhost:3000/users/53bfd03c55fc73c818efb341/measurements/be4697d7-1a95-4d51-936d-2b84da934e50/image/body_front
+```
+
 # Contributing
 
 ## 2 Spaces for indention

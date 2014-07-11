@@ -30,6 +30,9 @@ module.exports = mongoose.model('Measurement', {
   ,armscye_girth : Number
   ,height : Number
   ,hip_height :Number
+  ,body_front: String // Schema.Types.ObjectId of Image
+  ,body_back: String
+  ,body_side: String
   ,person : {
     name: String
     ,email: String

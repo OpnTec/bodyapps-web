@@ -11,8 +11,8 @@ var request = require('supertest');
 var assert = require('assert');
 var _ = require('lodash');
 
-var app = require('../app.js');
-var User = require('../models/user');
+var app = require('../../app.js');
+var User = require('../../app/models/user');
 
 describe('User API', function() {
 
@@ -41,7 +41,6 @@ describe('User API', function() {
 
     it('should return a single user', function(done) {
       var url = '/users/' + user.id;
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)

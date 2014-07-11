@@ -11,9 +11,9 @@ var request = require('supertest');
 var assert = require('assert');
 var _ = require('lodash');
 
-var app = require('../app.js');
-var User = require('../models/user');
-var Measurement = require('../models/measurement');
+var app = require('../../app.js');
+var User = require('../../app/models/user');
+var Measurement = require('../../app/models/measurement');
 var measurement;
 var user;
 var data;
@@ -77,7 +77,6 @@ describe('Measurement API', function() {
 
     it('should return a single measurement record', function(done) {
       var url = '/users/' + user.id + '/measurements/' + measurement.m_id;
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -104,7 +103,6 @@ describe('Measurement API', function() {
 
     it('should return a list of measurement records', function(done) {
       var url = '/users/' + user.id + '/measurements';
-      console.log('GET ' + url);
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -125,10 +123,15 @@ describe('Measurement API', function() {
         });
     });
 
-    it('should respond 404 if a measurement was not found', function(done) {
+    it('should respond empty list if records were not found', function(done) {
       api.get('/users/abc123/measurements')
         .expect('Content-type', /json/)
-        .expect(404, done);
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(0, res.body.data.length);
+          done();
+        });        
     });
 
   });
@@ -136,7 +139,8 @@ describe('Measurement API', function() {
   describe('POST /users/measurements', function() {
 
   it('should create a new measurement record', function(done) {
-    api.post('/users/measurements')
+    var url = '/users/' + user.id + '/measurements';
+    api.post(url)
       .send(data)
       .expect('Content-type', /json/)
       .expect(201)
@@ -152,12 +156,13 @@ describe('Measurement API', function() {
     });
 
     it('should reject a measurement w/o name and dob and gender', function(done) {
+      var url = '/users/' + user.id + '/measurements';
       var _data = _.clone(data);
       delete(_data.person.name);
       delete(_data.person.dob);
       delete(_data.person.gender);
 
-      api.post('/users/measurements')
+      api.post(url)
         .send(_data)
         .expect('Content-type', /json/)
         .expect(400, done);

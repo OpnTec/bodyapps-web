@@ -28,7 +28,7 @@ curl -X POST -H 'Content-Type: application/json' -d '{"m_unit": "cm", "mid_neck_
 
 
 ```bash
-curl -X POST -H 'Content-Type: application/json' -d '{ "type": "png", "binary_data":"binary_data" }' http://localhost:3000/users/53bfd03c55fc73c818efb341/measurements/be4697d7-1a95-4d51-936d-2b84da934e50/image/body_front
+curl -X POST -H 'Content-Type: application/json' -d '{ "binary_data":"binary_data" }' http://localhost:3000/users/53bfd03c55fc73c818efb341/measurements/be4697d7-1a95-4d51-936d-2b84da934e50/image/body_front
 ```
 
 # Contributing

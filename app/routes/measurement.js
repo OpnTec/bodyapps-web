@@ -24,7 +24,7 @@ function errorResponse(message, status) {
   return message;
 }
 
-function returnMeasurementRec(doc) {
+function returnMeasurementRec(req, doc, user_id) {
   var measurementRecord = {
     data :{
       m_id : doc.m_id,
@@ -51,20 +51,32 @@ function returnMeasurementRec(doc) {
       },user_id : doc.user_id
     }
   };
+  if(doc.images.length!= 0) {
+    measurementRecord.data.images = {};
+    for(var i = 0; i < doc.images.length; i++) {
+      var imageNumber = 'image'+ (i+1);
+      var path = '/users/'+ user_id + '/measurements/'+ doc.m_id + '/image/'
+        + doc.images[0].idref;
+      var href = req.protocol + '://' + req.headers.host + path;
+      measurementRecord.data.images[imageNumber] = { rel : doc.images[0].rel, 
+        idref : href};
+    }
+  }
   return measurementRecord;
 }
 
 module.exports = function(app) {
   app.get('/users/:user_id/measurements', function(req, res, next) { 
-    var userid = req.params.user_id;
-    Measurement.find({ user_id: userid}, function(err, docs) {
+    var user_id = req.params.user_id;
+
+    Measurement.find({ user_id: user_id}, function(err, docs) {
       if(err)  return next(err);
       var measurementList = [];
       if(docs.length==0)  {
         return res.json({ data: measurementList});
       }
       docs.forEach(function(doc) {
-        var measurementRecord = returnMeasurementRec(doc);
+        var measurementRecord = returnMeasurementRec(req, doc, user_id);
         measurementList.push(measurementRecord);
       });
       return res.json(measurementList);
@@ -72,12 +84,13 @@ module.exports = function(app) {
   });
 
   app.get('/users/:user_id/measurements/:measurement_id', function(req, res) {
-    var id = req.params.measurement_id;
+    var m_id = req.params.measurement_id;
+    var user_id = req.params.user_id;
 
-    Measurement.findOne({ m_id: id}, function(err, doc) {
+    Measurement.findOne({ m_id: m_id}, function(err, doc) {
       if(err)  return next(err);
       if(doc) {
-        var measurementRecord = returnMeasurementRec(doc);
+        var measurementRecord = returnMeasurementRec(req, doc, user_id);
         return res.json(measurementRecord);
       }
       return res.json(404,
@@ -90,17 +103,18 @@ module.exports = function(app) {
     var personName = body.person.name;
     var personDob = body.person.dob;
     var personGender = body.person.gender;
+    var user_id = req.params.user_id;
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
         return res.json(400,
           errorResponse('Email not found', 400));
     }
-
     Measurement.create(body, function(err, doc) {
       if(err)  return next(err);
-      var measurementRecord = returnMeasurementRec(doc);
+      var measurementRecord = returnMeasurementRec(req, doc, user_id);
       return res.json(201,measurementRecord);
     })
+
   });
 }

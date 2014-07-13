@@ -70,7 +70,7 @@ function createMeasurement(done) {
 function encodeImage(done) {
   fs.readFile(__dirname + '/bodyfront.png', function (err, data) {
     if (err) throw err;
-    binary_data = new Buffer(data).toString('base64');
+    binary_data = new Buffer(data).toString('binary');
     done();
   });
 }
@@ -78,7 +78,6 @@ function encodeImage(done) {
 function insertImage(done) {
   Image.create(
     data = {
-      type: 'png',
       binary_data: binary_data
       }, function(err, _image) {
           image = _image;
@@ -134,15 +133,14 @@ describe('Image API', function() {
         .end(function(err, res) {
           assert.ok(res.body.data);
           assert.ok(res.body.data.type);
-          assert.ok(res.body.data.binary_data);
+          assert.ok(res.body.data.id);
           done();
           });
       });
 
       it('should reject a image w/o valid content', function(done) {
         var data = {
-          type : "png",
-          binary_data : "this is not an image"
+          binary_data : 'this is not an image'
         };
 
         api.post(url)
@@ -151,9 +149,8 @@ describe('Image API', function() {
           .expect(400, done);
       });
 
-      it('should reject a image w/o type and data', function(done) {
+      it('should reject a image w/o data', function(done) {
         var _data = _.clone(data);
-        delete(_data.type);
         delete(_data.binary_data);
 
         api.post(url)
@@ -163,12 +160,12 @@ describe('Image API', function() {
       });
   });
 
-  describe('GET /users/:user_id/measurements/:measurement_id/image/:side', 
+  describe('GET /users/:user_id/measurements/:measurement_id/image/:image_id', 
     function() {
 
       it('should return a single image record', function(done) {
         var url = '/users/' + user.id + '/measurements/' + measurement.m_id
-        + '/image/'+ 'body_front';
+        + '/image/'+ image.id;
         api.get(url)
           .expect(200)
           .expect('Content-type', /json/)
@@ -182,7 +179,7 @@ describe('Image API', function() {
       });
 
       it('should respond 404 if a image was not found', function(done) {
-        api.get('/users/abc123/measurements/xyz123/image/body_front')
+        api.get('/users/abc123/measurements/xyz123/image/pqr123')
           .expect('Content-type', /json/)
           .expect(404, done);
       });

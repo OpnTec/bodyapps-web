@@ -25,91 +25,102 @@ function errorResponse(message, status) {
   return message;
 }
 
-function returnImageRec(doc)
+function returnImageRec(doc, method)
 {
-  var imageRecord = {
-    data :{
-      id : doc.id,
-      type: doc.type,
-      binary_data: doc.binary_data
-    }
-  };
+  var imageRecord;
+  if(method == "POST") {
+    imageRecord = {
+      data :{
+        id : doc.id,
+        type: doc.type
+      }
+    };
+  }
+  else {
+    imageRecord = {
+      data :{
+        id : doc.id,
+        type: doc.type,
+        binary_data: doc.binary_data
+      }
+    };
+  }
   return imageRecord;
 }
 
 function mimeMagicCheck(buffer) {
   var isValidImage;
+  var type;
   mimeMagic( buffer, function( err, mimeType ){
-    if ( err || !mimeType ) isValidImage = false;
-    else isValidImage = true;
+    if ( err || !mimeType ) {
+      isValidImage = false;
+      type = 'undefined';
+    }
+    else  {
+      isValidImage = true;
+      type = mimeType.mime;
+    }
    });
-  return isValidImage;
+
+  var mimeProperties = {
+    imageCheck : isValidImage, 
+    mimeType: type
+  };
+  return mimeProperties;
 }
 
 module.exports = function(app) {
   app.post('/users/:user_id/measurements/:measurement_id/image/:side', 
     function (req, res, next) {
       var body = req.body;
-      var m_id = req.params.measurement_id;;
+      var m_id = req.params.measurement_id;
       var side = req.params.side;
-      var type = body.type;
       var binary_data = body.binary_data;
 
-      if(validator.isNull(type) || validator.isNull(binary_data)) {
+      if(validator.isNull(binary_data)) {
           return res.json(400, 
             errorResponse('invalid request,type or data is missing', '400'));
       }
-      
-      var bitmap = new Buffer(binary_data, 'base64');
-      var bMimeType = mimeMagicCheck(bitmap);
 
-      if(!bMimeType){
+      var bitmap = new Buffer(binary_data, 'binary');
+      var mime = mimeMagicCheck(bitmap);
+
+      if(!mime.imageCheck) {
         return res.json(400, 
           errorResponse('invalid image data', '400'));
       }
       var image = new Image();
-      image.type = body.type;
+      image.type = mime.mimeType;
       image.binary_data = body.binary_data;
       image.save(function(err) {
-        if (err)
-          return next(err);
+        if (err)  return next(err);
       });
 
-      var query = {};
-      query[side] = image._id;
-
-      Measurement.update({ m_id: m_id }, { $set: query}, 
-        function (err) {
+      Measurement.findOne({m_id:m_id}, function(err, doc) {
+        if(err)  next(err);
+        doc[side] = image._id;
+        doc.images.push({rel: side,idref:image._id});
+        doc.save(function(err) {
           if(err)  return next(err);
-          var imageRecord = returnImageRec(image);
+          var imageRecord = returnImageRec(image, req.method);
           res.json(201, imageRecord);
+        });
       });
   });
 
-  app.get('/users/:user_id/measurements/:measurement_id/image/:side', 
-    function(req, res) {
+  app.get('/users/:user_id/measurements/:measurement_id/image/:image_id', 
+    function(req, res, next) {
       var body = req.body;
       var m_id = req.params.measurement_id;
-      var side = req.params.side;
-      var image_id;
+      var image_id = req.params.image_id;
 
-      Measurement.findOne({m_id: m_id}, function(err, measurement) {
-        if(err)  return next(err);
-        else {
-          if(validator.isNull(measurement)) {
-            return res.json(404, errorResponse('image not found', '404'));
-          }
-          image_id = measurement[side];
-          Image.findById(image_id, function(err, doc) {
-            if(err)  return next(err);
-            if(doc) {
-              var imageRecord = returnImageRec(doc);
-              return res.json(200,imageRecord);
-            }
-            return res.json(404,errorResponse('image not found', '404'));
-          });
+      Image.findById(image_id, function(err, doc) {
+        if(doc) {
+          var imageRecord = returnImageRec(doc);
+          return res.json(200,imageRecord);
         }
-    });
+        return res.json(404, errorResponse('image not found', '404'));
+      });
   });
 
 }

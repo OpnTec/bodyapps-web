@@ -172,7 +172,6 @@ describe('Image API', function() {
           .end(function(err, res) {
             if (err) return done(err);
             assert.ok(res.body.data);
-            assert.equal(image.type, res.body.data.type);
             assert.equal(image.binary_data, res.body.data.binary_data);
             done();
           });

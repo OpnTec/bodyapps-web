@@ -59,7 +59,7 @@ function returnMeasurementRec(req, doc, user_id) {
         + doc.images[0].idref;
       var href = req.protocol + '://' + req.headers.host + path;
       measurementRecord.data.images[imageNumber] = { rel : doc.images[0].rel, 
-        idref : href};
+        href : href};
     }
   }
   return measurementRecord;

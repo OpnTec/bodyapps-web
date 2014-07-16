@@ -31,5 +31,8 @@
     "sinon": "^1.10.2",
     "supertest": "^0.13.0",
     "winston": "^0.7.3"
+  },
+  "scripts": {
+    "test":  "grunt test"
   }
 }

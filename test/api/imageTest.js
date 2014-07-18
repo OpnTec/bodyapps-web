@@ -4,7 +4,7 @@
  */
 
 /*
- * API tests of the bodyapps user backend service.
+ * API tests of the image for backend service.
  */
 
 var request = require('supertest');
@@ -21,7 +21,7 @@ var measurement;
 var user;
 var image;
 var data;
-var binary_data;
+var imageData;
 
 var user_id;
 
@@ -70,7 +70,7 @@ function createMeasurement(done) {
 function encodeImage(done) {
   fs.readFile(__dirname + '/bodyfront.png', function (err, data) {
     if (err) throw err;
-    binary_data = new Buffer(data).toString('binary');
+    imageData = new Buffer(data).toString('base64');
     done();
   });
 }
@@ -78,7 +78,7 @@ function encodeImage(done) {
 function insertImage(done) {
   Image.create(
     data = {
-      binary_data: binary_data
+      data: imageData
       }, function(err, _image) {
           image = _image;
           done(err);
@@ -106,7 +106,7 @@ before(function(done) {
   ], done);
 });
 
-// Reset database
+// // Reset database
 after (function(done) {
   async.series([ 
     removeUser, removeMeasurement
@@ -140,7 +140,7 @@ describe('Image API', function() {
 
       it('should reject a image w/o valid content', function(done) {
         var data = {
-          binary_data : 'this is not an image'
+          data : 'this is not an image'
         };
 
         api.post(url)
@@ -151,7 +151,7 @@ describe('Image API', function() {
 
       it('should reject a image w/o data', function(done) {
         var _data = _.clone(data);
-        delete(_data.binary_data);
+        delete(_data.data);
 
         api.post(url)
           .send(_data)
@@ -160,25 +160,25 @@ describe('Image API', function() {
       });
   });
 
-  describe('GET /users/:user_id/measurements/:measurement_id/image/:image_id', 
+  describe('GET /images/:image_id', 
     function() {
 
       it('should return a single image record', function(done) {
-        var url = '/users/' + user.id + '/measurements/' + measurement.m_id
-        + '/image/'+ image.id;
+        var url = '/images/'+ image.id;
         api.get(url)
           .expect(200)
           .expect('Content-type', /json/)
           .end(function(err, res) {
             if (err) return done(err);
-            assert.ok(res.body.data);
-            assert.equal(image.binary_data, res.body.data.binary_data);
+            assert.ok(res.body);
+            assert.equal(image.type, res.body.data.type);
+            assert.equal(image.data, res.body.data);
             done();
           });
       });
 
       it('should respond 404 if a image was not found', function(done) {
-        api.get('/users/abc123/measurements/xyz123/image/pqr123')
+        api.get('/images/pqr123')
           .expect('Content-type', /json/)
           .expect(404, done);
       });

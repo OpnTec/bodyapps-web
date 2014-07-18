@@ -14,21 +14,11 @@ var Measurement = require('../models/measurement');
 var validator = require('validator');
 var mimeMagic = require( 'node-ee-mime-magic' );
 var fs = require('fs');
+var errorResponse = require('./errorResponse');
 
-function errorResponse(message, status) {
-  var message = {
-    error: {
-      message: message,
-      status: status
-    }
-  };
-  return message;
-}
-
-function returnImageRec(doc, method)
-{
+function returnImageRec(doc, method) {
   var imageRecord;
-  if(method == "POST") {
+  if(method === 'POST') {
     imageRecord = {
       data :{
         id : doc.id,
@@ -41,7 +31,7 @@ function returnImageRec(doc, method)
       data :{
         id : doc.id,
         type: doc.type,
-        binary_data: doc.binary_data
+        data: doc.data
       }
     };
   }
@@ -73,16 +63,16 @@ module.exports = function(app) {
   app.post('/users/:user_id/measurements/:measurement_id/image/:side', 
     function (req, res, next) {
       var body = req.body;
-      var m_id = req.params.measurement_id;
+      var measurementId = req.params.measurement_id;
       var side = req.params.side;
-      var binary_data = body.binary_data;
+      var data = body.data;
 
-      if(validator.isNull(binary_data)) {
+      if(validator.isNull(data)) {
           return res.json(400, 
             errorResponse('invalid request,type or data is missing', '400'));
       }
 
-      var bitmap = new Buffer(binary_data, 'binary');
+      var bitmap = new Buffer(data, 'base64');
       var mime = mimeMagicCheck(bitmap);
 
       if(!mime.imageCheck) {
@@ -91,14 +81,13 @@ module.exports = function(app) {
       }
       var image = new Image();
       image.type = mime.mimeType;
-      image.binary_data = body.binary_data;
+      image.data = body.data;
       image.save(function(err) {
         if (err)  return next(err);
       });
 
-      Measurement.findOne({m_id:m_id}, function(err, doc) {
-        if(err)  next(err);
-        doc[side] = image._id;
+      Measurement.findOne({m_id:measurementId}, function(err, doc) {
+        if(err)  return next(err);
         doc.images.push({rel: side,idref:image._id});
         doc.save(function(err) {
           if(err)  return next(err);
@@ -108,19 +97,17 @@ module.exports = function(app) {
       });
   });
 
-  app.get('/users/:user_id/measurements/:measurement_id/image/:image_id', 
-    function(req, res, next) {
-      var body = req.body;
-      var m_id = req.params.measurement_id;
-      var image_id = req.params.image_id;
+  app.get('/images/:image_id', function(req, res, next) {
+    var body = req.body;
+    var image_id = req.params.image_id;
 
-      Image.findById(image_id, function(err, doc) {
-        if(doc) {
-          var imageRecord = returnImageRec(doc);
-          return res.json(200,imageRecord);
-        }
-        return res.json(404, errorResponse('image not found', '404'));
-      });
+    Image.findById(image_id, function(err, doc) {
+      if(doc) {
+        var imageRecord = returnImageRec(doc, req.method);
+        return res.send(200, doc);
+      }
+      return res.json(404, errorResponse('image not found', '404'));
+    });
   });
 
 }

@@ -4,7 +4,7 @@
  */
 
 /*
- * API tests of the bodyapps user backend service.
+ * API tests of the measurement for backend service.
  */
 
 var request = require('supertest');

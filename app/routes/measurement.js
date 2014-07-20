@@ -27,10 +27,10 @@ function mapMeasurement(req, doc) {
 
 module.exports = function(app) {
   app.get('/users/:user_id/measurements', function(req, res, next) { 
-    var user_id = req.params.user_id;
+    var userId = req.params.user_id;
 
-    Measurement.find({ user_id: user_id}, function(err, docs) {
-      if(err)  return next(err);
+    Measurement.find({ user_id: userId}, function(err, docs) {
+      if(err) return next(err);
       var measurementList = [];
       if(docs.length==0)  {
         return res.json({ data: measurementList});
@@ -44,10 +44,9 @@ module.exports = function(app) {
 
   app.get('/users/:user_id/measurements/:measurement_id', function(req, res) {
     var m_id = req.params.measurement_id;
-    var user_id = req.params.user_id;
 
     Measurement.findOne({ m_id: m_id}, function(err, doc) {
-      if(err)  return next(err);
+      if(err) return next(err);
       if(doc) {
         return res.json(mapMeasurement(req, doc));
       }
@@ -61,7 +60,6 @@ module.exports = function(app) {
     var personName = body.person.name;
     var personDob = body.person.dob;
     var personGender = body.person.gender;
-    var user_id = req.params.user_id;
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
@@ -69,7 +67,7 @@ module.exports = function(app) {
           errorResponse('Email not found', 400));
     }
     Measurement.create(body, function(err, doc) {
-      if(err)  return next(err);
+      if(err) return next(err);
       return res.json(201, mapMeasurement(req, doc));
     })
 

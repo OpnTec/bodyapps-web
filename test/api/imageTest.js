@@ -172,7 +172,7 @@ describe('Image API', function() {
             if (err) return done(err);
             assert.ok(res.body);
             assert.equal(image.type, res.body.data.type);
-            assert.equal(image.data, res.body.data);
+            assert.equal(image.data, res.body.data.data);
             done();
           });
       });

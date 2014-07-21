@@ -53,8 +53,8 @@ module.exports = function(app) {
       Measurement.findOne({m_id: measurementId}, function(err, measurement) {
         if(err) return next(err);
         if(validator.isNull(measurement)) {
-          return res.json(400, 
-            errorResponse('Measurement record not found', '400'));
+          return res.json(404, 
+            errorResponse('Measurement record not found', '404'));
         }
         var bitmap = new Buffer(data, 'base64');
 
@@ -86,7 +86,7 @@ module.exports = function(app) {
     Image.findById(image_id, function(err, doc) {
       if(err) return res.json(404, errorResponse('image not found', '404'));
       var imageRecord = returnImageRec(doc, req.method);
-      return res.json(200, doc);
+      return res.json(200, imageRecord);
     });
   });
 

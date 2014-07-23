@@ -12,8 +12,8 @@
 var mongoose = require('mongoose');
 
 module.exports = mongoose.model('User', {
-  name: String
-  ,dob: { type: Date}
-  ,age: Number
-  ,email: String
+  name: String,
+  dob: { type: Date},
+  age: Number,
+  email: String
 });

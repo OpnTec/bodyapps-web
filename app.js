@@ -51,6 +51,7 @@ require('./app/routes/passport')(app); //load routes and pass in 'app'
 
 require('./app/routes/user')(app);
 require('./app/routes/measurement')(app);
+require('./app/routes/image')(app);
 
 app.get('*', function(req, res, next) {
   var err = new Error();

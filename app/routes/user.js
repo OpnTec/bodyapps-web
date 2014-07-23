@@ -11,16 +11,7 @@
 
 var User = require('../models/user');
 var validator = require('validator');
-
-function errorResponse(message, status) {
-  var message = {
-    error: {
-      message: message,
-      status: status
-    }
-  };
-  return message;
-}
+var errorResponse = require('./errorResponse');
 
 function returnUserRec(doc)
 {

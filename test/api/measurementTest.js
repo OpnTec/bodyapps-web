@@ -140,7 +140,6 @@ describe('Measurement API', function() {
               });
             },
             function(callback) {
-              var readStream = fs.createReadStream(__dirname + '/sampleHdf.zip');
               var zip = new admzip(__dirname + '/sampleHdf.zip');
               zip.extractAllTo(__dirname + '/output', true);
               callback();

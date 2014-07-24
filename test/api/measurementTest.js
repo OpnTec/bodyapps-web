@@ -21,6 +21,7 @@ var admzip = require('adm-zip');
 var rimraf = require('rimraf');
 var measurement;
 var user;
+var userId;
 var data;
 
 function binaryZipParser(res, callback) {
@@ -42,7 +43,7 @@ function createUser(done) {
     email: 'willy.e.coyote@acme.org'
   } ,function(err, _user) {
       user = _user;
-      user_id = user.id;
+      userId = user.id;
       done(err);
   });
 }
@@ -70,7 +71,7 @@ function createMeasurement(done) {
       gender: 'male',
       dob: '12/10/1990'
       },
-      user_id : user_id
+      user_id : userId
     }, function(err,_measurement) {
         measurement = _measurement;
         done(err);

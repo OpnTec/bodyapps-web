@@ -17,7 +17,7 @@ var Measurement = require('../../app/models/measurement');
 var async = require('async');
 var fs = require('fs');
 var xml2js = require('xml2js');
-var AdmZip = require('adm-zip');
+var admzip = require('adm-zip');
 var rimraf = require('rimraf');
 var measurement;
 var user;
@@ -141,7 +141,7 @@ describe('Measurement API', function() {
             },
             function(callback) {
               var readStream = fs.createReadStream(__dirname + '/sampleHdf.zip');
-              var zip = new AdmZip(__dirname + '/sampleHdf.zip');
+              var zip = new admzip(__dirname + '/sampleHdf.zip');
               zip.extractAllTo(__dirname + '/output', true);
               callback();
             },
@@ -156,12 +156,11 @@ describe('Measurement API', function() {
               var parser = new xml2js.Parser();
               parser.parseString(fileData, function (err, result) {
                 if(err) return done(err);
+                var docInfo = result.hdf.document_info;
+                var bodyDefinition = result.hdf.body_definition;
 
-                var docInfo = result.hdf['document_info'];
-                var bodyDefinition = result.hdf['body_definition'];
-
-                assert.equal(docInfo[0]['author_name'][0], user.name);
-                assert.equal(docInfo[0]['author_email'][0], user.email);
+                assert.equal(docInfo[0].author_name[0], user.name);
+                assert.equal(docInfo[0].author_email[0], user.email);
                 assert.equal(bodyDefinition[0].personal[0].name[0],
                   measurement.person.name);
                 assert.equal(bodyDefinition[0].personal[0].sex[0],

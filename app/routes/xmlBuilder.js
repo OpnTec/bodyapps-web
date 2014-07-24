@@ -234,8 +234,7 @@ exports.returnXML = function (measurement, user, fileNameList) {
         .up()
     var images = documentInfo.ele('images');
     if(measurement.images.length!=0) {
-      for(var i = 0; i <= measurement.images.length; i++)
-      {
+      for(var i = 0; i <= measurement.images.length; i++) {
         var image = images.ele('image');
         image.att('rel', 'pictures/' + measurement.images[0].rel);
         image.att('href', fileNameList[0]);

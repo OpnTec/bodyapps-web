@@ -9,6 +9,8 @@
     "url": "git@github.com:fashiontec/bodyapps-service.git"
   },
   "dependencies": {
+    "adm-zip": "^0.4.4",
+    "archiver": "^0.10.1",
     "async": "^0.9.0",
     "body-parser": "^1.3.0",
     "config": "^0.4.36",
@@ -23,9 +25,11 @@
     "node-uuid": "^1.4.1",
     "passport": "^0.2.0",
     "passport-google-oauth": "^0.1.5",
+    "rimraf": "^2.2.8",
     "string": "^1.8.1",
     "validator": "^3.16.0",
-    "winston": "^0.7.3"
+    "xml2js": "^0.4.4",
+    "xmlbuilder": "^2.3.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",

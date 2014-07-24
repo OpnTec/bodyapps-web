@@ -134,7 +134,7 @@ describe('Measurement API', function() {
 
           async.series([
             function(callback) {
-              fs.writeFile(__dirname + '/sampleHdf.zip', res.body, function (err) {
+              fs.writeFile(__dirname + '/sampleHdf.zip', res.body, function(err) {
                 if (err) return done(err);
                 callback();
               });
@@ -153,7 +153,7 @@ describe('Measurement API', function() {
             },
             function(callback) {
               var parser = new xml2js.Parser();
-              parser.parseString(fileData, function (err, result) {
+              parser.parseString(fileData, function(err, result) {
                 if(err) return done(err);
                 var docInfo = result.hdf.document_info;
                 var bodyDefinition = result.hdf.body_definition;
@@ -173,13 +173,13 @@ describe('Measurement API', function() {
               });
             },
             function(callback) {
-              fs.unlink(__dirname + '/sampleHdf.zip', function (err) {
+              fs.unlink(__dirname + '/sampleHdf.zip', function(err) {
                 if(err) return done(err);
                 callback();
               });
             },
             function(callback) {
-              rimraf(__dirname + '/output', function (err) {
+              rimraf(__dirname + '/output', function(err) {
                 if(err) return done(err);
                 callback();
               });

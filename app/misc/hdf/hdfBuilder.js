@@ -11,7 +11,7 @@
 
 var builder = require('xmlbuilder');
 
-exports.returnXML = function (measurement, user, fileNameList) {
+exports.xmlString = function (measurement, user, fileNameList) {
   var doc = builder.create('hdf', {'version': '1.0', 'encoding': 'UTF-8'})
     .dtd('hdf.dtd')
     .up();
@@ -240,6 +240,6 @@ exports.returnXML = function (measurement, user, fileNameList) {
         image.att('href', fileNameList[0]);
       }
     }
-  var xmlString = doc.end({ pretty: true, indent: '  ', newline: '\n' });
-  return xmlString;
+  var xmlToString = doc.end({ pretty: true, indent: '  ', newline: '\n' });
+  return xmlToString;
 }

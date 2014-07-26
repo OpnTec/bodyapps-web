@@ -13,12 +13,9 @@
 
 var Measurement = require('../models/measurement');
 var User = require('../models/user');
-var Image = require('../models/image');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
-var xml = require('./xmlBuilder');
-var archiver = require('archiver');
-var async = require('async');
+var generateHdf = require('../misc/hdf/generateHdf')
 
 function mapMeasurement(req, doc) {
   var data = doc.toJSON();
@@ -50,72 +47,42 @@ module.exports = function(app) {
   app.get('/users/:user_id/measurements/:measurement_id', function(req, res, next) {
     var measurementId = req.params.measurement_id;
     var userId = req.params.user_id;
+    var accept = req.get('Accept');
 
-    if(req.get('Accept') === 'application/json') {
-      Measurement.findOne({ m_id: measurementId}, function(err, doc) {
-        if(err) return next(err);
-        if(doc) {
-          return res.json(mapMeasurement(req, doc));
-        }
-        return res.json(404,
-          errorResponse('Measurement record not found', 404));
-      })
-    }
-    else if (req.get('Accept') === 'application/vnd.valentina.hdf') {
-      var zip = archiver('zip');
-      res.set('Content-type', 'application/vnd.valentina.hdf');
+    switch(accept) {
 
-      zip.pipe(res);
-      var fileNameList = [];
-
-      User.findOne({ _id: userId}, function(err, user) {
-        if(err) return next(err);
-
-        if(validator.isNull(user))  return res.send(404,'user not found');
-        Measurement.findOne({ m_id: measurementId}, function(err, measurement) {
+      case 'application/json':
+        Measurement.findOne({ m_id: measurementId}, function(err, doc) {
           if(err) return next(err);
-          if(validator.isNull(measurement))  
-            return res.send(404,'measurement not found');
-
-          if(measurement.images.length!=0) {
-            async.each(measurement.images, function(image, callback) {
-              Image.findOne({ _id: image.idref}, function(err, doc) {
-                if(err) return next(err);
-                var fileName = 'pictures/'+ image.idref + '.' + image.type;
-                zip.append(doc.binary_data, {name: fileName});
-                fileNameList.push(fileName);
-                callback();
-              });
-            },
-              function(err) {
-                if(err) next(err);
-                var xmlDoc = xml.returnXML(measurement, user, fileNameList);
-   
-                zip.append(new Buffer(xmlDoc),
-                  { name:'hdf.xml' });
-                zip.finalize(function (err) {
-                  if (err) next(err);
-                  res.end();
-                });
-              }
-            )
+          if(doc) {
+            return res.json(mapMeasurement(req, doc));
           }
-
-          else {
-            var xmlDoc = xml.returnXML(measurement, user, fileNameList);
-
-            zip.append(new Buffer(xmlDoc),
-              { name:'hdf.xml' });
-            zip.finalize(function (err) {
-              if (err) next(err);
-              res.end();
-            });
-          }
+          return res.json(404,
+            errorResponse('Measurement record not found', 404));
         });
-      });
-    }
-    else {
-      return res.send(406, 'Not Acceptable Request');
+        break;
+
+      case 'application/vnd.valentina.hdf':
+        User.findOne({ _id: userId}, function(err, user) {
+          if(err) return next(err);
+
+          if(validator.isNull(user))  return res.send(404,'user not found');
+          Measurement.findOne({ m_id: measurementId}, function(err, measurement) {
+            if(err) return next(err);
+            if(validator.isNull(measurement))  
+              return res.send(404,'measurement not found');
+            generateHdf(user, measurement, function(err, hdf) {
+                if(err) return next(err);
+                res.set('Content-type', 'application/vnd.valentina.hdf');
+                hdf.pipe(res);
+            });          
+          });
+        });
+        break;
+
+      default:
+          return res.send(406, 'Not Acceptable Request');
+          break;
     }
   });
 

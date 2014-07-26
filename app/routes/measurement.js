@@ -15,7 +15,7 @@ var Measurement = require('../models/measurement');
 var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
-var generateHdf = require('../misc/hdf/generateHdf')
+var generateHdf = require('../misc/hdf/generateHdf');
 
 function mapMeasurement(req, doc) {
   var data = doc.toJSON();
@@ -44,46 +44,48 @@ module.exports = function(app) {
     })
   });
 
-  app.get('/users/:user_id/measurements/:measurement_id', function(req, res, next) {
-    var measurementId = req.params.measurement_id;
-    var userId = req.params.user_id;
-    var accept = req.get('Accept');
+  app.get('/users/:user_id/measurements/:measurement_id',
+    function(req, res, next) {
+      var measurementId = req.params.measurement_id;
+      var userId = req.params.user_id;
+      var accept = req.get('Accept');
 
-    switch(accept) {
+      switch(accept) {
 
-      case 'application/json':
-        Measurement.findOne({ m_id: measurementId}, function(err, doc) {
-          if(err) return next(err);
-          if(doc) {
-            return res.json(mapMeasurement(req, doc));
-          }
-          return res.json(404,
-            errorResponse('Measurement record not found', 404));
-        });
-        break;
-
-      case 'application/vnd.valentina.hdf':
-        User.findOne({ _id: userId}, function(err, user) {
-          if(err) return next(err);
-
-          if(validator.isNull(user))  return res.send(404,'user not found');
-          Measurement.findOne({ m_id: measurementId}, function(err, measurement) {
+        case 'application/json':
+          Measurement.findOne({ m_id: measurementId}, function(err, doc) {
             if(err) return next(err);
-            if(validator.isNull(measurement))  
-              return res.send(404,'measurement not found');
-            generateHdf(user, measurement, function(err, hdf) {
-                if(err) return next(err);
-                res.set('Content-type', 'application/vnd.valentina.hdf');
-                hdf.pipe(res);
-            });          
+            if(doc) {
+              return res.json(mapMeasurement(req, doc));
+            }
+            return res.json(404,
+              errorResponse('Measurement record not found', 404));
           });
-        });
-        break;
+          break;
 
-      default:
+        case 'application/vnd.valentina.hdf':
+          User.findOne({ _id: userId}, function(err, user) {
+            if(err) return next(err);
+
+            if(validator.isNull(user))  return res.send(404,'user not found');
+            Measurement.findOne({ m_id: measurementId},
+              function(err, measurement) {
+                if(err) return next(err);
+                if(validator.isNull(measurement))
+                  return res.send(404,'measurement not found');
+                generateHdf(user, measurement, function(err, hdf) {
+                  if(err) return next(err);
+                  res.set('Content-type', 'application/vnd.valentina.hdf');
+                  hdf.pipe(res);
+                });
+            });
+          });
+          break;
+
+        default:
           return res.send(406, 'Not Acceptable Request');
           break;
-    }
+      }
   });
 
   app.post('/users/:user_id/measurements', function(req, res, next) {

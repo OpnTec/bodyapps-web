@@ -15,14 +15,14 @@ var hdfBuilder = require('./hdfBuilder');
 var async = require('async');
 var archiver = require('archiver');
 
-module.exports = function generateHdf(user, measurement, callbackHdf) {
+module.exports = function generateHdf(user, measurement, callbackFunction) {
   var zip = archiver('zip');
   var fileNameList = [];
 
   if(measurement.images.length!=0) {
     async.each(measurement.images, function(image, callback) {
       Image.findOne({ _id: image.idref}, function(err, doc) {
-        if(err) callbackHdf(err);
+        if(err) callbackFunction(err);
         var fileName = 'pictures/'+ image.idref + '.' + image.type;
         zip.append(doc.binary_data, {name: fileName});
         fileNameList.push(fileName);
@@ -30,11 +30,11 @@ module.exports = function generateHdf(user, measurement, callbackHdf) {
       });
     },
       function(err) {
-        if(err) callbackHdf(err);
+        if(err) callbackFunction(err);
         var xmlDoc = hdfBuilder.xmlString(measurement, user, fileNameList);
 
         zip.append(new Buffer(xmlDoc), {name:'hdf.xml'});
-        callbackHdf(null, zip);
+        callbackFunction(null, zip);
         zip.finalize();
       }
     )
@@ -43,7 +43,7 @@ module.exports = function generateHdf(user, measurement, callbackHdf) {
     var xmlDoc = hdfBuilder.xmlString(measurement, user, fileNameList);
 
     zip.append(new Buffer(xmlDoc), {name:'hdf.xml'});
-    callbackHdf(null, zip);
+    callbackFunction(null, zip);
     zip.finalize();
   }
 }

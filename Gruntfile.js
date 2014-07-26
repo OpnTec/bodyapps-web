@@ -55,21 +55,14 @@ module.exports = function(grunt) {
           reporter: 'spec'
         },
         src: ['test/api/**/*.js']
-      },
-      test: {
-        options: {
-          reporter: 'spec'
-        },
-        src: ['test/api/**/*.js', 'test/unit/**/*.js']
       }
     }
 
   });
 
   grunt.registerTask('run', ['express:dev', 'watch']);
-  grunt.registerTask('test-unit', ['env:test', 'mochaTest:testUnit']);
-  grunt.registerTask('test-api', ['env:test', 'mochaTest:testApi']);
-  grunt.registerTask('test', ['env:test', 'mochaTest:test']);
+  grunt.registerTask('test', ['env:test', 'mochaTest:testUnit']);
+  grunt.registerTask('api-test', ['test', 'mochaTest:testApi']);
 
   grunt.registerTask('default', ['run']);
 };

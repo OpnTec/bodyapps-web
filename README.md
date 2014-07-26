@@ -1,7 +1,4 @@
-# bodyapps-service
-
-**Travis build state** : [![Build Status](https://travis-ci.org/fashiontec/bodyapps-service.svg?branch=master)](https://travis-ci.org/fashiontec/bodyapps-service)  
-**Travis CI link** : https://travis-ci.org/fashiontec/bodyapps-service
+[![Build Status](https://travis-ci.org/fashiontec/bodyapps-service.svg?branch=master)](https://travis-ci.org/fashiontec/bodyapps-service)
 
 Web service and web application components of #bodyapps project
 

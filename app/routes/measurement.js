@@ -50,8 +50,7 @@ module.exports = function(app) {
       if(doc) {
         return res.json(mapMeasurement(req, doc));
       }
-      return res.json(404,
-        errorResponse('Measurement record not found', 404));
+      return res.status(404).json(errorResponse('Measurement record not found', 404));
     })
   });
 
@@ -63,12 +62,11 @@ module.exports = function(app) {
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
-        return res.json(400,
-          errorResponse('Email not found', 400));
+        return res.status(400).json(errorResponse('Email not found', 400));
     }
     Measurement.create(body, function(err, doc) {
       if(err) return next(err);
-      return res.json(201, mapMeasurement(req, doc));
+      return res.status(201).json(mapMeasurement(req, doc));
     })
 
   });

@@ -144,11 +144,8 @@ describe('Image API', function() {
       });
 
       it('should reject a image w/o data', function(done) {
-        var url = '/users/'+ user.id + '/measurements/' + measurement.m_id 
-          + '/image/' + 'body_front';
         var _data = _.clone(data);
         delete(_data.data);
-
         api.post(url)
           .send(_data)
           .expect('Content-type', /json/)

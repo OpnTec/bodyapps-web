@@ -28,6 +28,7 @@
     "rimraf": "^2.2.8",
     "string": "^1.8.1",
     "validator": "^3.16.0",
+    "winston": "^0.7.3",
     "xml2js": "^0.4.4",
     "xmlbuilder": "^2.3.0"
   },

@@ -33,7 +33,7 @@ var winstonStream = {
     logger.info(message);
   }
 };
-app.use(morgan({stream:winstonStream}));
+app.use(morgan('combined', {stream:winstonStream}));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -31,20 +31,19 @@ module.exports = function(app) {
   app.post('/users', function (req, res, next) { 
     var body = req.body;
     var email = body.email;
-    if(validator.isNull(email)){
-      return res.json(400,
-        errorResponse('Email not found', 400));
+    if(validator.isNull(email)) {
+      return res.status(400).json(errorResponse('Email not found', 400));
     }
     User.findOne({ email: email}, function(err, user) {
       if(user) {
         var userRecord = returnUserRec(user);
-        return res.json(201,userRecord);
+        return res.status(201).json(userRecord);
       }
       User.create( body, function (err, doc) {
         if (err) return next(err);
         var userRecord = returnUserRec(doc);
-        return res.json(201,userRecord);
-        })
+        return res.status(201).json(userRecord);
+      })
     })
   });
 
@@ -53,10 +52,9 @@ module.exports = function(app) {
     User.findOne({_id: id}, function(err, doc) {
       if(doc) {
         var userRecord = returnUserRec(doc);
-        return res.json(200,userRecord);
+        return res.status(200).json(userRecord);
       }
-      return res.json(404,
-        errorResponse('User not found', 404));
+      return res.status(404).json(errorResponse('User not found', 404));
     })
   });
 }

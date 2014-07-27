@@ -23,6 +23,8 @@ var image;
 var data;
 var imageData;
 
+var url;
+
 var user_id;
 
 function createUser(done) {
@@ -62,27 +64,27 @@ function createMeasurement(done) {
     },
     user_id : user_id
   }, function(err,_measurement) {
-      measurement = _measurement;
-      done(err);
+    measurement = _measurement;
+    done(err);
   });
 }
 
-function encodeImage(done) {
+function encodeImage(callback) {
   fs.readFile(__dirname + '/bodyfront.png', function (err, data) {
-    if (err) throw err;
-    imageData = new Buffer(data).toString('base64');
-    done();
+    if (err) callback(err);
+    var imageData = new Buffer(data).toString('base64');
+    callback(null, imageData);
   });
 }
 
-function insertImage(done) {
-  Image.create(
-    data = {
-      data: imageData
-      }, function(err, _image) {
-          image = _image;
-          done(err);
-    });  
+function createImage(done) {
+  encodeImage(function(err, imageData) {
+    Image.create(data = {data: imageData}, function(err, img) {
+      if (err) return done(err);
+      image = img;
+      done(null, data);
+    });
+  });
 }
 
 function removeUser(done) {
@@ -93,44 +95,38 @@ function removeMeasurement(done) {
   Measurement.collection.remove(done);
 }
 
-  // Load fixture data
-before(function(done) {
-  async.series([
-    createUser, createMeasurement
-  ] ,done);
-});
-
-before(function(done) {
-  async.series([
-    encodeImage, insertImage
-  ], done);
-});
-
-// // Reset database
-after (function(done) {
-  async.series([ 
-    removeUser, removeMeasurement
-  ], done);
-});
-
-after (function(done) {
-  Image.collection.remove(done);
-});
-
 describe('Image API', function() {
   var api = request(app);
 
-  describe('POST /users/:user_id/measurements/:measurement_id/image/:side',
-    function() {
+  // Load fixture data
+  beforeEach(function(done) {
+    async.series([createUser, createMeasurement, createImage], function(err, res) {
+      if (err) return done();
+      data = res[2];
+      url = '/users/'+ user.id + '/measurements/' + measurement.m_id + '/image/body_front'; 
+      done();
+    });
+  });
+
+  // Reset database
+  afterEach(function(done) {
+    async.series([ 
+      function(cb) { Measurement.collection.remove(cb) }, 
+      function(cb) { User.collection.remove(cb) },
+      function(cb) { Image.collection.remove(cb) }
+    ], done);
+  });
+
+  describe('POST /users/:user_id/measurements/:measurement_id/image/:side', function() {
 
     it('should create a new image in measurement record', function(done) {
-      url = '/users/'+ user.id + '/measurements/' + measurement.m_id + '/image/' 
-      + 'body_front';
+      
       api.post(url)
         .send(data)
         .expect('Content-type', /json/)
         .expect(201)
         .end(function(err, res) {
+          if (err) return done(err);
           assert.ok(res.body.data);
           assert.ok(res.body.data.type);
           assert.ok(res.body.data.id);
@@ -139,12 +135,10 @@ describe('Image API', function() {
       });
 
       it('should reject a image w/o valid content', function(done) {
-        var data = {
-          data : 'this is not an image'
-        };
-
+        var _data = _.clone(data)
+        _data.data = 'this is not an image'
         api.post(url)
-          .send(data)
+          .send(_data)
           .expect('Content-type', /json/)
           .expect(400, done);
       });
@@ -152,7 +146,6 @@ describe('Image API', function() {
       it('should reject a image w/o data', function(done) {
         var _data = _.clone(data);
         delete(_data.data);
-
         api.post(url)
           .send(_data)
           .expect('Content-type', /json/)

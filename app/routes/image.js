@@ -46,22 +46,20 @@ module.exports = function(app) {
       var data = body.data;
 
       if(validator.isNull(data)) {
-          return res.json(400,
-            errorResponse('invalid request,type or data is missing', '400'));
+        return res.status(400).json(errorResponse('invalid request,type or data is missing', '400'));
       }
 
       Measurement.findOne({m_id: measurementId}, function(err, measurement) {
         if(err) return next(err);
         if(validator.isNull(measurement)) {
-          return res.json(404, 
-            errorResponse('Measurement record not found', '404'));
+          console.log('No such measurement');
+          return res.status(404).json(errorResponse('Measurement record not found', '404'));
         }
         var bitmap = new Buffer(data, 'base64');
 
         mimeMagic(bitmap, function(err, mimeType) {
           if (err || !mimeType) {
-            return res.json(400,
-              errorResponse('invalid image data', '400'));
+            return res.status(400).json(errorResponse('invalid image data', '400'));
           }
           var image = new Image();
 
@@ -73,7 +71,7 @@ module.exports = function(app) {
             measurement.images.push({rel: side, idref:image._id});
             measurement.save(function(err) {
               var imageRecord = returnImageRec(image, req.method);
-              return res.json(201, imageRecord);
+              return res.status(201).json(imageRecord);
             });
           });
         });
@@ -84,9 +82,9 @@ module.exports = function(app) {
     var image_id = req.params.image_id;
 
     Image.findById(image_id, function(err, doc) {
-      if(err) return res.json(404, errorResponse('image not found', '404'));
+      if(err) return res.status(404).json(errorResponse('image not found', '404'));
       var imageRecord = returnImageRec(doc, req.method);
-      return res.json(200, imageRecord);
+      return res.status(200).json(imageRecord);
     });
   });
 

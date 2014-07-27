@@ -58,8 +58,8 @@ module.exports = function(app) {
             if(doc) {
               return res.json(mapMeasurement(req, doc));
             }
-            return res.json(404,
-              errorResponse('Measurement record not found', 404));
+            return res.status(404)
+              .json(errorResponse('Measurement record not found', 404));
           });
           break;
 
@@ -67,12 +67,12 @@ module.exports = function(app) {
           User.findOne({ _id: userId}, function(err, user) {
             if(err) return next(err);
 
-            if(validator.isNull(user))  return res.send(404,'user not found');
+            if(validator.isNull(user))  return res.status(404).send('user not found');
             Measurement.findOne({ m_id: measurementId},
               function(err, measurement) {
                 if(err) return next(err);
                 if(validator.isNull(measurement))
-                  return res.send(404,'measurement not found');
+                  return res.status(404).send('measurement not found');
                 generateHdf(user, measurement, function(err, hdf) {
                   if(err) return next(err);
                   res.set('Content-type', 'application/vnd.valentina.hdf');
@@ -83,7 +83,7 @@ module.exports = function(app) {
           break;
 
         default:
-          return res.send(406, 'Not Acceptable Request');
+          return res.status(406).send('Not Acceptable Request');
           break;
       }
   });
@@ -96,7 +96,7 @@ module.exports = function(app) {
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
-        return res.json(400,
+        return res.status(400).json(
           errorResponse('person name, date of birth or gender is missing', 400));
     }
     Measurement.create(body, function(err, doc) {

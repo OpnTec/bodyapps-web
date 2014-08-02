@@ -12,8 +12,10 @@
  */
 
 var Measurement = require('../models/measurement');
+var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
+var generateHdf = require('../misc/hdf/generateHdf');
 
 function mapMeasurement(req, doc) {
   var data = doc.toJSON();
@@ -42,19 +44,51 @@ module.exports = function(app) {
     })
   });
 
-  app.get('/users/:user_id/measurements/:measurement_id', function(req, res) {
-    var m_id = req.params.measurement_id;
+  app.get('/users/:user_id/measurements/:measurement_id',
+    function(req, res, next) {
+      var measurementId = req.params.measurement_id;
+      var userId = req.params.user_id;
+      var accept = req.get('Accept');
 
-    Measurement.findOne({ m_id: m_id}, function(err, doc) {
-      if(err) return next(err);
-      if(doc) {
-        return res.json(mapMeasurement(req, doc));
+      switch(accept) {
+
+        case 'application/json':
+          Measurement.findOne({ m_id: measurementId}, function(err, doc) {
+            if(err) return next(err);
+            if(doc) {
+              return res.json(mapMeasurement(req, doc));
+            }
+            return res.status(404)
+              .json(errorResponse('Measurement record not found', 404));
+          });
+          break;
+
+        case 'application/vnd.valentina.hdf':
+          User.findOne({ _id: userId}, function(err, user) {
+            if(err) return next(err);
+
+            if(validator.isNull(user))  return res.status(404).send('user not found');
+            Measurement.findOne({ m_id: measurementId},
+              function(err, measurement) {
+                if(err) return next(err);
+                if(validator.isNull(measurement))
+                  return res.status(404).send('measurement not found');
+                generateHdf(user, measurement, function(err, hdf) {
+                  if(err) return next(err);
+                  res.set('Content-type', 'application/vnd.valentina.hdf');
+                  hdf.pipe(res);
+                });
+            });
+          });
+          break;
+
+        default:
+          return res.status(406).send('Not Acceptable Request');
+          break;
       }
-      return res.status(404).json(errorResponse('Measurement record not found', 404));
-    })
   });
 
-  app.post('/users/:user_id/measurements', function(req, res) {
+  app.post('/users/:user_id/measurements', function(req, res, next) {
     var body = req.body;
     var personName = body.person.name;
     var personDob = body.person.dob;
@@ -62,7 +96,8 @@ module.exports = function(app) {
 
     if(validator.isNull(personName) || validator.isNull(personDob) 
       || validator.isNull(personGender)) {
-        return res.status(400).json(errorResponse('Email not found', 400));
+        return res.status(400).json(
+          errorResponse('person name, date of birth or gender is missing', 400));
     }
     Measurement.create(body, function(err, doc) {
       if(err) return next(err);

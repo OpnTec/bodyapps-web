@@ -15,7 +15,11 @@ Web service and web application components of #bodyapps project
  * Unit tests: `grunt test`
  * API tests: `grunt api-test`
 
-# Coding Conventions
+# Contributing
+
+ * Pull requests welcome :)
+
+## Coding Conventions
 
  * Use 2 spaces for indenting your code.
  * Use UNIX-style newlines (`\n`), and a newline character as the last character of a file.

@@ -61,6 +61,7 @@ require('./app/routes/passport')(app);
 require('./app/routes/user')(app);
 require('./app/routes/measurement')(app);
 require('./app/routes/image')(app);
+require('./app/routes/message')(app);
 
 app.get('*', function(req, res, next) {
   var err = new Error();

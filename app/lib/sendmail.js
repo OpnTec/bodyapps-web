@@ -18,6 +18,6 @@ module.exports.sendmail = function(message, callback) {
   transport.sendMail(message, function(err, res) {
     if(err) callback(err);
     transport.close();
-    callback();
+    callback(null, res);
   });
 }

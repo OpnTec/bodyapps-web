@@ -18,7 +18,7 @@ var Measurement = require('../../app/models/measurement');
 var async = require('async');
 var measurement;
 var user;
-var data;
+var defaultData;
 var userId;
 var measurementId;
 

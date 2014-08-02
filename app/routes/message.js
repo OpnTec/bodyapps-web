@@ -85,7 +85,7 @@ module.exports = function(app) {
             +  measurementId + '.zip');
           hdf.pipe(fileOutput);
           var mailOptions = mailDetails(body, user.name);
-          nodemailer.sendmail(mailOptions, function(err) {
+          nodemailer.sendmail(mailOptions, function(err, sendMailResponse) {
             if(err) next(err);
             res.status(201).json(mailResponse(body));
             fs.unlink(__dirname + '/' + measurementId + '.zip', function (err) {

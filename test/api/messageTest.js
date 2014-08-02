@@ -101,10 +101,10 @@ describe('Message API', function() {
 
   var api = request(app);
 
-  describe('POST /messages', function() {
+  describe('POST /message', function() {
 
     it('should send an email', function(done) {
-      api.post('/messages')
+      api.post('/message')
         .send(defaultData)
         .expect('Content-type', /json/)
         .expect(201)
@@ -119,31 +119,31 @@ describe('Message API', function() {
 
     it('should not accept a missing recipient', function(done) {
       var data = _.omit(defaultData, 'recipient');
-      api.post('/messages')
+      api.post('/message')
         .send(data)
         .expect(400, done);
     });
 
     it('should not accept a missing user_id', function(done) {
       var data = _.omit(defaultData, 'user_id');
-      api.post('/messages')
+      api.post('/message')
         .send(data)
         .expect(400, done);
     });
 
     it('should not accept a missing measurement_id', function(done) {
       var data = _.omit(defaultData, 'measurement_id');
-      api.post('/messages')
+      api.post('/message')
         .send(data)
         .expect(400, done);
     });
 
-    it('should call the stubbed nodemailer transport', function(done) {
+    it('should call stubbed nodemailer transport', function(done) {
       assert.equal(true, stubTransport.sendmail.called);
       done();
     });
 
-    it('should pass the correct arguments to stubbed nodemailer transport',
+    it('should pass correct arguments to stubbed nodemailer transport',
       function(done) {
         assert.equal(defaultData.recipient,
           stubTransport.sendmail.args[0][0].to);

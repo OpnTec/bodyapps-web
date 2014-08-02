@@ -54,7 +54,7 @@ function mailDetails(body, userName) {
 }
 
 module.exports = function(app) {
-  app.post('/messages', function(req, res, next) {
+  app.post('/message', function(req, res, next) {
     var body = req.body;
     var userId = body.user_id;
     var measurementId = body.measurement_id;

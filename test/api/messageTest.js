@@ -19,8 +19,6 @@ var async = require('async');
 var measurement;
 var user;
 var defaultData;
-var userId;
-var measurementId;
 
 function createUser(done) {
   User.create({
@@ -66,8 +64,8 @@ function createMeasurement(done) {
 
 function createMessageData(done) {
   defaultData = {
-    user_id: userId,
-    measurement_id : measurementId,
+    user_id: user.id,
+    measurement_id : measurement.m_id,
     recipient : 'johndoe@acme.com',
     subject: 'hi',
     message:'Please find the attached file'

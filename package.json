@@ -23,6 +23,7 @@
     "morgan": "^1.1.1",
     "node-ee-mime-magic": "^0.1.1",
     "node-uuid": "^1.4.1",
+    "nodemailer": "^0.7.1",
     "passport": "^0.2.0",
     "passport-google-oauth": "^0.1.5",
     "rimraf": "^2.2.8",

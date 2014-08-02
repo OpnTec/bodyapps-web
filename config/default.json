@@ -10,6 +10,23 @@
     "level" : "debug"
   },
   "session" : {
-    "secret" : ""
+    "secret" : "65c1b73c-46b4-404a-a71c-761c6b940d84"
+  },
+  "transport" : {
+    "type" : "SMTP"
+  },
+  "transportOptions" : {
+    "service": "Gmail",
+    "secureConnection": "true",
+    "port": "465",
+
+    "auth": {
+      "XOAuth2" : {
+          "user": "vishvbrahmbhatt19@gmail.com",
+          "clientId": "227579141651-lj3pvgmfob1nc79vur7t5vv74hbujg8p.apps.googleusercontent.com",
+          "clientSecret": "amGvxhKqZaWCiuryV0UkptG4",
+          "refreshToken" : "1/NvE5x0A58IIFvnJMo_lO0kT0HWvcCJ99UIIdXr-F0TM"
+      }
+    }    
   }
 }

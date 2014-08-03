@@ -11,6 +11,9 @@
  * appropriate methods.
  */
 
+// Force config dir location relative to this file - makes deployment a lot more robust
+process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');

@@ -14,7 +14,6 @@ var User = require('../models/user');
 var Image = require('../models/image');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
-var fs = require('fs');
 var config = require('config');
 var nodemailer = require('../lib/sendmail');
 var generateHdf = require('../misc/hdf/generateHdf');
@@ -30,7 +29,7 @@ function mailResponse(body) {
   return mailInfo;
 }
 
-function mailDetails(body, userName) {
+function mailDetails(body, userName, hdfStream) {
 
   var recipient = body.recipient;
   var subject = body.subject;
@@ -46,7 +45,7 @@ function mailDetails(body, userName) {
     attachments: [
       {
         filename: 'hdf.zip',
-        filePath: __dirname + '/' + body.measurement_id + '.zip'
+        streamSource: hdfStream
       }
     ]
   };
@@ -81,16 +80,10 @@ module.exports = function(app) {
         }
         generateHdf(user, measurement, function(err, hdf) {
           if(err) return next(err);
-          var fileOutput = fs.createWriteStream(__dirname + '/'
-            +  measurementId + '.zip');
-          hdf.pipe(fileOutput);
-          var mailOptions = mailDetails(body, user.name);
+          var mailOptions = mailDetails(body, user.name, hdf);
           nodemailer.sendmail(mailOptions, function(err, sendMailResponse) {
             if(err) next(err);
             res.status(201).json(mailResponse(body));
-            fs.unlink(__dirname + '/' + measurementId + '.zip', function (err) {
-              if (err) next(err);
-            });
           });
         });
       });

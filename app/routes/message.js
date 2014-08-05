@@ -17,6 +17,8 @@ var errorResponse = require('./errorResponse');
 var config = require('config');
 var nodemailer = require('../lib/sendmail');
 var generateHdf = require('../misc/hdf/generateHdf');
+var config = require('config');
+var apiVersion = config.apiversion.uri;
 
 function mailResponse(body) {
   var mailInfo = {
@@ -53,7 +55,7 @@ function mailDetails(body, userName, hdfStream) {
 }
 
 module.exports = function(app) {
-  app.post('/message', function(req, res, next) {
+  app.post(apiVersion + '/message', function(req, res, next) {
     var body = req.body;
     var userId = body.user_id;
     var measurementId = body.measurement_id;

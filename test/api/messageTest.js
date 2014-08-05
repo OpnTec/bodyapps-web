@@ -16,6 +16,8 @@ var app = require('../../app');
 var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var async = require('async');
+var config = require('config');
+var apiVersion = config.apiversion.uri;
 var measurement;
 var user;
 var defaultData;
@@ -98,11 +100,12 @@ afterEach(function(done) {
 describe('Message API', function() {
 
   var api = request(app);
+  var url = apiVersion + '/message';
 
   describe('POST /message', function() {
 
     it('should send an email', function(done) {
-      api.post('/message')
+      api.post(url)
         .send(defaultData)
         .expect('Content-type', /json/)
         .expect(201)
@@ -117,21 +120,21 @@ describe('Message API', function() {
 
     it('should not accept a missing recipient', function(done) {
       var data = _.omit(defaultData, 'recipient');
-      api.post('/message')
+      api.post(url)
         .send(data)
         .expect(400, done);
     });
 
     it('should not accept a missing user_id', function(done) {
       var data = _.omit(defaultData, 'user_id');
-      api.post('/message')
+      api.post(url)
         .send(data)
         .expect(400, done);
     });
 
     it('should not accept a missing measurement_id', function(done) {
       var data = _.omit(defaultData, 'measurement_id');
-      api.post('/message')
+      api.post(url)
         .send(data)
         .expect(400, done);
     });

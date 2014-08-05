@@ -10,6 +10,21 @@ Web service and web application components of #bodyapps project
  * If you want to start server on specific port number such as 8020, run `PORT=8020 node server.js`
  * Or via grunt: `grunt run`
 
+## Configuration
+ 
+ * Create a new project in (Google Developer Console)[https://console.developers.google.com/]
+ * Generate OAuth Client ID 
+ * Create a file config/local.json containing the `client_id` and `client_secret` as below:
+
+```json
+{
+  "google_oauth" : {
+    "client_id": "yourClientIdHere",
+    "client_secret": "yourClientSecretHere"
+  }
+}
+```
+
 ## Test
 
  * Unit tests: `grunt test`

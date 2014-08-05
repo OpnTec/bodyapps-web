@@ -3,8 +3,8 @@
     "uri": "mongodb://localhost/bodyapps-service"
   },
   "google_oauth" : {
-    "client_id": "",
-    "client_secret": ""
+    "client_id": "_",
+    "client_secret": "_"
   },
   "logging" : {
     "level" : "debug"

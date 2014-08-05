@@ -17,6 +17,8 @@ var app = require('../../app.js');
 var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var Image = require('../../app/models/image');
+var config = require('config');
+var apiVersion = config.apiversion.uri;
 var measurement;
 var user;
 var image;
@@ -103,7 +105,7 @@ describe('Image API', function() {
     async.series([createUser, createMeasurement, createImage], function(err, res) {
       if (err) return done();
       data = res[2];
-      url = '/users/'+ user.id + '/measurements/' + measurement.m_id + '/image/body_front'; 
+      url = apiVersion + '/users/'+ user.id + '/measurements/' + measurement.m_id + '/image/body_front'; 
       done();
     });
   });
@@ -157,7 +159,7 @@ describe('Image API', function() {
     function() {
 
       it('should return a single image record', function(done) {
-        var url = '/images/'+ image.id;
+        var url = apiVersion + '/images/'+ image.id;
         api.get(url)
           .expect(200)
           .expect('Content-type', /json/)
@@ -171,7 +173,7 @@ describe('Image API', function() {
       });
 
       it('should respond 404 if a image was not found', function(done) {
-        api.get('/images/pqr123')
+        api.get(apiVersion + '/images/pqr123')
           .expect('Content-type', /json/)
           .expect(404, done);
       });

@@ -19,6 +19,8 @@ var fs = require('fs');
 var xml2js = require('xml2js');
 var admzip = require('adm-zip');
 var rimraf = require('rimraf');
+var config = require('config');
+var apiversion = config.apiversion.uri;
 var measurement;
 var user;
 var userId;
@@ -106,7 +108,7 @@ describe('Measurement API', function() {
   describe('GET /users/:user_id/measurements/:measurement_id', function() {
 
     it('should return a single measurement record', function(done) {
-      var url = '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = apiversion + '/users/' + user.id + '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/json')
         .expect(200)
@@ -123,7 +125,7 @@ describe('Measurement API', function() {
     });
 
     it('should return a Hdf record', function(done) {
-      var url = '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = apiversion + '/users/' + user.id + '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/vnd.valentina.hdf')
         .expect(200)
@@ -192,20 +194,20 @@ describe('Measurement API', function() {
     });
 
     it('should respond 404 if a measurement was not found', function(done) {
-      api.get('/users/abc123/measurements/xyz123')
+      api.get(apiversion + '/users/abc123/measurements/xyz123')
         .set('Accept', 'application/json')
         .expect('Content-type', /json/)
         .expect(404, done);
     });
 
     it('should respond 404 if Hdf record cannot be found', function(done) {
-      api.get('/users/abc123/measurements/xyz123')
+      api.get(apiversion + '/users/abc123/measurements/xyz123')
         .set('Accept', 'application/vnd.valentina.hdf')
         .expect(404, done);
     });
 
     it('should respond 406 if unknown mime is requested', function(done) {
-      var url = '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = apiversion + '/users/' + user.id + '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/unknown')
         .expect(406, done);
@@ -216,7 +218,7 @@ describe('Measurement API', function() {
   describe('GET /users/:user_id/measurements', function() {
 
     it('should return a list of measurement records', function(done) {
-      var url = '/users/' + user.id + '/measurements';
+      var url = apiversion + '/users/' + user.id + '/measurements';
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -238,7 +240,7 @@ describe('Measurement API', function() {
     });
 
     it('should respond empty list if records were not found', function(done) {
-      api.get('/users/abc123/measurements')
+      api.get(apiversion + '/users/abc123/measurements')
         .expect('Content-type', /json/)
         .expect(200)
         .end(function(err, res) {
@@ -253,7 +255,7 @@ describe('Measurement API', function() {
   describe('POST /users/measurements', function() {
 
   it('should create a new measurement record', function(done) {
-    var url = '/users/' + user.id + '/measurements';
+    var url = apiversion + '/users/' + user.id + '/measurements';
     api.post(url)
       .send(data)
       .expect('Content-type', /json/)
@@ -270,7 +272,7 @@ describe('Measurement API', function() {
     });
 
     it('should reject a measurement w/o name and dob and gender', function(done) {
-      var url = '/users/' + user.id + '/measurements';
+      var url = apiversion + '/users/' + user.id + '/measurements';
       var _data = _.clone(data);
       delete(_data.person.name);
       delete(_data.person.dob);

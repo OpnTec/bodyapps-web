@@ -19,9 +19,9 @@
     "type" : "SMTP"
   },
   "transportOptions" : {
-    "service": "Gmail",
-    "secureConnection": "true",
-    "port": "465",
+    "service": "",
+    "secureConnection": "",
+    "port": "",
 
     "auth": {
       "XOAuth2" : {

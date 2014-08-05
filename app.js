@@ -46,7 +46,8 @@ if (!config.session.secret) {
 }
 
 app.use(session({ secret: config.session.secret, saveUninitialized: true, 
-  resave: true, cookie:{maxAge:86400000} }));
+  resave: true, cookie:{maxAge:86400000}, 
+  store: require('mongoose-session')(mongoose) }));
 
 app.use(passport.initialize());
 app.use(passport.session());

@@ -81,9 +81,9 @@ module.exports = function(app) {
   });
 
   app.get(apiVersion +'/images/:image_id', function(req, res, next) {
-    var image_id = req.params.image_id;
+    var imageId = req.params.image_id;
 
-    Image.findById(image_id, function(err, doc) {
+    Image.findById(imageId, function(err, doc) {
       if(err) return res.status(404).json(errorResponse('image not found', '404'));
       var imageRecord = returnImageRec(doc, req.method);
       return res.status(200).json(imageRecord);

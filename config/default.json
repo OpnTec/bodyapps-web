@@ -1,7 +1,4 @@
 {
-  "apiversion" :  {
-    "uri":"/api/v1"
-  },
   "mongo": {
     "uri": "mongodb://localhost/bodyapps-service"
   },

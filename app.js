@@ -29,6 +29,7 @@ mongoose.connect(config.mongo.uri);
 
 // Configure express
 var app = express();
+app.API_VERSION = 'v1';
 var passport = require('./app/passport');
 
 var winstonStream = {

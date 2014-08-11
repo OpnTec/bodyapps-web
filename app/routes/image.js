@@ -15,7 +15,6 @@ var validator = require('validator');
 var mimeMagic = require( 'node-ee-mime-magic');
 var errorResponse = require('./errorResponse');
 var config = require('config');
-var apiVersion = config.apiversion.uri;
 
 function returnImageRec(doc, method) {
   var imageRecord;
@@ -40,7 +39,9 @@ function returnImageRec(doc, method) {
 }
 
 module.exports = function(app) {
-  app.post(apiVersion + '/users/:user_id/measurements/:measurement_id/image/:side', 
+var API_VERSION = app.API_VERSION;
+
+  app.post('/api/' + API_VERSION + '/users/:user_id/measurements/:measurement_id/image/:side', 
     function (req, res, next) {
       var body = req.body;
       var measurementId = req.params.measurement_id;
@@ -80,7 +81,7 @@ module.exports = function(app) {
       });
   });
 
-  app.get(apiVersion +'/images/:image_id', function(req, res, next) {
+  app.get('/api/' + API_VERSION +'/images/:image_id', function(req, res, next) {
     var imageId = req.params.image_id;
 
     Image.findById(imageId, function(err, doc) {

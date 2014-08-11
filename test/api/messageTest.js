@@ -17,7 +17,7 @@ var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var async = require('async');
 var config = require('config');
-var apiVersion = config.apiversion.uri;
+var API_VERSION = require('../../app').API_VERSION;
 var measurement;
 var user;
 var defaultData;
@@ -100,7 +100,7 @@ afterEach(function(done) {
 describe('Message API', function() {
 
   var api = request(app);
-  var url = apiVersion + '/message';
+  var url = '/api/' + API_VERSION + '/message';
 
   describe('POST /message', function() {
 

@@ -13,7 +13,6 @@ var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
 var config = require('config');
-var apiVersion = config.apiversion.uri;
 
 function returnUserRec(doc)
 {
@@ -30,7 +29,8 @@ function returnUserRec(doc)
 }
 
 module.exports = function(app) {
-  app.post(apiVersion + '/users', function (req, res, next) { 
+var API_VERSION = app.API_VERSION;
+  app.post('/api/' + API_VERSION + '/users', function (req, res, next) { 
     var body = req.body;
     var email = body.email;
     if(validator.isNull(email)) {
@@ -49,7 +49,7 @@ module.exports = function(app) {
     })
   });
 
-  app.get(apiVersion + '/users/:user_id', function (req, res, next) {
+  app.get('/api/' + API_VERSION + '/users/:user_id', function (req, res, next) {
     var id = req.params.user_id;
     User.findOne({_id: id}, function(err, doc) {
       if(doc) {

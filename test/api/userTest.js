@@ -14,7 +14,7 @@ var _ = require('lodash');
 var app = require('../../app.js');
 var User = require('../../app/models/user');
 var config = require('config');
-var apiVersion = config.apiversion.uri;
+var API_VERSION = require('../../app').API_VERSION;
 
 describe('User API', function() {
 
@@ -42,7 +42,7 @@ describe('User API', function() {
   describe('GET /:user_id', function() {
 
     it('should return a single user', function(done) {
-      var url = apiVersion + '/users/' + user.id;
+      var url = '/api/' + API_VERSION + '/users/' + user.id;
       api.get(url)
         .expect(200)
         .expect('Content-type', /json/)
@@ -56,7 +56,7 @@ describe('User API', function() {
     });
 
     it('should respond 404 if a user was not found', function(done) {
-      api.get(apiVersion + '/users/abc123')
+      api.get('/api/' + API_VERSION + '/users/abc123')
         .expect('Content-type', /json/)
         .expect(404, done);
     });
@@ -73,7 +73,7 @@ describe('User API', function() {
     };
 
     it('should create a new user', function(done) {
-      api.post(apiVersion + '/users')
+      api.post('/api/' + API_VERSION + '/users')
         .send(data)
         .expect('Content-type', /json/)
         .expect(201)
@@ -90,7 +90,7 @@ describe('User API', function() {
       var _data = _.clone(data);
       delete(_data.email);
 
-      api.post(apiVersion + '/users')
+      api.post('/api/' + API_VERSION + '/users')
         .send(_data)
         .expect('Content-type', /json/)
         .expect(400, done);

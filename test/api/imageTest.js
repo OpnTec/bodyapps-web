@@ -13,12 +13,12 @@ var _ = require('lodash');
 var async = require('async');
 var fs = require('fs');
 
-var app = require('../../app.js');
+var app = require('../../app');
 var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var Image = require('../../app/models/image');
 var config = require('config');
-var API_VERSION = require('../../app').API_VERSION;
+var API_VERSION = app.API_VERSION;
 var measurement;
 var user;
 var image;

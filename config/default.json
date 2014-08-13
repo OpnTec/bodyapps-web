@@ -11,5 +11,22 @@
   },
   "session" : {
     "secret" : ""
+  },
+  "transport" : {
+    "type" : "SMTP"
+  },
+  "transportOptions" : {
+    "service": "",
+    "secureConnection": "",
+    "port": "",
+
+    "auth": {
+      "XOAuth2" : {
+          "user": "",
+          "clientId": "",
+          "clientSecret": "",
+          "refreshToken" : ""
+      }
+    }
   }
 }

@@ -29,6 +29,7 @@ mongoose.connect(config.mongo.uri);
 
 // Configure express
 var app = express();
+app.API_VERSION = 'v1';
 var passport = require('./app/passport');
 
 var winstonStream = {
@@ -46,7 +47,8 @@ if (!config.session.secret) {
 }
 
 app.use(session({ secret: config.session.secret, saveUninitialized: true, 
-  resave: true, cookie:{maxAge:86400000} }));
+  resave: true, cookie:{maxAge:86400000}, 
+  store: require('mongoose-session')(mongoose) }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -61,6 +63,7 @@ require('./app/routes/passport')(app);
 require('./app/routes/user')(app);
 require('./app/routes/measurement')(app);
 require('./app/routes/image')(app);
+require('./app/routes/message')(app);
 
 app.get('*', function(req, res, next) {
   var err = new Error();

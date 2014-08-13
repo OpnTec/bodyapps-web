@@ -16,6 +16,7 @@ var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
 var generateHdf = require('../misc/hdf/generateHdf');
+var config = require('config');
 
 function mapMeasurement(req, doc) {
   var data = doc.toJSON();
@@ -28,7 +29,9 @@ function mapMeasurement(req, doc) {
 }
 
 module.exports = function(app) {
-  app.get('/users/:user_id/measurements', function(req, res, next) { 
+var API_VERSION = app.API_VERSION;
+
+  app.get('/api/' + API_VERSION + '/users/:user_id/measurements', function(req, res, next) { 
     var userId = req.params.user_id;
 
     Measurement.find({ user_id: userId}, function(err, docs) {
@@ -44,7 +47,7 @@ module.exports = function(app) {
     })
   });
 
-  app.get('/users/:user_id/measurements/:measurement_id',
+  app.get('/api/' + API_VERSION + '/users/:user_id/measurements/:measurement_id',
     function(req, res, next) {
       var measurementId = req.params.measurement_id;
       var userId = req.params.user_id;
@@ -88,7 +91,7 @@ module.exports = function(app) {
       }
   });
 
-  app.post('/users/:user_id/measurements', function(req, res, next) {
+  app.post('/api/' + API_VERSION + '/users/:user_id/measurements', function(req, res, next) {
     var body = req.body;
     var personName = body.person.name;
     var personDob = body.person.dob;

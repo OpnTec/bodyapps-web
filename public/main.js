@@ -60,7 +60,7 @@ var MeasurementListView = Backbone.View.extend({
   render:function(options) {
     var that = this;
     if(options.id){
-      var url = '/users/' + options.id + '/measurements';
+      var url = '/api/v1' + '/users/' + options.id + '/measurements';
       this.collection.url = url;
       this.collection.fetch({
         success:function(records, response){
@@ -109,7 +109,7 @@ var UserView = Backbone.View.extend({
   render : function(options){
     var that = this;
 
-    this.model.url = '/users/' + options.id;
+    this.model.url = '/api/v1' + '/users/' + options.id;
     this.model.fetch({
       success:function(user ,response){
         if(response==401) {

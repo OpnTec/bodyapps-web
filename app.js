@@ -20,8 +20,10 @@ var morgan = require('morgan');
 var config = require('config');
 var uuid = require('node-uuid');
 var logger = require('./logger');
+var methodOverride = require('method-override');
+var busboy = require('connect-busboy');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');  
+var cookieParser = require('cookie-parser');
 
 logger.debug('Connecting to ' + config.mongo.uri);
 mongoose.connect(config.mongo.uri);
@@ -38,8 +40,10 @@ var winstonStream = {
 app.use(morgan('combined', {stream:winstonStream}));
 
 app.use(cookieParser());
+app.use(busboy());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(methodOverride());
 
 // This should be written to config/runtime.json
 if (!config.session.secret) {

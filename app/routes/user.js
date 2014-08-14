@@ -12,7 +12,6 @@
 var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
-var config = require('config');
 
 function returnUserRec(doc)
 {
@@ -21,7 +20,6 @@ function returnUserRec(doc)
       name : doc.name,
       id : doc._id,
       dob : doc.dob,
-      age :doc.age,
       email : doc.email
     }
   };

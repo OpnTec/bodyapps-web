@@ -13,7 +13,6 @@ var _ = require('lodash');
 
 var app = require('../../app');
 var User = require('../../app/models/user');
-var config = require('config');
 var API_VERSION = app.API_VERSION;
 
 describe('User API', function() {
@@ -26,7 +25,6 @@ describe('User API', function() {
     User.create({
       name: 'Wile E. Coyote',
       dob: '09/17/1949',
-      age: '100',
       email: 'willy.e.coyote@acme.org'
     }, function(err, _user) {
       user = _user;
@@ -67,7 +65,6 @@ describe('User API', function() {
 
     var data = { 
       name: 'John Doe',
-      age: '22', 
       dob: '10/12/1990',
       email: 'john.doe@example.org'
     };

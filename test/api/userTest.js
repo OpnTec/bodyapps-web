@@ -13,7 +13,6 @@ var _ = require('lodash');
 
 var app = require('../../app');
 var User = require('../../app/models/user');
-var config = require('config');
 var API_VERSION = app.API_VERSION;
 
 describe('User API', function() {

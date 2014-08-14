@@ -16,7 +16,6 @@ var app = require('../../app');
 var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var async = require('async');
-var config = require('config');
 var API_VERSION = app.API_VERSION;
 var measurement;
 var user;

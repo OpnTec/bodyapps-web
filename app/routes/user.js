@@ -12,7 +12,6 @@
 var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
-var config = require('config');
 
 function returnUserRec(doc)
 {

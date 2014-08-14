@@ -11,6 +11,40 @@
 
 var builder = require('xmlbuilder');
 
+var ARM_TYPE = {
+  0: 'normal',
+  1: 'muscular_and_developed',
+  2: 'large_not_muscular'
+};
+
+var BACK_SHAPE = {
+  0: 'normal',
+  1: 'hunched',
+  2: 'erect',
+  3: 'slight_forward_stoop',
+  4: 'curved_upper_back'
+};
+
+var CHEST_TYPE = {
+  0: 'normal_flat_chest',
+  1: 'collapsed_chest',
+  2: 'muscular_and_developed',
+  3: 'slight_forward_stoop',
+  4: 'large_and_sagging'
+};
+
+var SHOULDER_TYPE = {
+  0: 'square_shoulders',
+  1: 'normal_shoulders',
+  2: 'sloping_shoulders'
+};
+
+var STOMACH_SHAPE = {
+  0: 'flat_stomach',
+  1: 'slight_stomach',
+  2: 'protruding_stomach'
+};
+
 exports.xmlString = function (measurement, user, fileNameList) {
   var doc = builder.create('hdf', {'version': '1.0', 'encoding': 'UTF-8'})
     .dtd('hdf.dtd')
@@ -215,6 +249,17 @@ exports.xmlString = function (measurement, user, fileNameList) {
           .ele('foot_across_top', measurement.foot_across_top)
             .up()
           .up()
+        .ele('body_structure')
+          .ele('arm_type', ARM_TYPE[measurement.arm_type])
+            .up()
+          .ele('back_shape', BACK_SHAPE[measurement.back_shape])
+            .up()
+          .ele('chest_type', CHEST_TYPE[measurement.chest_type])
+            .up()
+          .ele('shoulder_type', SHOULDER_TYPE[measurement.shoulder_type])
+            .up()
+          .ele('stomach_shape', STOMACH_SHAPE[measurement.stomach_shape])
+            .up()
         .up()
       .ele('colors')
         .ele('eye_color',measurement.person.eye_color)
@@ -234,10 +279,10 @@ exports.xmlString = function (measurement, user, fileNameList) {
         .up()
     var images = documentInfo.ele('images');
     if(measurement.images.length!=0) {
-      for(var i = 0; i <= measurement.images.length; i++) {
+      for(var i = 0; i < measurement.images.length; i++) {
         var image = images.ele('image');
-        image.att('rel', 'pictures/' + measurement.images[0].rel);
-        image.att('href', fileNameList[0]);
+        image.att('rel', 'pictures/' + measurement.images[i].rel);
+        image.att('href', fileNameList[i]);
       }
     }
   var xmlToString = doc.end({ pretty: true, indent: '  ', newline: '\n' });

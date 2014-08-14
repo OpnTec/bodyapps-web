@@ -14,5 +14,6 @@ var mongoose = require('mongoose');
 
 module.exports = mongoose.model('Image', {
   type: String, //jpg or png
-  data: String //base64 encoded string
+  extension: String,
+  data: Buffer //binary buffer
 });

@@ -23,8 +23,8 @@ module.exports = function generateHdf(user, measurement, callbackFunction) {
     async.each(measurement.images, function(image, callback) {
       Image.findOne({ _id: image.idref}, function(err, doc) {
         if(err) callbackFunction(err);
-        var fileName = 'pictures/'+ image.idref + '.' + image.type;
-        zip.append(doc.binary_data, {name: fileName});
+        var fileName = 'pictures/'+ image.idref + '.' + image.extension;
+        zip.append(doc.data, {name: fileName});
         fileNameList.push(fileName);
         callback();
       });

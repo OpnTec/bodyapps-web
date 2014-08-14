@@ -134,18 +134,31 @@ var WelcomeView = Backbone.View.extend({
   }
 });
 
+var BodyVizView = Backbone.View.extend({
+  el:'#containerBodyViz',
+
+  template: _.template($('#body-viz').html()),
+
+  render:function() {
+    this.$el.html(this.template);
+    return this;
+  }
+});
+
 var userModel = new UserModel();
 var measurements = new Measurements();
 var measurementListView = new MeasurementListView({collection:measurements});
 
 var userView = new UserView({model:userModel});
 var welcomeView = new WelcomeView();
+var bodyVizView = new BodyVizView();
 
 var Router = Backbone.Router.extend({
   routes: {
     '':'homepage',
     'user/:id' : 'userhome',
-    'user/measurements/:id' : 'user'
+    'user/measurements/:id' : 'user',
+    'bodyviz':'bodyViz'
   },
 
   homepage:function(id){
@@ -158,6 +171,10 @@ var Router = Backbone.Router.extend({
 
   user:function(id){
     measurementListView.render({id: id});
+  },
+
+  bodyViz:function() {
+    bodyVizView.render();
   }
 });
 

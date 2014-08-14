@@ -11,7 +11,7 @@ var request = require('supertest');
 var assert = require('assert');
 var _ = require('lodash');
 
-var app = require('../../app');
+var app = require('../../app.js');
 var User = require('../../app/models/user');
 var Measurement = require('../../app/models/measurement');
 var async = require('async');
@@ -19,12 +19,14 @@ var fs = require('fs');
 var xml2js = require('xml2js');
 var admzip = require('adm-zip');
 var rimraf = require('rimraf');
-var config = require('config');
+var moment = require('moment');
 var API_VERSION = app.API_VERSION;
 var measurement;
+var anotherMeasurement;
 var user;
 var userId;
 var data;
+var updatedData;
 
 function binaryZipParser(res, callback) {
   res.setEncoding('binary');
@@ -80,6 +82,38 @@ function createMeasurement(done) {
   });
 }
 
+function createAnotherMeasurement(done) {
+  Measurement.create(
+    updatedData = {
+      m_unit: 'cm',
+      m_timestamp: moment().subtract(2, 'days').format(),
+      mid_neck_girth : '10',
+      bust_girth :'10',
+      waist_girth : '10', 
+      hip_girth : '10',
+      across_back_shoulder_width : '10', 
+      shoulder_drop : '10',
+      shoulder_slope_degrees :'10', 
+      arm_length :'10',
+      wrist_girth : '10',
+      upper_arm_girth : '10', 
+      armscye_girth : '10',
+      height : '10',
+      hip_height :'10',
+      person : {
+      name: 'san', 
+      email:'san@hotmail.com',
+      gender: 'male',
+      dob: '12/10/1980'
+      },
+      user_id : userId,
+      deleted: true,
+    }, function(err,_measurement) {
+        anotherMeasurement = _measurement;
+        done(err);
+  });
+}
+
 function removeUser(done) {
   User.collection.remove(done);
 }
@@ -91,7 +125,7 @@ function removeMeasurement(done) {
   // Load fixture data
 beforeEach(function(done) {
   async.series([
-    createUser, createMeasurement
+    createUser, createMeasurement, createAnotherMeasurement
   ] ,done);
 });
 
@@ -108,7 +142,8 @@ describe('Measurement API', function() {
   describe('GET /users/:user_id/measurements/:measurement_id', function() {
 
     it('should return a single measurement record', function(done) {
-      var url = '/api/' + API_VERSION + '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/json')
         .expect(200)
@@ -125,7 +160,8 @@ describe('Measurement API', function() {
     });
 
     it('should return a Hdf record', function(done) {
-      var url = '/api/' + API_VERSION + '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/vnd.valentina.hdf')
         .expect(200)
@@ -207,7 +243,8 @@ describe('Measurement API', function() {
     });
 
     it('should respond 406 if unknown mime is requested', function(done) {
-      var url = '/api/' + API_VERSION + '/users/' + user.id + '/measurements/' + measurement.m_id;
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/' + measurement.m_id;
       api.get(url)
         .set('Accept', 'application/unknown')
         .expect(406, done);
@@ -224,17 +261,14 @@ describe('Measurement API', function() {
         .expect('Content-type', /json/)
         .end(function(err, res) {
           if (err) return done(err);
-          var length = res.body.length;
+          assert.ok(res.body[0].data);
 
-          for(var i=0; i<length; i++)
-          {
-            assert.ok(res.body[i].data);
-            assert.equal(measurement.m_id, res.body[i].data.m_id);
-            assert.equal(measurement.user_id, res.body[i].data.user_id);
-            assert.equal(measurement.person.name, res.body[i].data.person.name);
-            assert.equal(measurement.person.email, 
-              res.body[i].data.person.email);
-          }
+          assert.equal(measurement.m_id, res.body[0].data.m_id);
+          assert.equal(measurement.user_id, res.body[0].data.user_id);
+          assert.equal(measurement.person.name,
+            res.body[0].data.person.name);
+          assert.equal(measurement.person.email, 
+            res.body[0].data.person.email);
           done();
         });
     });
@@ -247,7 +281,79 @@ describe('Measurement API', function() {
           if (err) return done(err);
           assert.equal(0, res.body.data.length);
           done();
-        });        
+        });
+    });
+
+  });
+
+  describe('GET /users/:user_id/measurements/?modifiedAfter', function() {
+
+    it('should return a changed list of measurement records', function(done) {
+      var lastModifiedTime = moment().subtract(1, 'days')._d.getTime();
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/?modifiedAfter=' + lastModifiedTime;
+      api.get(url)
+        .expect(200)
+        .expect('Content-type', /json/)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.ok(res.body[0]);
+          assert.equal(measurement.m_id, res.body[0].data);
+          done();
+        });
+    });
+
+    it('should respond empty list if records were not found', function(done) {
+      api.get('/api/' + API_VERSION +
+        '/users/abc123/measurements?modifiedAfter=1406898760638')
+        .expect('Content-type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(0, res.body.data.length);
+          done();
+        });
+    });
+
+    it('should respond with an error if wrong query is passed', function(done) {
+      api.get('/api/' + API_VERSION + '/users/abc123/measurements?modifiedAfter=abc')
+        .expect('Content-type', /json/)
+        .expect(400, done);
+    });
+
+  });
+
+  describe('GET /users/:user_id/measurements/?personName', function() {
+
+    it('should return a list of measurement records', function(done) {
+      var url = '/api/' + API_VERSION + '/users/' + user.id + '/measurements/?personName=' +
+        measurement.person.name;
+      api.get(url)
+        .expect(200)
+        .expect('Content-type', /json/)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.ok(res.body[0].data);
+
+          assert.equal(measurement.m_id, res.body[0].data.m_id);
+          assert.equal(measurement.user_id, res.body[0].data.user_id);
+          assert.equal(measurement.person.name,
+            res.body[0].data.person.name);
+          assert.equal(measurement.person.email, 
+            res.body[0].data.person.email);
+          done();
+        });
+    });
+
+    it('should respond empty list if records were not found', function(done) {
+      api.get('/api/' + API_VERSION + '/users/abc123/measurements?personName=xyz')
+        .expect('Content-type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(0, res.body.data.length);
+          done();
+        });
     });
 
   });
@@ -282,6 +388,92 @@ describe('Measurement API', function() {
         .send(_data)
         .expect('Content-type', /json/)
         .expect(400, done);
-    })
+    });
+  });
+
+  describe('PUT /users/:user_id/measurements/:measurement_id', function() {
+
+    it('should update a measurement record', function(done) {
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/' + measurement.m_id;
+      var _updatedData = _.clone(updatedData);
+      _updatedData.deleted = false;
+      api.put(url)
+        .send(_updatedData)
+        .expect('Content-type', /json/)
+        .end(function(err, res) {
+          assert.ok(res.body.data);
+          assert.equal(measurement.m_id, res.body.data.m_id);
+          assert.equal(anotherMeasurement.user_id, res.body.data.user_id);
+          assert.equal(anotherMeasurement.person.name, res.body.data.person.name);
+          assert.equal(anotherMeasurement.person.email, res.body.data.person.email);
+          done();
+          });
+      });
+
+      it('should respond 405 if a measurement_id is tried to be updated',
+        function(done) {
+          var url = '/api/' + API_VERSION + '/users/' + user.id +
+            '/measurements/' + measurement.m_id;
+          var _updatedData = _.clone(updatedData);
+          _updatedData.m_id = anotherMeasurement.m_id;
+          _updatedData.deleted = false;
+          api.put(url)
+            .send(_updatedData)
+            .expect('Content-type', /json/)
+            .expect(405, done);
+      });
+
+      it('should respond 404 if a measurement was not found', function(done) {
+        api.put('/api/' + API_VERSION + '/users/abc123/measurements/xyz123')
+          .send(updatedData)
+          .expect('Content-type', /json/)
+          .expect(404, done);
+      });
+  });
+
+  describe('DELETE /users/:user_id/measurements/:measurement_id', function() {
+
+    it('should delete a measurement record', function(done) {
+      var url = '/api/' + API_VERSION + '/users/' + user.id +
+        '/measurements/' + measurement.m_id;
+      api.delete(url)
+        .expect('Content-type', /json/)
+        .expect(200, done);
+    });
+
+    it('should respond 404 if a measurement was not found', function(done) {
+      api.delete('/api/' + API_VERSION + '/users/abc123/measurements/xyz123')
+        .expect('Content-type', /json/)
+        .expect(404, done);
+    });
+
+  });
+
+  describe('GET /users/:user_id/deletedMeasurements', function() {
+
+    it('should return a list of deleted measurement records', function(done) {
+      var url = '/api/' + API_VERSION + '/users/' + user.id + '/deletedMeasurements';
+      api.get(url)
+        .expect(200)
+        .expect('Content-type', /json/)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.ok(res.body);
+          assert.equal(anotherMeasurement.m_id, res.body[0].data);
+          done();
+        });
+    });
+
+    it('should respond empty list if records were not found', function(done) {
+      api.get('/api/' + API_VERSION + '/users/abc123/deletedMeasurements')
+        .expect('Content-type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          assert.equal(0, res.body.data.length);
+          done();
+        });
+    });
   });
 })

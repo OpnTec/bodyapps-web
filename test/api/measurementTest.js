@@ -43,7 +43,6 @@ function createUser(done) {
   User.create({
     name: 'Wile E. Coyote',
     dob: '09/17/1949',
-    age: '100',
     email: 'willy.e.coyote@acme.org'
   } ,function(err, _user) {
       user = _user;

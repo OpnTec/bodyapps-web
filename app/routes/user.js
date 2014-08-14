@@ -20,7 +20,6 @@ function returnUserRec(doc)
       name : doc.name,
       id : doc._id,
       dob : doc.dob,
-      age :doc.age,
       email : doc.email
     }
   };

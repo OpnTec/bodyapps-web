@@ -17,11 +17,12 @@ var validator = require('validator');
 var errorResponse = require('./errorResponse');
 var generateHdf = require('../misc/hdf/generateHdf');
 var moment = require('moment');
+var API_VERSION;
 
 function mapMeasurement(req, doc) {
   var data = doc.toJSON();
   data.images =  doc.images.map(function(img) {
-    var path = '/images/' + img.idref;
+    var path = 'api/' + API_VERSION + '/images/' + img.idref;
     var href = req.protocol + '://' + req.headers.host + path;
     return {rel: img.rel, href: href};
   });
@@ -30,7 +31,7 @@ function mapMeasurement(req, doc) {
 
 module.exports = function(app) {
 
-  var API_VERSION = app.API_VERSION;
+  API_VERSION = app.API_VERSION;
 
   app.get('/api/' + API_VERSION + '/users/:user_id/measurements',
     function(req, res, next) {

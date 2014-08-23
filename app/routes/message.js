@@ -9,14 +9,17 @@
  * It handles the request of sending HDF file via email.
  */
 
-var Measurement = require('../models/measurement');
+var validator = require('validator');
+
 var User = require('../models/user');
 var Image = require('../models/image');
-var validator = require('validator');
+var Measurement = require('../models/measurement');
+
 var errorResponse = require('./errorResponse');
-var config = require('config');
 var nodemailer = require('../lib/sendmail');
 var generateHdf = require('../misc/hdf/generateHdf');
+
+var config = require('../../config');
 
 function mailResponse(body) {
   var mailInfo = {
@@ -36,8 +39,7 @@ function mailDetails(body, userName, hdfStream) {
   var message = body.message;
 
   var mailOptions = {
-    from: userName + ' via ' + '<'
-      + config.transportOptions.auth.XOAuth2.user + '>',
+    from: userName + ' via <' + config.messageOptions.from + '>',
     to: recipient,
     subject: subject,
     text: message,

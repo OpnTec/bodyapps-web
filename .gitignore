@@ -27,3 +27,4 @@ node_modules
 .idea
 config/runtime.json
 config/local.json
+.env.yml

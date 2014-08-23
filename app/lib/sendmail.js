@@ -9,9 +9,10 @@
  */
 
 var nodemailer = require('nodemailer');
-var config = require('config');
+var config = require('../../config');
 
-var transport = nodemailer.createTransport(config.transport.type,
+var transport = nodemailer.createTransport(
+  config.transport.type,
   config.transportOptions);
 
 module.exports.sendmail = function(message, callback) {

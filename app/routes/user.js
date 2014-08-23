@@ -13,8 +13,7 @@ var User = require('../models/user');
 var validator = require('validator');
 var errorResponse = require('./errorResponse');
 
-function returnUserRec(doc)
-{
+function returnUserRec(doc) {
   var userRecord = {
     data :{
       name : doc.name,

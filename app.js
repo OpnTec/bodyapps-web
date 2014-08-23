@@ -13,17 +13,19 @@
 // Force config dir location relative to this file - makes deployment a lot more robust
 process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
+var config = require('./config');
+
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var config = require('config');
 var uuid = require('node-uuid');
-var logger = require('./logger');
 var methodOverride = require('method-override');
 var busboy = require('connect-busboy');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+
+var logger = require('./logger');
 
 logger.debug('Connecting to ' + config.mongo.uri);
 mongoose.connect(config.mongo.uri);

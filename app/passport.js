@@ -10,9 +10,10 @@
  */
 
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var User = require('./models/user');
 var passport = require('passport');
-var config = require('config');
+
+var User = require('./models/user');
+var config = require('../config');
 
 // It's not necessary to export 'authCheck' from passport's perspective, but it makes it easier to
 // test
@@ -53,7 +54,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: config.google_oauth.client_id,
     clientSecret: config.google_oauth.client_secret,
-    callbackURL: "/auth/google/callback"
+    callbackURL: '/auth/google/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {

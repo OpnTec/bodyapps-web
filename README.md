@@ -34,7 +34,7 @@ GOOGLE_CLIENT_SECRET: '{google_client_secret}'
 
 ### Obtaining Google OAuth client credentials
  
- * Create a new project in (Google Developer Console)[https://console.developers.google.com/]
+ * Create a new project in [Google Developer Console](https://console.developers.google.com/)
  * Go to APIs & auth > Credentials > Create new Client ID
  * Application type: "Web application",
  * Authorized javascript origins: "http://localhost:3000" (when running locally)

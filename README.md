@@ -4,31 +4,41 @@ Web service and web application components of #bodyapps project
 
 ## Setup
 
- * Install Node.js, MongoDB on machine. 
- * Then run `npm install` in this directory and all the dependencies will be automatically downloaded.
- * Execute `node server.js` and 
- * If you want to start server on specific port number such as 8020, run `PORT=8020 node server.js`
- * Or via grunt: `grunt run`
+### Preconditions
 
-## Configuration
- 
- * Create a new project in (Google Developer Console)[https://console.developers.google.com/]
- * Generate OAuth Client ID 
- * Create a file config/local.json containing the `client_id` and `client_secret` as below:
+ * Install Node.js, MongoDB on machine.
+ * Then run `npm install` in project directory to install dependencies
 
-```json
-{
-  "google_oauth" : {
-    "client_id": "yourClientIdHere",
-    "client_secret": "yourClientSecretHere"
-  }
-}
+### Running the Server
+
+ * You will need a Google Account and create Google OAuth client credentials (see below)
+ * Create a file `.env.yaml` in your project directory 
+ * Enter your local config as shown below
+ * After this you can run `grunt s` to start the server
+
+```yaml
+MONGO_URI: 'mongodb://localhost/bodyapps-service-dev' 
+SMTP_USER: '{my_gmail_user}'
+SMTP_PASS: '{my_gmail_password}'
+GOOGLE_CLIENT_ID: '{google_client_id}'
+GOOGLE_CLIENT_SECRET: '{google_client_secret}'
 ```
 
-## Test
+ * To run from CLI directly, use your OSes native mechanism to define environment variables
 
- * Unit tests: `grunt test`
- * API tests: `grunt api-test`
+### Tests
+
+ * Tests should work out-of the box, can be run via grunt (recommended) or mocha-CLI
+ * Via grunt, simply execute `grunt api-test` from inside the project dir
+ * Via Mocha, execute `mocha test/my-test-case`, or use any documented [mocha options](http://visionmedia.github.io/mocha/#usage)
+
+### Obtaining Google OAuth client credentials
+ 
+ * Create a new project in (Google Developer Console)[https://console.developers.google.com/]
+ * Go to APIs & auth > Credentials > Create new Client ID
+ * Application type: "Web application",
+ * Authorized javascript origins: "http://localhost:3000" (when running locally)
+ * Authorized redirect URI: "http://localhost:3000/auth/google/callback" (when running locally)
 
 # Contributing
 
@@ -38,7 +48,7 @@ Web service and web application components of #bodyapps project
 
  * Use 2 spaces for indenting your code.
  * Use UNIX-style newlines (`\n`), and a newline character as the last character of a file.
- * Limit your lines to 80 characters.
+ * Limit your lines to 100 characters.
  * Use single quotes, unless you are writing JSON.
 
 Opening braces go on the same line as the statement:

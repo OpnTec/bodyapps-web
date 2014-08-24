@@ -8,7 +8,7 @@
  */
 
 var winston = require('winston');
-var config = require('config');
+var config = require('./config');
 
 var logger = new (winston.Logger)({
   transports: [

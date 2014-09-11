@@ -9,73 +9,76 @@
 <head>
     <meta charset"utf-8">
     <title>Body Apps Service</title>
-    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css">
+    <link rel="stylesheet" src="public/lib/css/webapp.css">
+    
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="bodyapps-viz/css/style.css">
 </head>
 <body>
+  <div class="navigation-bar">
+  </div>
   <div id="containerBodyViz">
   </div>
   <div class="container">
   </div>
 
+  <!-- Template for navigation bar view -->
+<script type="text/template" id="navigation">
+    <nav role="navigation" class="navbar navbar-default">
+        <div class="navbar-header">
+            <a href="#user/<%=user_id%>" class="navbar-brand">BodyApps</a>
+        </div>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#user/<%=user_id%>">Home</a></li>
+                <li><a href="#user/<%=user_id%>/create_measurement/personalInfo">Create Measurement</a></li>
+                <li><a href="#user/measurements/<%=user_id%>">Measurement List</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</script>
+
   <!-- Template for MeasurmentList view -->
   <script type="text/template" id="measurement-list">
+    <%if(measurements[0].m_id==undefined) {%>
+      <h2> Your measurement list is empty, please create a new measurement first.</h2>
+    <% } else {%>
     <h1>List of Measurements</h1>
-    <a href="/logout" class="btn btn-large"><i class="icon-white icon-heart">
-    </i>Logout</a>
     <hr />
-      <table class="table striped">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th> Name </th>
-            <th> Email:ID </th>
+            <th> Email </th>
             <th> Gender </th>
             <th> Date of Birth </th>
-            <th> MUnit </th>
-            <th> MidNeckGirth</th>
-            <th> BustGirth </th>
-            <th> WaistGirth </th>
-            <th> AcrossBackShoulderWidth </th>
-            <th> ShoulderDrop </th>
-            <th> ArmLength </th>
-            <th> WristGirth </th>
-            <th> UpperArmGirth </th>
-            <th> ArmscyeGirth </th>
-            <th> Height </th>
-            <th> HipHeight </th>
         </tr>
       </thead>
       <tbody>
         <% _.each(measurements, function(measurement) { %>
           <tr>
-            <td><%= measurement.data.person.name %></td>
-            <td><%= measurement.data.person.email %></td>
-            <td><%= measurement.data.person.gender %></td>
-            <td><%= measurement.data.person.dob %></td>
-            <td><%= measurement.data.m_unit%></td>
-            <td><%= measurement.data.mid_neck_girth%></td>
-            <td><%= measurement.data.waist_girth%></td>
-            <td><%= measurement.data.across_back_shoulder_width%></td>
-            <td><%= measurement.data.shoulder_drop%></td>
-            <td><%= measurement.data.shoulder_slope_degrees%></td>
-            <td><%= measurement.data.arm_length%></td>
-            <td><%= measurement.data.wrist_girth%></td>
-            <td><%= measurement.data.upper_arm_girth%></td>
-            <td><%= measurement.data.armscye_girth%></td>
-            <td><%= measurement.data.height%></td>
-            <td><%= measurement.data.hip_height%></td>
+            <td><%= measurement.person.name %></td>
+            <td><%= measurement.person.email %></td>
+            <td><%= measurement.person.gender %></td>
+            <td><%= moment(measurement.person.dob).format('L') %></td>
+            <td><a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.
+              m_id%>/personalInfo" class="btn btn-primary btn-large"> Edit</a>
+            <td><a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.
+              m_id%>" class="btn btn-primary btn-large"> Details</a>
           </tr>
       </tbody>
       <% }); %>
     </table>
+    <%}%>
   </script>
 
   <!-- Template for User's Home view -->
   <script type="text/template" id="user-name">
     <h1>Welcome <%=data.name%></h1>
-    <a href="#user/measurements/<%=data.id%>" class="btn btn-primary btn-large"><i class="measurement"></i> Measurement List</a>
-    <a href="/logout" class="btn btn-large"><i class="icon-white icon-heart"></i>Logout</a>
   </script>
 
   <!-- Template for Web Services Home view -->
@@ -83,6 +86,624 @@
     <h1> Welcome to body apps </h1>
     <a href="/auth/google" class="btn btn-danger"><span class="google-plus">
     </span> Google Sign in</a>
+  </script>
+
+    <!-- Template for Web Services Measurement Home view -->
+  <script type="text/template" id="measurement-home">
+    <h3> Click on body part to view or edit it </h1>
+      <table>
+      <tr>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/headInfo">
+          <img src="pics/head.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/neckInfo">
+          <img src="pics/neck.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/shoulderInfo">
+          <img src="pics/shoulders.png" width="62" height="62"></a></td>
+      </tr>
+      <tr>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/chestInfo">
+          <img src="pics/chest.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/armInfo">
+          <img src="pics/arm.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/handInfo">
+          <img src="pics/hand.png" width="62" height="62"></a></td>
+      </tr>
+      <tr>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/hipNwaistInfo">
+          <img src="pics/hip_waist.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/legInfo">
+          <img src="pics/leg.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/footInfo">
+          <img src="pics/foot.png" width="62" height="62"></a></td>
+      </tr>
+      <tr>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/trunkInfo">
+          <img src="pics/trunk.png" width="62" height="62"></a></td>
+        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/heightsInfo">
+          <img src="pics/heights.png" width="62" height="62"></a></td>
+      </tr>
+      </table>
+  </script>
+
+    <!-- Template for Web Services Create Measurement view -->
+  <script type="text/template" id="create-measurement">
+    <h3> Enter the personal info </h3>
+      <form id ="measurements">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Unit:</span>
+            <input type ="text" class="form-control" name = "m_unit" 
+              placeholder="cm" <%if(measurement) { %><%if(measurement.m_unit!=undefined) {%>
+              value="<%=measurement.m_unit%>" <%}%>  <%}%> />
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> PersonName:</span>
+            <input type ="text" class="form-control" name = "person[name]" 
+              placeholder="John Doe" <%if(measurement) { %> <%if(measurement.person.name!=
+              undefined) {%> value="<%=measurement.person.name%>"<% }%>  <% } %> />
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> PersonEmail:</span>
+            <input type ="email" class="form-control" name = "person[email]" 
+              placeholder="johndoe@email.com" required <%if(measurement) { %><%if(
+              measurement.person.email!=undefined) {%> value="<%=measurement.person.email%>"
+              <% }%>  <% } %> />
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> PersonDob:</span>
+            <input type ="text" class="form-control" name = "person[dob]" 
+              placeholder="10/10/1990" <%if(measurement) { %><%if(measurement.person.dob!=
+              undefined) {%> value="<%=moment(measurement.person.dob).format('L')%>"<% }%>  <%
+              } %> />
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> PersonGender:</span>
+             <select class="form-control" name="person[gender]" required>
+                <option value="male"> male </option>
+                <option value="female"> female </option>
+             </select>
+          </div>
+        </div>
+      </div>
+    <% if(user_id) { %>
+      <input type="hidden" name="user_id" value="<%= user_id %>" />
+    <% }; %>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"><%if(measurement) { %>
+      Save & Continue <% } else { %> Create <% }%> </button>
+  </form>
+  </script>
+
+    <!-- Template for Web Services Edit Measurement view for head details -->
+  <script type="text/template" id="edit-measurement-headInfo">
+    <h3> Edit the head measurement </h3>
+    <form id ="headInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Head Girth:</span>
+            <input type ="number" class="form-control" name = "head_girth"
+              placeholder="10" value="<%=measurement.head_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Head And Neck Length:</span>
+            <input type ="number" class="form-control" name = "head_and_neck_length" 
+              placeholder="10" value="<%=measurement.head_and_neck_length%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+    <!-- Template for Web Services Edit Measurement view for neck details -->
+  <script type="text/template" id="edit-measurement-neckInfo">
+    <h3> Edit the neck measurement </h3>
+    <form id ="neckInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Mid Neck Girth:</span>
+            <input type ="number" class="form-control" name = "mid_neck_girth" 
+              placeholder="10" value="<%=measurement.mid_neck_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Neck Base Girth:</span>
+            <input type ="number" class="form-control" name = "neck_base_girth" 
+              placeholder="10" value="<%=measurement.neck_base_girth%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+   <!-- Template for Web Services Edit Measurement view for shoulder details -->
+  <script type="text/template" id="edit-measurement-shoulderInfo">
+    <h3> Edit the shoulder measurement </h3>
+    <form id ="shoulderInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder Girth:</span>
+            <input type ="number" class="form-control" name = "shoulder_girth"
+              placeholder="10" value="<%=measurement.shoulder_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder Length:</span>
+            <input type ="number" class="form-control" name = "shoulder_length" 
+              placeholder="10" value="<%=measurement.shoulder_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder And Arm Length:</span>
+            <input type ="number" class="form-control" name = "shoulder_and_arm_length"
+              placeholder="10" value="<%=measurement.shoulder_and_arm_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Across Front Shoulder Width:</span>
+            <input type ="number" class="form-control" name ="across_front_shoulder_width"
+              placeholder="10" value="<%=measurement.across_front_shoulder_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Across Back Shoulder Width:</span>
+            <input type ="number" class="form-control" name = "
+              across_back_shoulder_width" placeholder="10" value="<%=measurement.
+              across_back_shoulder_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder Width:</span>
+            <input type ="number" class="form-control" name = "shoulder_width" placeholder="10" value="<%=measurement.shoulder_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder Slope Degree:</span>
+            <input type ="number" class="form-control" name = "shoulder_slope_degree" 
+              placeholder="10" value="<%=measurement.shoulder_slope_degree%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder Drop:</span>
+            <input type ="number" class="form-control" name = "shoulder_drop" 
+              placeholder="10" value="<%=measurement.shoulder_drop%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+   <!-- Template for Web Services Edit Measurement view for chest details -->
+  <script type="text/template" id="edit-measurement-chestInfo">
+    <h3> Edit the chest measurement </h3>
+    <form id ="chestInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Upper Chest Girth:</span>
+            <input type ="number" class="form-control" name = "upper_chest_girth"
+              placeholder="10" value="<%=measurement.upper_chest_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Bust Girth:</span>
+            <input type ="number" class="form-control" name = "bust_girth" 
+              placeholder="10" value="<%=measurement.bust_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Under Bust Girth:</span>
+            <input type ="number" class="form-control" name = "under_bust_girth"
+              placeholder="10" value="<%=measurement.under_bust_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Upper Front Chest Width:</span>
+            <input type ="number" class="form-control" name = "upper_front_chest_width"
+              placeholder="10" value="<%=measurement.upper_front_chest_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Front Chest Width:</span>
+            <input type ="number" class="form-control" name = "front_chest_width"
+              placeholder="10" value="<%=measurement.front_chest_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Bustpoint To Bustpoint:</span>
+            <input type ="number" class="form-control" name = "bustpoint_to_bustpoint" 
+              placeholder="10" value="<%=measurement.bustpoint_to_bustpoint%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Halter Bustpoint To Bustpoint:</span>
+            <input type ="number" class="form-control" name = "halter_bustpoint_to_bustpoint" 
+              placeholder="10" value="<%=measurement.halter_bustpoint_to_bustpoint%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Neck To Bustpoint:</span>
+            <input type ="number" class="form-control" name = "neck_to_bustpoint" 
+              placeholder="10" value="<%=measurement.neck_to_bustpoint%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+  <!-- Template for Web Services Edit Measurement view for arm details -->
+  <script type="text/template" id="edit-measurement-armInfo">
+    <h3> Edit the arm measurement </h3>
+    <form id ="armInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Armscye Girth:</span>
+            <input type ="number" class="form-control" name = "armscye_girth"
+              placeholder="10" value="<%=measurement.armscye_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Elbow Girth:</span>
+            <input type ="number" class="form-control" name = "elbow_girth" 
+              placeholder="10" value="<%=measurement.elbow_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Upper Arm Girth:</span>
+            <input type ="number" class="form-control" name = "upper_arm_girth"
+              placeholder="10" value="<%=measurement.upper_arm_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Wrist Girth:</span>
+            <input type ="number" class="form-control" name = "wrist_girth"
+              placeholder="10" value="<%=measurement.wrist_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Underarm Length:</span>
+            <input type ="number" class="form-control" name = "underarm_length"
+              placeholder="10" value="<%=measurement.underarm_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Cervical To Wrist Length:</span>
+            <input type ="number" class="form-control" name = "cervical_to_wrist_length
+              "placeholder="10" value="<%=measurement.cervical_to_wrist_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Shoulder To Elbow Length:</span>
+            <input type ="number" class="form-control" name = "shoulder_to_elbow_length
+              "placeholder="10" value="<%=measurement.shoulder_to_elbow_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Arm Length:</span>
+            <input type ="number" class="form-control" name = "arm_length" 
+              placeholder="10" value="<%=measurement.arm_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Scye depth:</span>
+            <input type ="number" class="form-control" name = "scye_depth" 
+              placeholder="10" value="<%=measurement.scye_depth%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+  <!-- Template for Web Services Edit Measurement view for hand details -->
+  <script type="text/template" id="edit-measurement-handInfo">
+    <h3> Edit the hand measurement </h3>
+    <form id ="handInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Hand Girth:</span>
+            <input type ="number" class="form-control" name = "hand_girth"
+              placeholder="10" value="<%=measurement.hand_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Hand Length:</span>
+            <input type ="number" class="form-control" name = "hand_length" 
+              placeholder="10" value="<%=measurement.hand_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Hand Width:</span>
+            <input type ="number" class="form-control" name = "hand_width"
+              placeholder="10" value="<%=measurement.hand_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Thumb Length:</span>
+            <input type ="number" class="form-control" name = "thumb_length"
+              placeholder="10" value="<%=measurement.thumb_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Underarm Length:</span>
+            <input type ="number" class="form-control" name = "underarm_length"
+              placeholder="10" value="<%=measurement.underarm_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Index Finger Length:</span>
+            <input type ="number" class="form-control" name = "index_finger_length"
+              placeholder="10" value="<%=measurement.index_finger_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Middle Finger Length:</span>
+            <input type ="number" class="form-control" name = "middle_finger_length" 
+              placeholder="10" value="<%=measurement.middle_finger_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Ring Finger Length:</span>
+            <input type ="number" class="form-control" name = "ring_finger_length" 
+              placeholder="10" value="<%=measurement.ring_finger_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Little Finger Length:</span>
+            <input type ="number" class="form-control" name = "little_finger_length" 
+              placeholder="10" value="<%=measurement.little_finger_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Thumb Width:</span>
+            <input type ="number" class="form-control" name = "thumb_width"
+              placeholder="10" value="<%=measurement.thumb_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Index Finger Width:</span>
+            <input type ="number" class="form-control" name = "index_finger_width"
+              placeholder="10" value="<%=measurement.index_finger_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Middle Finger Width:</span>
+            <input type ="number" class="form-control" name = "middle_finger_width" 
+              placeholder="10" value="<%=measurement.middle_finger_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Ring Finger Width:</span>
+            <input type ="number" class="form-control" name = "ring_finger_width" 
+              placeholder="10" value="<%=measurement.ring_finger_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Little Finger Width:</span>
+            <input type ="number" class="form-control" name = "little_finger_width"
+              placeholder="10" value="<%=measurement.little_finger_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Thumb Girth:</span>
+            <input type ="number" class="form-control" name = "thumb_girth" 
+              placeholder="10" value="<%=measurement.thumb_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Index Finger Girth:</span>
+            <input type ="number" class="form-control" name = "index_finger_girth" 
+              placeholder="10" value="<%=measurement.index_finger_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Middle Finger Girth:</span>
+            <input type ="number" class="form-control" name = "middle_finger_girth" 
+              placeholder="10" value="<%=measurement.middle_finger_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Ring Finger Girth:</span>
+            <input type ="number" class="form-control" name = "ring_finger_girth" 
+              placeholder="10" value="<%=measurement.ring_finger_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Little Finger Girth:</span>
+            <input type ="number" class="form-control" name = "little_finger_girth" 
+              placeholder="10" value="<%=measurement.little_finger_girth%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+   <!-- Template for Web Services Edit Measurement view for hip n waist details -->
+  <script type="text/template" id="edit-measurement-hipNwaistInfo">
+    <h3> Edit the hipNwaist measurement </h3>
+    <form id ="hipNwaistInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> High Hip Girth:</span>
+            <input type ="number" class="form-control" name = "high_hip_girth"
+              placeholder="10" value="<%=measurement.high_hip_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Hip Girth:</span>
+            <input type ="number" class="form-control" name = "hip_girth" 
+              placeholder="10" value="<%=measurement.hip_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> High Hip Height:</span>
+            <input type ="number" class="form-control" name = "high_hip_height"
+              placeholder="10" value="<%=measurement.high_hip_height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Crotch length:</span>
+            <input type ="number" class="form-control" name = "crotch_length" 
+              placeholder="10" value="<%=measurement.crotch_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Crotch Height:</span>
+            <input type ="number" class="form-control" name = "crotch_height"
+              placeholder="10" value="<%=measurement.crotch_height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Rise Height:</span>
+            <input type ="number" class="form-control" name = "rise_height"
+              placeholder="10" value="<%=measurement.rise_height%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+ <!-- Template for Web Services Edit Measurement view for leg details -->
+  <script type="text/template" id="edit-measurement-legInfo">
+    <h3> Edit the leg measurement </h3>
+    <form id ="legInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Thigh Girth:</span>
+            <input type ="number" class="form-control" name = "thigh_girth"
+              placeholder="10" value="<%=measurement.thigh_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Mid Thigh Girth:</span>
+            <input type ="number" class="form-control" name = "mid_thigh_girth" 
+              placeholder="10" value="<%=measurement.mid_thigh_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Knee Girth:</span>
+            <input type ="number" class="form-control" name = "knee_girth"
+              placeholder="10" value="<%=measurement.knee_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Calf Girth:</span>
+            <input type ="number" class="form-control" name = "calf_girth" 
+              placeholder="10" value="<%=measurement.calf_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Ankle Girth:</span>
+            <input type ="number" class="form-control" name = "ankle_girth"
+              placeholder="10" value="<%=measurement.ankle_girth%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Cervical to knee height:</span>
+            <input type ="number" class="form-control" name = "cervical_to_knee_height"
+              placeholder="10" value="<%=measurement.cervical_to_knee_height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Cervical height:</span>
+            <input type ="number" class="form-control" name = "cervical_height" 
+              placeholder="10" value="<%=measurement.cervical_height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Knee height:</span>
+            <input type ="number" class="form-control" name = "knee_height"
+              placeholder="10" value="<%=measurement.knee_height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Ankle height:</span>
+            <input type ="number" class="form-control" name = "ankle_height"
+              placeholder="10" value="<%=measurement.ankle_height%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+ <!-- Template for Web Services Edit Measurement view for foot details -->
+  <script type="text/template" id="edit-measurement-footInfo">
+    <h3> Edit the leg measurement </h3>
+    <form id ="footInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Foot Length:</span>
+            <input type ="number" class="form-control" name = "foot_length"
+              placeholder="10" value="<%=measurement.foot_length%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Foot width:</span>
+            <input type ="number" class="form-control" name = "foot_width" 
+              placeholder="10" value="<%=measurement.foot_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Foot across top:</span>
+            <input type ="number" class="form-control" name = "foot_across_top"
+              placeholder="10" value="<%=measurement.foot_across_top%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+ <!-- Template for Web Services Edit Measurement view for trunk details -->
+  <script type="text/template" id="edit-measurement-trunkInfo">
+    <h3> Edit the trunk measurement </h3>
+    <form id ="trunkInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Upper Back Width:</span>
+            <input type ="number" class="form-control" name = "upper_back_width"
+              placeholder="10" value="<%=measurement.upper_back_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Back Width:</span>
+            <input type ="number" class="form-control" name = "back_width" 
+              placeholder="10" value="<%=measurement.back_width%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Trunk Girth:</span>
+            <input type ="number" class="form-control" name = "trunk_girth"
+              placeholder="10" value="<%=measurement.trunk_girth%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
+  </script>
+
+ <!-- Template for Web Services Edit Measurement view for height details -->
+  <script type="text/template" id="edit-measurement-heightsInfo">
+    <h3> Edit the height measurement </h3>
+    <form id ="heightsInfo">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon"> Height:</span>
+            <input type ="number" class="form-control" name = "height"
+              placeholder="10" value="<%=measurement.height%>"/>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"> Hip Height:</span>
+            <input type ="number" class="form-control" name = "hip_height" 
+              placeholder="10" value="<%=measurement.hip_height%>"/>
+          </div>
+        </div>
+      </div>
+    <hr/>
+    <button type="submit" class="btn btn-primary btn-large active"> Save & Continue
+    </button>
+    <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>"
+      class = "btn btn-primary btn-large"> Measurement Home</a>
+  </form>
   </script>
 
   <script src="bodyapps-viz/js/three.js"></script>  
@@ -100,6 +721,8 @@
   <script src="lib/jquery-1.11.1.js"></script>
   <script src="lib/underscore.js"></script>
   <script src="lib/backbone.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/1.2.0/jquery.serializeJSON.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment.min.js"></script>
   <script src="./main.js"></script>
 
 </body>

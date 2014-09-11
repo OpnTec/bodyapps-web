@@ -28,3 +28,4 @@ node_modules
 config/runtime.json
 config/local.json
 .env.yml
+setenv.sh

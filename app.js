@@ -10,9 +10,6 @@
  * it to appropriate methods.
  */
 
-// Force config dir location relative to this file - makes deployment a lot more robust
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-
 var config = require('./config');
 
 var express = require('express');

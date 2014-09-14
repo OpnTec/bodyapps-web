@@ -11,6 +11,9 @@
  * And display view on the website page.
  */
 
+// Current user, if any
+var user = false;
+
 //models
 
 var MeasurementModel = Backbone.Model.extend({
@@ -126,16 +129,16 @@ var MeasurementModel = Backbone.Model.extend({
   parse : function(resp, xhr) {
     return resp.data; 
   }
-
 });
 
 var UserModel = Backbone.Model.extend({
   defaults:{
-    data:{
-      name: '',
-      dob: '',
-      email: ''
-    }
+    name: '',
+    dob: '',
+    email: ''
+  },
+  parse : function(resp, xhr) {
+    return resp.data; 
   }
 });
 
@@ -157,16 +160,20 @@ function json2Array(json){
 }
 
 function renderView(options, self, templateId, callback) {
+  if (!user) {
+    window.location.hash = '';
+  }
   self.model = new MeasurementModel();
-  self.model.url = '/api/v1' + '/users/' + options.id + '/measurements/' + options.m_id;
+  self.model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + options.m_id;
   self.model.fetch({
     headers:{
-    'Accept':'application/json'
+      'Accept':'application/json'
     },
     success: function() {
       var measurement = self.model.toJSON();
-      var template = _.template($(templateId).html(),
-        { measurement:measurement });
+      var template = _.template($(templateId).html(), { 
+        measurement: measurement 
+      });
       self.$el.html(template);
       callback();
     }
@@ -187,31 +194,36 @@ function saveMeasurementInfo(ev, self, callback) {
 //views
 
 var MeasurementListView = Backbone.View.extend({
-  el:'.container',
+
+  el:'#content-container',
 
   intialize: function() {
     this.collection.bind('change', this.render, this);
   },
 
   render:function(options) {
-    var self = this;
-    if(options.id){
-      var url = '/api/v1' + '/users/' + options.id + '/measurements';
-      this.collection.url = url;
-      this.collection.fetch({
-        success:function(records, response){
-          if(response==401) {
-            window.location.href = '/index.html#home';
-          } else {
-              var array = json2Array(((records).toJSON()));
-              var template = _.template($('#measurement-list').html(),
-                {measurements:array});
-              self.$el.html(template);
-          }
-        }
-      })
-      return self;
+    if (!user) {
+      window.location.hash = '';
+      return;
     }
+
+    var id = user.get('id');
+    var self = this;
+    var url = '/api/v1' + '/users/' + id + '/measurements';
+
+    this.collection.url = url;
+    this.collection.fetch({success: function(records, response) {
+      if(response == 401) {
+        window.location.hash = '';
+      } else {
+        console.log(records);
+        var array = json2Array(((records).toJSON()));
+        console.log(array);
+        var template = _.template($('#measurement-list').html(), { measurements:array });
+        self.$el.html(template);
+      }
+    }})
+    return this;
   }
 });
 
@@ -223,55 +235,69 @@ var MeasurementView = Backbone.View.extend({
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   }
-
 });
 
-var NavigationView = Backbone.View.extend({
-  el:'.navigation-bar',
-  template: _.template($('#navigation').html()),
+// var NavigationView = Backbone.View.extend({
+//   el:'.navigation-bar',
+//   template: _.template($('#navigation').html()),
 
-  render: function(options){
-    this.$el.html(this.template({user_id:options.id}));
-    return this;
-  }
+//   render: function(options){
+//     this.$el.html(this.template({user_id:options.id}));
+//     return this;
+//   }
 
-});
+// });
 
-var UserView = Backbone.View.extend({
-  el:'.container',
+// var UserView = Backbone.View.extend({
+//   el:'#content-container',
 
-  template: _.template($('#user-name').html()),
+//   template: _.template($('#user-name').html()),
 
-  render : function(options){
-    var self = this;
+//   render: function(options) {
+//     var self = this;
+//     $.cookie('userId', _user.get('id'));
 
-    this.model.url = '/api/v1' + '/users/' + options.id;
-    this.model.fetch({
-      success:function(user ,response){
-        if(response==401) {
-          window.location.href = '/index.html#home';
-        } else {
-          self.$el.html(self.template(user.toJSON()));
-        }
-      }
-    });
-    return self;
-  }
-});
+//     this.model.url = '/api/v1/users/' + options.userId;
+//     this.model.fetch({success: function(_user, response){
+      
+//         // if(response == 401) {
+//         //   window.location.hash = '';
+//         // } else {
+//         //   user = _user;
+//         //   ;c
+//         // }
+//     }});
+//     self.$el.html(self.template(_user.toJSON()))
+//     return self;
+//   }
+// });
 
 var WelcomeView = Backbone.View.extend({
-  el:'.container',
+
+  el:'#content-container',
 
   template: _.template($('#welcome-message').html()),
 
   render:function() {
-    this.$el.html(this.template);
+    this.$el.html(this.template({user: user.toJSON()}));
+    return this;
+  }
+});
+
+var LoginView = Backbone.View.extend({
+
+  el:'#content-container',
+
+  template: _.template($('#login-view').html()),
+
+  render:function() {
+    this.$el.html(this.template());
     return this;
   }
 });
 
 var BodyVizView = Backbone.View.extend({
-  el:'#containerBodyViz',
+  el:'#bodyviz-container',
 
   template: _.template($('#body-viz').html()),
 
@@ -282,18 +308,26 @@ var BodyVizView = Backbone.View.extend({
 });
 
 var MeasurementHomeView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   template: _.template($('#measurement-home').html()),
 
   render:function(options) {
-    this.$el.html(this.template({user_id:options.id, m_id:options.m_id}));
+    if (!user) {
+      window.location.hash = '';
+      return;
+    }
+    this.$el.html(this.template({
+      user_id: user.get('id'), 
+      m_id: options.m_id
+    }));
     return this;
   }
 });
 
 var EditHeadView = Backbone.View.extend({
-  el:'.container',
+
+  el:'#content-container',
 
   events : {
     'submit #headInfo': 'saveHeadInfo'
@@ -321,7 +355,7 @@ var EditHeadView = Backbone.View.extend({
 });
 
 var EditNeckView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #neckInfo': 'saveNeckInfo'
@@ -349,7 +383,7 @@ var EditNeckView = Backbone.View.extend({
 });
 
 var EditShoulderView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #shoulderInfo': 'saveShoulderInfo'
@@ -377,7 +411,7 @@ var EditShoulderView = Backbone.View.extend({
 });
 
 var EditChestView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #chestInfo': 'saveChestInfo'
@@ -405,7 +439,7 @@ var EditChestView = Backbone.View.extend({
 });
 
 var EditArmView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #armInfo': 'saveArmInfo'
@@ -433,7 +467,7 @@ var EditArmView = Backbone.View.extend({
 });
 
 var EditHandView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #handInfo': 'saveHandInfo'
@@ -461,7 +495,7 @@ var EditHandView = Backbone.View.extend({
 });
 
 var EditHipNwaistView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #hipNwaistInfo': 'saveHipNwaistInfo'
@@ -489,7 +523,7 @@ var EditHipNwaistView = Backbone.View.extend({
 });
 
 var EditLegView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #legInfo': 'saveLegInfo'
@@ -517,7 +551,7 @@ var EditLegView = Backbone.View.extend({
 });
 
 var EditFootView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #footInfo': 'saveFootInfo'
@@ -545,7 +579,7 @@ var EditFootView = Backbone.View.extend({
 });
 
 var EditTrunkView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #trunkInfo': 'saveTrunkInfo'
@@ -573,7 +607,7 @@ var EditTrunkView = Backbone.View.extend({
 });
 
 var EditHeightsView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #heightsInfo': 'saveHeightsInfo'
@@ -600,7 +634,7 @@ var EditHeightsView = Backbone.View.extend({
 });
 
 var CreateMeasurementView = Backbone.View.extend({
-  el:'.container',
+  el:'#content-container',
 
   events : {
     'submit #measurements': 'saveMeasurement'
@@ -670,7 +704,8 @@ var userModel = new UserModel();
 var measurements = new Measurements();
 var measurementListView = new MeasurementListView({collection:measurements});
 
-var userView = new UserView({model:userModel});
+var loginView = new LoginView();
+// var userView = new UserView({model:userModel});
 var welcomeView = new WelcomeView();
 var bodyVizView = new BodyVizView();
 var measurement = new MeasurementModel();
@@ -687,119 +722,155 @@ var editLegView = new EditLegView();
 var editFootView = new EditFootView();
 var editTrunkView = new EditTrunkView();
 var editHeightsView = new EditHeightsView();
-var navigationView = new NavigationView();
+// var navigationView = new NavigationView();
+
+// Just a bad hack, since session is maintained on the server and we need to the current user
+// from the server somehow. Future versions should maintain the session on the client only and
+// no roundtrips to the server should be required.
+function checkLogin(fn) {
+  if (user) {
+    fn();
+  } else if ($.cookie('bodyapps.userId')) {
+    loadUser($.cookie('bodyapps.userId'), {
+    success: function(_user) {
+      user = _user;
+      fn();
+    },
+    error: function(req, res) {
+      if (res.status === 401) {
+        // not tested since server doesn't check authorization yet
+        window.location.hash = 'login';
+      } else {
+        alert('Sorry we could not log you in: ' + res.statusText);
+      }
+    }})
+  } else {
+    window.location.hash = 'login';
+  }
+}
+
+function loadUser(userId, options) {
+  var userModel = new UserModel();
+  userModel.url = '/api/v1/users/' + userId;
+  userModel.fetch(options);
+}
 
 //router
 var Router = Backbone.Router.extend({
+
   routes: {
-    '':'homepage',
-    'user/:id' : 'userhome',
-    'user/measurements/:id' : 'user',
-    'bodyviz':'bodyViz',
-    'user/:id/create_measurement/personalInfo' : 'newMeasurement',
-    'user/:id/edit_measurement/:m_id' : 'measurementHome',
-    'user/:id/edit_measurement/:m_id/personalInfo' : 'editPersonalInfo',
-    'user/:id/edit_measurement/:m_id/headInfo' : 'editHead',
-    'user/:id/edit_measurement/:m_id/neckInfo' : 'editNeck',
-    'user/:id/edit_measurement/:m_id/shoulderInfo' : 'editShoulder',
-    'user/:id/edit_measurement/:m_id/chestInfo' : 'editChest',
-    'user/:id/edit_measurement/:m_id/armInfo' : 'editArm',
-    'user/:id/edit_measurement/:m_id/handInfo' : 'editHand',
-    'user/:id/edit_measurement/:m_id/hipNwaistInfo' : 'editHipNwaist',
-    'user/:id/edit_measurement/:m_id/legInfo' : 'editLeg',
-    'user/:id/edit_measurement/:m_id/footInfo' : 'editFoot',
-    'user/:id/edit_measurement/:m_id/trunkInfo' : 'editTrunk',
-    'user/:id/edit_measurement/:m_id/heightsInfo' : 'editHeights',
+    '': 'homepage',
+    'login': 'login',
+    'login/:userId': 'loginSuccess',
+    'measurements': 'measurements',
+    'bodyviz': 'bodyViz',
+    'create_measurement/personalInfo': 'newMeasurement',
+    'edit_measurement/:m_id': 'measurementHome',
+    'edit_measurement/:m_id/personalInfo': 'editPersonalInfo',
+    'edit_measurement/:m_id/headInfo': 'editHead',
+    'edit_measurement/:m_id/neckInfo': 'editNeck',
+    'edit_measurement/:m_id/shoulderInfo': 'editShoulder',
+    'edit_measurement/:m_id/chestInfo': 'editChest',
+    'edit_measurement/:m_id/armInfo': 'editArm',
+    'edit_measurement/:m_id/handInfo': 'editHand',
+    'edit_measurement/:m_id/hipNwaistInfo': 'editHipNwaist',
+    'edit_measurement/:m_id/legInfo': 'editLeg',
+    'edit_measurement/:m_id/footInfo': 'editFoot',
+    'edit_measurement/:m_id/trunkInfo': 'editTrunk',
+    'edit_measurement/:m_id/heightsInfo': 'editHeights',
   },
 
-  homepage:function(id) {
+  route: function(route, name, callback) {
+    var router = this;
+    if (!callback) callback = this[name];
+    if (route.indexOf('login') === 0) {
+      // skip login check for login-related routes
+      return Backbone.Router.prototype.route.call(this, route, name, callback);
+    } else {
+      return Backbone.Router.prototype.route.call(this, route, name, function() {
+        var args = arguments;
+        checkLogin(function() { callback.apply(router, args); });
+      });
+    }
+  },
+
+  homepage: function() {
     welcomeView.render();
   },
 
-  userhome:function(id) {
-    navigationView.render({id:id});
-    userView.render({id: id});
+  login: function() {
+    loginView.render();
   },
 
-  user:function(id) {
-    navigationView.render({id:id});
-    measurementListView.render({id: id});
+  loginSuccess: function(userId) {
+    $.cookie('bodyapps.userId', userId);
+    window.location.hash = '';
   },
 
-  bodyViz:function() {
+  measurements: function() {
+    measurementListView.render();
+  },
+
+  bodyViz: function() {
     bodyVizView.render();
-  }
-
-  newMeasurement:function(id) {
-    navigationView.render({id:id});
-    createMeasurementView.render({id: id});
   },
 
-  measurementHome: function(id, m_id) {
-    navigationView.render({id:id});
-    measurementHomeView.render({id: id, m_id: m_id});
+  newMeasurement: function() {
+    createMeasurementView.render();
   },
 
-  editPersonalInfo:function(id, m_id) {
-    navigationView.render({id:id});
-    createMeasurementView.render({id:id, m_id:m_id});
+  measurementHome: function(m_id) {
+    measurementHomeView.render({m_id: m_id});
   },
 
-  editHead:function(id, m_id) {
-    navigationView.render({id:id});
-    editHeadView.render({id: id, m_id:m_id });
+  editPersonalInfo: function(m_id) {
+    createMeasurementView.render({m_id: m_id});
   },
 
-  editNeck:function(id, m_id) {
-    navigationView.render({id:id});
-    editNeckView.render({id: id, m_id:m_id });
+  editHead: function(m_id) {
+    editHeadView.render({m_id: m_id});
   },
 
-  editShoulder:function(id, m_id) {
-    navigationView.render({id:id});
-    editShoulderView.render({id: id, m_id:m_id });
+  editNeck: function(m_id) {
+    editNeckView.render({m_id: m_id});
   },
 
-  editChest:function(id, m_id) {
-    navigationView.render({id:id});
-    editChestView.render({id: id, m_id:m_id });
+  editShoulder: function(m_id) {
+    editShoulderView.render({m_id: m_id});
   },
 
-  editArm:function(id, m_id) {
-    navigationView.render({id:id});
-    editArmView.render({id: id, m_id:m_id });
+  editChest: function(m_id) {
+    editChestView.render({m_id: m_id});
   },
 
-  editHand:function(id, m_id) {
-    navigationView.render({id:id});
-    editHandView.render({id: id, m_id:m_id });
+  editArm: function(m_id) {
+    editArmView.render({m_id: m_id});
   },
 
-  editHipNwaist:function(id, m_id) {
-    navigationView.render({id:id});
-    editHipNwaistView.render({id: id, m_id:m_id });
+  editHand: function(m_id) {
+    editHandView.render({m_id: m_id});
   },
 
-  editLeg:function(id, m_id) {
-    navigationView.render({id:id});
-    editLegView.render({id: id, m_id:m_id });
+  editHipNwaist: function(m_id) {
+    editHipNwaistView.render({m_id: m_id});
   },
 
-  editFoot:function(id, m_id) {
-    navigationView.render({id:id});
-    editFootView.render({id: id, m_id:m_id });
+  editLeg: function(m_id) {
+    editLegView.render({m_id: m_id});
   },
 
-  editTrunk:function(id, m_id) {
-    navigationView.render({id:id});
-    editTrunkView.render({id: id, m_id:m_id });
+  editFoot: function(m_id) {
+    editFootView.render({m_id: m_id});
   },
 
-  editHeights:function(id, m_id) {
-    navigationView.render({id:id});
-    editHeightsView.render({id: id, m_id:m_id });
+  editTrunk: function(m_id) {
+    editTrunkView.render({m_id: m_id});
+  },
+
+  editHeights: function(m_id) {
+    editHeightsView.render({m_id: m_id});
   }
 });
-var router = new Router();
 
+var router = new Router();
 Backbone.history.start();

@@ -27,7 +27,8 @@ function returnUserRec(doc) {
 
 module.exports = function(app) {
 var API_VERSION = app.API_VERSION;
-  app.post('/api/' + API_VERSION + '/users', function (req, res, next) { 
+
+  app.post('/api/' + API_VERSION + '/users', function(req, res, next) { 
     var body = req.body;
     var email = body.email;
     if(validator.isNull(email)) {
@@ -46,7 +47,7 @@ var API_VERSION = app.API_VERSION;
     })
   });
 
-  app.get('/api/' + API_VERSION + '/users/:user_id', function (req, res, next) {
+  app.get('/api/' + API_VERSION + '/users/:user_id', function(req, res, next) {
     var id = req.params.user_id;
     User.findOne({_id: id}, function(err, doc) {
       if(doc) {

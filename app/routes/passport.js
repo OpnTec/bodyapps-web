@@ -20,12 +20,12 @@ module.exports = function(app) {
   app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/index.html' }),
     function(req, res) {
-      var url = '/index.html#/user/' + req.user._id;
+      var url = '/index.html#login/' + req.user._id;
       res.redirect(url);
     });
 
   app.get('/logout', function(req, res) {
-    req.session.destroy(function (err) {
+    req.session.destroy(function(err) {
       res.redirect('/index.html');
     });
   });

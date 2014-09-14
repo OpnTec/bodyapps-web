@@ -8,7 +8,7 @@
  */
 
 var app = require('./app');
-var logger = require('./logger');
+var logger = require('./app/logger');
  
 app.set('port', process.env.PORT || 3000);
  

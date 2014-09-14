@@ -9,7 +9,7 @@
  */
 
 var nodemailer = require('nodemailer');
-var config = require('../../config');
+var config = require('../config');
 
 var transport = nodemailer.createTransport(
   config.transport.type,

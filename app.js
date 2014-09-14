@@ -10,7 +10,8 @@
  * it to appropriate methods.
  */
 
-var config = require('./config');
+var config = require('./app/config');
+var logger = require('./app/logger');
 
 var express = require('express');
 var mongoose = require('mongoose');
@@ -22,7 +23,6 @@ var busboy = require('connect-busboy');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
-var logger = require('./logger');
 
 logger.debug('Connecting to ' + config.mongo.uri);
 mongoose.connect(config.mongo.uri);
@@ -36,7 +36,7 @@ var passport = require('./app/passport');
 var winstonStream = {
   write: function(message){ logger.info(message); }
 };
-app.use(morgan('combined', {stream:winstonStream}));
+// app.use(morgan('combined', {stream:winstonStream}));
 
 app.use(cookieParser());
 app.use(busboy());
@@ -51,7 +51,8 @@ if (!config.session.secret) {
 
 app.use(session({ secret: config.session.secret, saveUninitialized: true, 
   resave: true, cookie:{maxAge:86400000}, 
-  store: require('mongoose-session')(mongoose) }));
+  store: require('mongoose-session')(mongoose) 
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());

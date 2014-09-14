@@ -19,7 +19,7 @@ var errorResponse = require('./errorResponse');
 var nodemailer = require('../lib/sendmail');
 var generateHdf = require('../misc/hdf/generateHdf');
 
-var config = require('../../config');
+var config = require('../config');
 
 function mailResponse(body) {
   var mailInfo = {

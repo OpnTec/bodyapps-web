@@ -1,91 +1,87 @@
-<script>
-/*
- * Copyright (c) 2014, Fashiontec (http://fashiontec.org)
- * Licensed under LGPL, Version 3
- */
-</script>
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <meta charset"utf-8">
     <title>Body Apps Service</title>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css">
-    <link rel="stylesheet" src="public/lib/css/webapp.css">
+
+    <meta charset"utf-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta name="copyright" content="&copy; 2014 Fashiontec"/>
     
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="bodyapps-viz/css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
 </head>
 <body>
-  <div class="navigation-bar">
+
+  <!-- Main navigation -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="#" class="navbar-brand">BodyApps</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#measurements">Measurement List</a></li>
+          <li><a href="#user/create_measurement/personalInfo">Create Measurement</a></li>
+        </ul> 
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
   <div id="containerBodyViz">
   </div>
-  <div class="container">
-  </div>
 
-  <!-- Template for navigation bar view -->
-<script type="text/template" id="navigation">
-    <nav role="navigation" class="navbar navbar-default">
-        <div class="navbar-header">
-            <a href="#user/<%=user_id%>" class="navbar-brand">BodyApps</a>
-        </div>
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="#user/<%=user_id%>">Home</a></li>
-                <li><a href="#user/<%=user_id%>/create_measurement/personalInfo">Create Measurement</a></li>
-                <li><a href="#user/measurements/<%=user_id%>">Measurement List</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/logout">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-</script>
+  <!-- Main content container -->
+  <div class="container" id="container">
+    <div id="content-container" class="col-md-6">
+    </div>
+    <div id="bodyviz-container" class="col-md-6">
+    </div>
+  </div>
 
   <!-- Template for MeasurmentList view -->
   <script type="text/template" id="measurement-list">
-    <%if(measurements[0].m_id==undefined) {%>
-      <h2> Your measurement list is empty, please create a new measurement first.</h2>
-    <% } else {%>
     <h1>List of Measurements</h1>
-    <hr />
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th> Name </th>
-            <th> Email </th>
-            <th> Gender </th>
-            <th> Date of Birth </th>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Date of Birth</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
-        <% _.each(measurements, function(measurement) { %>
-          <tr>
-            <td><%= measurement.person.name %></td>
-            <td><%= measurement.person.email %></td>
-            <td><%= measurement.person.gender %></td>
-            <td><%= moment(measurement.person.dob).format('L') %></td>
-            <td><a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.
-              m_id%>/personalInfo" class="btn btn-primary btn-large"> Edit</a>
-            <td><a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.
-              m_id%>" class="btn btn-primary btn-large"> Details</a>
-          </tr>
-      </tbody>
+      <% _.each(measurements, function(measurement) { %>
+        <tr>
+          <td><%= measurement.person.name %></td>
+          <td><%= measurement.person.email %></td>
+          <td><%= measurement.person.gender %></td>
+          <td><%= moment(measurement.person.dob).format('L') %></td>
+          <td>
+            <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-primary btn-large">Edit</a>
+            <a href="#/user/<%= measurement.user_id%>/edit_measurement/<%= measurement.m_id%>" class="btn btn-primary btn-large">Details</a>
+          </td>
+        </tr>
       <% }); %>
+      </tbody>
     </table>
-    <%}%>
-  </script>
-
-  <!-- Template for User's Home view -->
-  <script type="text/template" id="user-name">
-    <h1>Welcome <%=data.name%></h1>
   </script>
 
   <!-- Template for Web Services Home view -->
   <script type="text/template" id="welcome-message">
-    <h1> Welcome to body apps </h1>
-    <a href="/auth/google" class="btn btn-danger"><span class="google-plus">
-    </span> Google Sign in</a>
+    <h1>Welcome <%= user.name %>!</h1>
+  </script>
+
+  <script type="text/template" id="login-view">
+    <h1>Welcome to body apps</h1>
+    <a href="/auth/google" class="btn btn-danger">
+      <span class="google-plus"></span>Google Sign in
+    </a>
   </script>
 
     <!-- Template for Web Services Measurement Home view -->
@@ -128,7 +124,7 @@
     <!-- Template for Web Services Create Measurement view -->
   <script type="text/template" id="create-measurement">
     <h3> Enter the personal info </h3>
-      <form id ="measurements">
+    <form id ="measurements">
       <div class="row">
         <div class="col-xs-4">
           <div class="input-group">
@@ -166,13 +162,18 @@
           </div>
         </div>
       </div>
-    <% if(user_id) { %>
-      <input type="hidden" name="user_id" value="<%= user_id %>" />
-    <% }; %>
-    <hr/>
-    <button type="submit" class="btn btn-primary btn-large active"><%if(measurement) { %>
-      Save & Continue <% } else { %> Create <% }%> </button>
-  </form>
+      <% if(user_id) { %>
+        <input type="hidden" name="user_id" value="<%= user_id %>" />
+      <% }; %>
+      <hr/>
+      <button type="submit" class="btn btn-primary btn-large active">
+        <% if(measurement) { %>
+          Save & Continue 
+        <% } else { %> 
+          Create 
+        <% } %> 
+      </button>
+    </form>
   </script>
 
     <!-- Template for Web Services Edit Measurement view for head details -->
@@ -719,10 +720,11 @@
   </script>
 
   <script src="lib/jquery-1.11.1.js"></script>
+  <script src="lib/jquery.cookie.js"></script>
   <script src="lib/underscore.js"></script>
   <script src="lib/backbone.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/1.2.0/jquery.serializeJSON.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment.min.js"></script>
+  <script src="lib/jquery.serializejson.min.js"></script>
+  <script src="lib/moment.min.js"></script>
   <script src="./main.js"></script>
 
 </body>

@@ -17,14 +17,11 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      options: {
-        livereload: true,
-      },
       express: {
-        files:  ['server.js', 'app.js', 'app/**/*.js'],
+        files:  ['server.js', 'app.js', 'app/**/*'],
         tasks:  ['express:dev'],
         options: {
-          spawn: true
+          spawn: false
         }
       }
     },
@@ -35,7 +32,8 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          script: 'server.js'
+          script: './server.js',
+          node_env: 'development'
         }
       }
     },

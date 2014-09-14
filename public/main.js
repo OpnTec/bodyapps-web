@@ -148,83 +148,48 @@ var Measurements = Backbone.Collection.extend({
   model:MeasurementModel,
 });
 
-//functions
-
-function json2Array(json){
-  var array = [];
-  var keys = Object.keys(json);
-  keys.forEach(function(key){
-    array.push(json[key]);
-  });
-  return array;
-}
-
-function renderView(options, self, templateId, callback) {
-  if (!user) {
-    window.location.hash = '';
-  }
-  self.model = new MeasurementModel();
-  self.model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + options.m_id;
-  self.model.fetch({
-    headers:{
-      'Accept':'application/json'
-    },
-    success: function() {
-      var measurement = self.model.toJSON();
-      var template = _.template($(templateId).html(), { 
-        measurement: measurement 
-      });
-      self.$el.html(template);
-      callback();
-    }
-  });
-}
-
-function saveMeasurementInfo(ev, self, callback) {
-  var measurementDetails = $(ev.currentTarget).serializeJSON();
-  self.model.save(measurementDetails, {
-    success:function() {
-      var userId = self.model.get('user_id');
-      var measurementId = self.model.get('m_id');
-      callback(userId, measurementId);
-    }
-  });
-}
-
 //views
 
 var MeasurementListView = Backbone.View.extend({
 
-  el:'#content-container',
+  el: '#content-container',
+  template: _.template($('#measurement-list').html()),
 
-  intialize: function() {
-    this.collection.bind('change', this.render, this);
+  initialize: function() {
+    this.collection = new Measurements();
+    _.bindAll(this, 'render', 'addOne');
   },
 
-  render:function(options) {
-    if (!user) {
-      window.location.hash = '';
-      return;
-    }
-
+  render: function(options) {
     var id = user.get('id');
-    var self = this;
-    var url = '/api/v1' + '/users/' + id + '/measurements';
+    var url = '/api/v1/users/' + id + '/measurements';
+    var addOne = this.addOne.bind(this);
 
+    this.$el.html(this.template());
     this.collection.url = url;
     this.collection.fetch({success: function(records, response) {
-      if(response == 401) {
-        window.location.hash = '';
-      } else {
-        console.log(records);
-        var array = json2Array(((records).toJSON()));
-        console.log(array);
-        var template = _.template($('#measurement-list').html(), { measurements:array });
-        self.$el.html(template);
-      }
-    }})
+      records.each(addOne);
+    }});
+
     return this;
+  },
+
+  addOne: function(measurement) {
+    var view = new MeasurementRowView({model: measurement});
+    this.$('#measurement-list-body').append(view.render().el);
   }
+});
+
+
+var MeasurementRowView = Backbone.View.extend({
+
+  tagName: 'tr',
+  template: _.template($('#measurement-item').html()),
+
+  render: function(options) {
+    this.$el.html(this.template({measurement: this.model.toJSON()}));
+    return this;
+  } 
 });
 
 var MeasurementView = Backbone.View.extend({
@@ -236,41 +201,6 @@ var MeasurementView = Backbone.View.extend({
     return this;
   }
 });
-
-// var NavigationView = Backbone.View.extend({
-//   el:'.navigation-bar',
-//   template: _.template($('#navigation').html()),
-
-//   render: function(options){
-//     this.$el.html(this.template({user_id:options.id}));
-//     return this;
-//   }
-
-// });
-
-// var UserView = Backbone.View.extend({
-//   el:'#content-container',
-
-//   template: _.template($('#user-name').html()),
-
-//   render: function(options) {
-//     var self = this;
-//     $.cookie('userId', _user.get('id'));
-
-//     this.model.url = '/api/v1/users/' + options.userId;
-//     this.model.fetch({success: function(_user, response){
-      
-//         // if(response == 401) {
-//         //   window.location.hash = '';
-//         // } else {
-//         //   user = _user;
-//         //   ;c
-//         // }
-//     }});
-//     self.$el.html(self.template(_user.toJSON()))
-//     return self;
-//   }
-// });
 
 var WelcomeView = Backbone.View.extend({
 
@@ -297,17 +227,19 @@ var LoginView = Backbone.View.extend({
 });
 
 var BodyVizView = Backbone.View.extend({
+
   el:'#bodyviz-container',
 
-  template: _.template($('#body-viz').html()),
+  // template: _.template($('#').html()),
 
   render:function() {
-    this.$el.html(this.template);
+    this.$el.bodyviz();
     return this;
   }
 });
 
 var MeasurementHomeView = Backbone.View.extend({
+
   el:'#content-container',
 
   template: _.template($('#measurement-home').html()),
@@ -325,362 +257,153 @@ var MeasurementHomeView = Backbone.View.extend({
   }
 });
 
-var EditHeadView = Backbone.View.extend({
+/**
+ * Base view for all measurement editors. Renders the form for given measurement set and contains
+ * the required logic to save the record to the server.
+ */
+var EditMeasurementBaseView = Backbone.View.extend({
 
   el:'#content-container',
 
-  events : {
-    'submit #headInfo': 'saveHeadInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveHeadInfo');
+  initialize: function() {
+    _.bindAll(this, 'render', 'save');
   },
 
   render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-headInfo', function() {
-      return self;
+    this.model = new MeasurementModel();
+    this.model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + options.m_id;
+    this.model.fetch({
+      headers:{
+        'Accept': 'application/json'
+      },
+      success: function() {
+        this.$el.html(this.template({ measurement: this.model.toJSON() }));
+        this.$('form').submit(this.save);
+      }.bind(this)
     });
+    return this;
   },
 
-  saveHeadInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/neckInfo', {trigger:true});      
-    }); 
-    return false;
+  save: function(ev) {
+    ev.preventDefault();
+    var measurementDetails = $(ev.currentTarget).serializeJSON();
+    var mId = this.model.get('m_id');
+    var nextUrl = this.next === null ? 
+      '#edit_measurement/' + mId :
+      '#edit_measurement/' + mId + '/' + this.next;
+    this.$('.btn-primary').text('Saving...').attr('disabled', 'disabled');
+    this.model.save(measurementDetails, {success: function() {
+      router.navigate(nextUrl, {trigger: true});
+    }});
   }
 });
 
-var EditNeckView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #neckInfo': 'saveNeckInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveNeckInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-neckInfo', function() {
-      return self;
-    });
-  },
-
-  saveNeckInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/shoulderInfo', {trigger:true});      
-    });
-    return false;
-  }
+var EditHeadView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-headInfo').html()),
+  next: 'neckInfo'
 });
 
-var EditShoulderView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #shoulderInfo': 'saveShoulderInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveShoulderInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-shoulderInfo', function() {
-      return self;
-    });
-  },
-
-  saveShoulderInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/chestInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditNeckView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-neckInfo').html()),
+  next: 'shoulderInfo'
 });
 
-var EditChestView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #chestInfo': 'saveChestInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveChestInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-chestInfo', function() {
-      return self;
-    });
-  },
-
-  saveChestInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/armInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditShoulderView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-shoulderInfo').html()),
+  next: 'chestInfo'
 });
 
-var EditArmView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #armInfo': 'saveArmInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveArmInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-armInfo', function() {
-      return self;
-    });
-  },
-
-  saveArmInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/handInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditChestView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-chestInfo').html()),
+  next: 'armInfo'
 });
 
-var EditHandView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #handInfo': 'saveHandInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveHandInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-handInfo', function() {
-      return self;
-    });
-  },
-
-  saveHandInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/hipNwaistInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditArmView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-armInfo').html()),
+  next: 'handInfo'
 });
 
-var EditHipNwaistView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #hipNwaistInfo': 'saveHipNwaistInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveHipNwaistInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-hipNwaistInfo', function() {
-      return self;
-    });
-  },
-
-  saveHipNwaistInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/legInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditHandView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-handInfo').html()),
+  next: 'hipNwaistInfo'
 });
 
-var EditLegView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #legInfo': 'saveLegInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveLegInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-legInfo', function() {
-      return self;
-    });
-  },
-
-  saveLegInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/footInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditHipNwaistView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-hipNwaistInfo').html()),
+  next: 'legInfo'
 });
 
-var EditFootView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #footInfo': 'saveFootInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveFootInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-footInfo', function() {
-      return self;
-    });
-  },
-
-  saveFootInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/trunkInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditLegView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-legInfo').html()),
+  next: 'footInfo'
 });
 
-var EditTrunkView = Backbone.View.extend({
-  el:'#content-container',
-
-  events : {
-    'submit #trunkInfo': 'saveTrunkInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveTrunkInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-trunkInfo', function() {
-      return self;
-    });
-  },
-
-  saveTrunkInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId + '/edit_measurement/' 
-        + measurementId + '/heightsInfo', {trigger:true});
-    });
-    return false;
-  }
+var EditFootView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-footInfo').html()),
+  next: 'trunkInfo'
 });
 
-var EditHeightsView = Backbone.View.extend({
-  el:'#content-container',
+var EditTrunkView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-trunkInfo').html()),
+  next: 'heightsInfo'
+});
 
-  events : {
-    'submit #heightsInfo': 'saveHeightsInfo'
-  },
-
-  intialize: function() {
-    _.bindAll(this, 'render', 'saveHeightsInfo');
-  },
-
-  render: function(options) {
-    var self = this;
-    renderView(options, self, '#edit-measurement-heightsInfo', function() {
-      return self;
-    });
-  },
-
-  saveHeightsInfo: function(ev) {
-    var self = this;
-    saveMeasurementInfo(ev, self, function(userId, measurementId) {
-      router.navigate('/user/' + userId, {trigger:true});
-    });
-    return false;
-  }
+var EditHeightsView = EditMeasurementBaseView.extend({
+  template: _.template($('#edit-measurement-heightsInfo').html()),
+  next: null
 });
 
 var CreateMeasurementView = Backbone.View.extend({
-  el:'#content-container',
 
-  events : {
-    'submit #measurements': 'saveMeasurement'
-  },
+  el:'#content-container',
+  template: _.template($('#create-measurement').html()),
 
   intialize: function() {
-    _.bindAll(this, 'render', 'saveMeasurement');
+    _.bindAll(this, 'render', '_render', 'save');
   },
 
   render:function(options) {
+    options = options || {};
+    var userId = user.get('id');
+
     if(!options.m_id) {
-      var template = _.template($('#create-measurement').html(),
-        { user_id:options.id, measurement:null });
-      this.$el.html(template);
-      return this;
-    }
-    else {
-      var self = this;
+      return this._render(null, userId);
+    } else {
       this.model = new MeasurementModel();
-      this.model.url = '/api/v1' + '/users/' + options.id + '/measurements/' + options.m_id;
+      this.model.url = '/api/v1/users/' + userId + '/measurements/' + options.m_id;
       this.model.fetch({
-        headers:{
-        'Accept':'application/json'
+        headers: {
+          'Accept':'application/json'
         },
         success: function() {
-          var measurement = self.model.toJSON();
-          var userId = self.model.get('user_id');
-          var template = _.template($('#create-measurement').html(),
-            {user_id:userId, measurement:measurement});
-          self.$el.html(template);
-        }
+          var measurement = this.model.toJSON();
+          this._render(measurement, userId);
+        }.bind(this)
       });
     }
   },
 
-  saveMeasurement: function(ev) {
-    if(this.model==undefined) {
+  _render: function(measurement, userId) {
+    this.$el.html(this.template({
+      user_id: userId,
+      measurement: measurement
+    }));
+    this.$('form').submit(this.save);
+    return this;
+  },
+
+  save: function(ev) {
+    ev.preventDefault();
+    if(!this.model) {
       var measurementDetails = $(ev.currentTarget).serializeJSON();
       var measurement = new MeasurementModel();
-      measurement.url = '/api/v1' + '/users/'+ measurementDetails.user_id + '/measurements';
+      measurement.url = '/api/v1/users/' + user.get('id') + '/measurements';
       measurement.save(measurementDetails, {
         type:'post',
         success:function() {
           var measurementId = measurement.get('m_id');
-          router.navigate('/user/' + measurementDetails.user_id + '/edit_measurement/' 
-            + measurementId, {trigger:true});
+          var url = '#edit_measurement/' + measurementId;
+          router.navigate(url, {trigger:true});
         }
       });
     }
@@ -700,29 +423,7 @@ var CreateMeasurementView = Backbone.View.extend({
   }
 });
 
-var userModel = new UserModel();
 var measurements = new Measurements();
-var measurementListView = new MeasurementListView({collection:measurements});
-
-var loginView = new LoginView();
-// var userView = new UserView({model:userModel});
-var welcomeView = new WelcomeView();
-var bodyVizView = new BodyVizView();
-var measurement = new MeasurementModel();
-var measurementHomeView = new MeasurementHomeView();
-var createMeasurementView = new CreateMeasurementView();
-var editHeadView = new EditHeadView();
-var editNeckView = new EditNeckView();
-var editShoulderView = new EditShoulderView();
-var editChestView = new EditChestView();
-var editArmView = new EditArmView();
-var editHandView = new EditHandView();
-var editHipNwaistView = new EditHipNwaistView();
-var editLegView = new EditLegView();
-var editFootView = new EditFootView();
-var editTrunkView = new EditTrunkView();
-var editHeightsView = new EditHeightsView();
-// var navigationView = new NavigationView();
 
 // Just a bad hack, since session is maintained on the server and we need to the current user
 // from the server somehow. Future versions should maintain the session on the client only and
@@ -764,7 +465,7 @@ var Router = Backbone.Router.extend({
     'login/:userId': 'loginSuccess',
     'measurements': 'measurements',
     'bodyviz': 'bodyViz',
-    'create_measurement/personalInfo': 'newMeasurement',
+    'create_measurement': 'newMeasurement',
     'edit_measurement/:m_id': 'measurementHome',
     'edit_measurement/:m_id/personalInfo': 'editPersonalInfo',
     'edit_measurement/:m_id/headInfo': 'editHead',
@@ -795,11 +496,11 @@ var Router = Backbone.Router.extend({
   },
 
   homepage: function() {
-    welcomeView.render();
+    new WelcomeView().render();
   },
 
   login: function() {
-    loginView.render();
+    new LoginView().render();
   },
 
   loginSuccess: function(userId) {
@@ -808,67 +509,67 @@ var Router = Backbone.Router.extend({
   },
 
   measurements: function() {
-    measurementListView.render();
+    new MeasurementListView().render();
   },
 
   bodyViz: function() {
-    bodyVizView.render();
+    new BodyVizView().render();
   },
 
   newMeasurement: function() {
-    createMeasurementView.render();
+    new CreateMeasurementView().render();
   },
 
   measurementHome: function(m_id) {
-    measurementHomeView.render({m_id: m_id});
+    new MeasurementHomeView().render({m_id: m_id});
   },
 
   editPersonalInfo: function(m_id) {
-    createMeasurementView.render({m_id: m_id});
+    new CreateMeasurementView().render({m_id: m_id});
   },
 
   editHead: function(m_id) {
-    editHeadView.render({m_id: m_id});
+    new EditHeadView().render({m_id: m_id});
   },
 
   editNeck: function(m_id) {
-    editNeckView.render({m_id: m_id});
+    new EditNeckView().render({m_id: m_id});
   },
 
   editShoulder: function(m_id) {
-    editShoulderView.render({m_id: m_id});
+    new EditShoulderView().render({m_id: m_id});
   },
 
   editChest: function(m_id) {
-    editChestView.render({m_id: m_id});
+    new EditChestView().render({m_id: m_id});
   },
 
   editArm: function(m_id) {
-    editArmView.render({m_id: m_id});
+    new EditArmView().render({m_id: m_id});
   },
 
   editHand: function(m_id) {
-    editHandView.render({m_id: m_id});
+    new EditHandView().render({m_id: m_id});
   },
 
   editHipNwaist: function(m_id) {
-    editHipNwaistView.render({m_id: m_id});
+    new EditHipNwaistView().render({m_id: m_id});
   },
 
   editLeg: function(m_id) {
-    editLegView.render({m_id: m_id});
+    new EditLegView().render({m_id: m_id});
   },
 
   editFoot: function(m_id) {
-    editFootView.render({m_id: m_id});
+    new EditFootView().render({m_id: m_id});
   },
 
   editTrunk: function(m_id) {
-    editTrunkView.render({m_id: m_id});
+    new EditTrunkView().render({m_id: m_id});
   },
 
   editHeights: function(m_id) {
-    editHeightsView.render({m_id: m_id});
+    new EditHeightsView().render({m_id: m_id});
   }
 });
 

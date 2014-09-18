@@ -8,9 +8,6 @@
     .css('width', '100%')
     .css('height', '500px');
 
-
-
-
   // When frame is loaded map `update` locally
   vizFrame.load(function() {
     _update = vizFrame[0].contentWindow.update;

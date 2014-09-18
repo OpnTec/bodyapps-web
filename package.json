@@ -52,7 +52,7 @@
     "supertest": "^0.13.0"
   },
   "scripts": {
-    "run": "grunt s",
+    "start": "grunt s",
     "test": "grunt api-test"
   }
 }

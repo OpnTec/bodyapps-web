@@ -167,4 +167,10 @@ var Router = Backbone.Router.extend({
 var router = new Router();
 Backbone.history.start();
 
+var measurement = [160, 98, 37, 39, 1, 1, 196, 1, 76.66, 26, 15, 16, 112, 36, 42, 38, 55];
 var bodyviz = $('#bodyviz-container').bodyviz();
+
+// Just for testing.
+setTimeout(function() {
+  bodyviz.update(measurement);
+}, 1000);

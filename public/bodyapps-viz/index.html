@@ -27,8 +27,9 @@
         
         <script>
             
-        
-    
+            function update(measurement) {
+                character.updateMorphs({}, measurement);
+            }
             
             var SCREEN_WIDTH = window.innerWidth;
             var SCREEN_HEIGHT = window.innerHeight;
@@ -50,8 +51,8 @@
             
             var gui, skinConfig, morphConfig;
                 
-            var measurements_object={measurement:top.frames.measurements};
-                //console.log("the values is"+measurements_object.measurement);
+            // var measurements_object={measurement:top.frames.measurements};
+                // console.log("the values is"+measurements_object.measurement);
             init();
         
             animate();
@@ -81,7 +82,7 @@
                 container.appendChild( renderer.domElement );
 
                 // CHARACTER
-    
+                // Is it necessary to define `character` globally? Initialize with `var` to avoid
                 character = new THREE.prototype();
                 character.onLoadComplete = function() {
                     //console.log( "Load Complete" );
@@ -114,7 +115,7 @@
             
             function setupMorphsGUI() {
                 
-                //var morphGui = gui.addFolder( "Morphs" );
+                var morphGui = gui.addFolder( "Morphs" );
                 
                 morphConfig = {};
                 
@@ -134,10 +135,10 @@
                 
                 for ( var i = 0; i < character.numMorphs; i ++ ) {
                     
-                    //morphGui.add( morphConfig,character.morphs[ i ]  ).min( character.morphslowlimit[ i ] ).max(character.morphshighlimit[ i ]).onChange( morphCallback( i ) );
+                    morphGui.add( morphConfig,character.morphs[ i ]  ).min( character.morphslowlimit[ i ] ).max(character.morphshighlimit[ i ]).onChange( morphCallback( i ) );
                 }
                 
-                //morphGui.open();
+                morphGui.open();
             
             }
 

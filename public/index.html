@@ -34,11 +34,15 @@
 
   <!-- Main content container -->
   <div class="container" id="container">
-    <div id="content-container" class="col-md-6">
-    </div>
-    <div id="bodyviz-container" class="col-md-6">
-    </div>
+    
   </div>
+
+  <script type="text/template" id="measurement-master">
+    <div id="measurement-pane" class="col-md-6">
+    </div>
+    <div id="bodyviz-pane" class="col-md-6">
+    </div>
+  </script>
 
   <!-- Template for MeasurmentList view -->
   <script type="text/template" id="measurement-list">
@@ -65,7 +69,7 @@
     <td><%= moment(measurement.person.dob).format('L') %></td>
     <td>
       <a href="#edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-primary btn-large">Edit</a>
-      <a href="#edit_measurement/<%= measurement.m_id%>" class="btn btn-primary btn-large">Details</a>
+      <a href="#measurement/<%= measurement.m_id%>" class="btn btn-primary btn-large">Details</a>
     </td>
   </script>
 
@@ -84,41 +88,71 @@
     <!-- Template for Web Services Measurement Home view -->
   <script type="text/template" id="measurement-home">
     <h3> Click on body part to view or edit it </h1>
-      <table>
+    <table>
       <tr>
         <td>
-          <a href="#edit_measurement/<%=m_id%>/headInfo">
+          <a href="#measurement/<%=m_id%>/headInfo" id="edit-head">
             <img src="pics/head.png" width="62" height="62">
           </a>
         </td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/neckInfo">
-          <img src="pics/neck.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/shoulderInfo">
-          <img src="pics/shoulders.png" width="62" height="62"></a></td>
+        <td>
+          <a href="#measurement/<%=m_id%>/neckInfo" id="edit-neck">
+            <img src="pics/neck.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/shoulderInfo" id="edit-shoulder">
+            <img src="pics/shoulders.png" width="62" height="62">
+          </a>
+        </td>
       </tr>
       <tr>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/chestInfo">
-          <img src="pics/chest.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/armInfo">
-          <img src="pics/arm.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/handInfo">
-          <img src="pics/hand.png" width="62" height="62"></a></td>
+        <td>
+          <a href="#measurement/<%=m_id%>/chestInfo" id="edit-chest">
+            <img src="pics/chest.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/armInfo" id="edit-arm">
+            <img src="pics/arm.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/handInfo" id="edit-hand">
+            <img src="pics/hand.png" width="62" height="62">
+          </a>
+        </td>
       </tr>
       <tr>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/hipNwaistInfo">
-          <img src="pics/hip_waist.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/legInfo">
-          <img src="pics/leg.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/footInfo">
-          <img src="pics/foot.png" width="62" height="62"></a></td>
+        <td>
+          <a href="#measurement/<%=m_id%>/hipNwaistInfo" id="edit-waist">
+            <img src="pics/hip_waist.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/legInfo" id="edit-leg">
+            <img src="pics/leg.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/footInfo" id="edit-foot">
+            <img src="pics/foot.png" width="62" height="62">
+          </a>
+        </td>
       </tr>
       <tr>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/trunkInfo">
-          <img src="pics/trunk.png" width="62" height="62"></a></td>
-        <td><a href="#/user/<%=user_id%>/edit_measurement/<%=m_id%>/heightsInfo">
-          <img src="pics/heights.png" width="62" height="62"></a></td>
+        <td>
+          <a href="#measurement/<%=m_id%>/trunkInfo" id="edit-trunk">
+            <img src="pics/trunk.png" width="62" height="62">
+          </a>
+        </td>
+        <td>
+          <a href="#measurement/<%=m_id%>/heightsInfo" id="edit-heights">
+            <img src="pics/heights.png" width="62" height="62">
+          </a>
+        </td>
       </tr>
-      </table>
+    </table>
   </script>
 
     <!-- Template for Web Services Create Measurement view -->

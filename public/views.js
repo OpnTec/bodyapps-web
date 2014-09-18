@@ -7,9 +7,69 @@
  * Views for frontend application.
  */
 
+var MeasurementMasterView = Backbone.View.extend({
+
+  el: '#container',
+  template: _.template($('#measurement-master').html()),
+  model: null,
+  measurementPane: null,
+  bodyvizPane: null,
+
+  render: function() {
+    this.$el.html(this.template());
+    this.measurementPane = this.$('#measurement-pane');
+    this.bodyvizPane = this.$('#bodyviz-pane');
+    new BodyVizView({el: this.bodyvizPane, model: this.model}).render();
+    new MeasurementView({el: this.measurementPane, model: this.model}).render();
+    return this;
+  }
+});
+
+var MeasurementView = Backbone.View.extend({
+
+  tagName: 'div',
+  contentPane: null,
+  currentView: null,
+
+  render: function(){
+    this.$el.html("<div id=\"content-pane\"></div>");
+    this.contentPane = this.$('#content-pane');
+    return this.switchEditor(MeasurementHomeView);
+    // this.currentView = new MeasurementHomeView({
+    //   el: this.contentPane, 
+    //   model: this.model,
+    //   master: this
+    // }).render();
+    // return this;
+  },
+
+  switchEditor: function(viewClass) {
+    var options = {
+      model: this.model,
+      master: this
+    }
+    if (this.currentView) {
+      this.currentView.remove();
+    }
+    this.currentView = (new viewClass(options));
+    this.contentPane.html(this.currentView.render().el);
+    return this;
+  }
+});
+
+var BodyVizView = Backbone.View.extend({
+  model: null,
+  bodyviz: null,
+  render: function() {
+    this.bodyviz = this.$el.bodyviz();
+    return this;
+  }  
+});
+
+
 var MeasurementListView = Backbone.View.extend({
 
-  el: '#content-container',
+  el: '#container',
   template: _.template($('#measurement-list').html()),
 
   initialize: function() {
@@ -49,19 +109,11 @@ var MeasurementRowView = Backbone.View.extend({
   } 
 });
 
-var MeasurementView = Backbone.View.extend({
-  tagName:'tr',
-  template: _.template($('#measurement-list').html()),
 
-  render: function(){
-    this.$el.html(this.template(this.model.toJSON()));
-    return this;
-  }
-});
 
 var WelcomeView = Backbone.View.extend({
 
-  el:'#content-container',
+  el:'#container',
 
   template: _.template($('#welcome-message').html()),
 
@@ -73,7 +125,7 @@ var WelcomeView = Backbone.View.extend({
 
 var LoginView = Backbone.View.extend({
 
-  el:'#content-container',
+  el:'#container',
 
   template: _.template($('#login-view').html()),
 
@@ -83,34 +135,30 @@ var LoginView = Backbone.View.extend({
   }
 });
 
-var BodyVizView = Backbone.View.extend({
-
-  el:'#bodyviz-container',
-
-  // template: _.template($('#').html()),
-
-  render:function() {
-    this.$el.bodyviz();
-    return this;
-  }
-});
-
 var MeasurementHomeView = Backbone.View.extend({
 
-  el:'#content-container',
-
+  master: null,
+  tagName: 'div',
   template: _.template($('#measurement-home').html()),
+  events: {
+    'click #edit-head': 'editHead'
+  },
 
-  render:function(options) {
-    if (!user) {
-      window.location.hash = '';
-      return;
-    }
+  initialize: function(options) {
+    this.master = options.master;
+  },
+
+  render: function() {
     this.$el.html(this.template({
-      user_id: user.get('id'), 
-      m_id: options.m_id
+      user_id: user.get('id'),
+      m_id: this.model.get('m_id')
     }));
     return this;
+  },
+
+  editHead: function(e) {
+    e.preventDefault();
+    this.master.switchEditor(EditHeadView);
   }
 });
 
@@ -120,24 +168,17 @@ var MeasurementHomeView = Backbone.View.extend({
  */
 var EditMeasurementBaseView = Backbone.View.extend({
 
-  el:'#content-container',
+  tagName: 'div',
 
   initialize: function() {
     _.bindAll(this, 'render', 'save');
   },
 
-  render: function(options) {
-    this.model = new MeasurementModel();
-    this.model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + options.m_id;
-    this.model.fetch({
-      headers:{
-        'Accept': 'application/json'
-      },
-      success: function() {
-        this.$el.html(this.template({ measurement: this.model.toJSON() }));
-        this.$('form').submit(this.save);
-      }.bind(this)
-    });
+  render: function() {
+    console.log('render');
+    console.log(this.$el);
+    this.$el.html(this.template({ measurement: this.model.toJSON() }));
+    this.$('form').submit(this.save);
     return this;
   },
 
@@ -145,12 +186,12 @@ var EditMeasurementBaseView = Backbone.View.extend({
     ev.preventDefault();
     var measurementDetails = $(ev.currentTarget).serializeJSON();
     var mId = this.model.get('m_id');
-    var nextUrl = this.next === null ? 
-      '#edit_measurement/' + mId :
-      '#edit_measurement/' + mId + '/' + this.next;
+    // var nextUrl = this.next === null ? 
+    //   '#edit_measurement/' + mId :
+    //   '#edit_measurement/' + mId + '/' + this.next;
     this.$('.btn-primary').text('Saving...').attr('disabled', 'disabled');
     this.model.save(measurementDetails, {success: function() {
-      router.navigate(nextUrl, {trigger: true});
+      // router.navigate(nextUrl, {trigger: true});
     }});
   }
 });
@@ -212,7 +253,7 @@ var EditHeightsView = EditMeasurementBaseView.extend({
 
 var CreateMeasurementView = Backbone.View.extend({
 
-  el:'#content-container',
+  el:'#container',
   template: _.template($('#create-measurement').html()),
 
   intialize: function() {

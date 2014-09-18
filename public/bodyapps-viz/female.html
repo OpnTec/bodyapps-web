@@ -80,12 +80,12 @@
 	
 				character = new THREE.prototype();
 				character.onLoadComplete = function() {
-					console.log( "Load Complete" );
-					console.log( character.numSkins + " skins and " + character.numMorphs + " morphtargets loaded." );
-					gui = new dat.GUI();
-					setupMorphsGUI();
-					gui.width = 300;
-					gui.open();
+				//	console.log( "Load Complete" );
+				//	console.log( character.numSkins + " skins and " + character.numMorphs + " morphtargets loaded." );
+				//	gui = new dat.GUI();
+				//	setupMorphsGUI();
+				//	gui.width = 300;
+				//	gui.open();
 			
 				}
 				
@@ -110,7 +110,7 @@
 			
 			function setupMorphsGUI() {
 				
-				var morphGui = gui.addFolder( "Morphs" );
+				//var morphGui = gui.addFolder( "Morphs" );
 				
 				morphConfig = {};
 				
@@ -130,10 +130,10 @@
 				
 				for ( var i = 0; i < character.numMorphs; i ++ ) {
 				    
-					morphGui.add( morphConfig, character.morphs[ i ] ).min( character.morphslowlimit[ i ] ).max(character.morphshighlimit[ i ]).onChange( morphCallback( i ) );
+				//	morphGui.add( morphConfig, character.morphs[ i ] ).min( character.morphslowlimit[ i ] ).max(character.morphshighlimit[ i ]).onChange( morphCallback( i ) );
 				}
 				
-				morphGui.open();
+				//	morphGui.open();
 			
 			}
 

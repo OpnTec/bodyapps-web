@@ -12,7 +12,7 @@
 		
 		<div id="info">BodyVisualiser for Valentina Project</div>
 		<div id="info"><a href="index.html">Switch to male body.</a></div>
-        <div id="info"><a href="female.html">Switch to female body.</a></div>
+        	<div id="info"><a href="female.html">Switch to female body.</a></div>
 		<div id="container"></div>
 		
 		<script src="js/three.js"></script>
@@ -81,12 +81,12 @@
 	
 				character = new THREE.prototype();
 				character.onLoadComplete = function() {
-					console.log( "Load Complete" );
-					console.log( character.numSkins + " skins and " + character.numMorphs + " morphtargets loaded." );
+					//console.log( "Load Complete" );
+					//console.log( character.numSkins + " skins and " + character.numMorphs + " morphtargets loaded." );
 					gui = new dat.GUI();
 					setupMorphsGUI();
 					gui.width = 300;
-					gui.open();
+					//gui.open();
 			
 				}
 				
@@ -134,7 +134,7 @@
 					morphGui.add( morphConfig, character.morphs[ i ] ).min( character.morphslowlimit[ i ] ).max(character.morphshighlimit[ i ]).onChange( morphCallback( i ) );
 				}
 				
-				morphGui.open();
+				//morphGui.open();
 			
 			}
 

@@ -14,7 +14,7 @@ THREE.prototype = function() {
 	this.skins = [];
 	this.materials = [];
 	this.morphs = [];
-    this.morphslimit=[];
+    	this.morphslimit=[];
 	this.morphslowlimit=[];
 	this.morphshighlimit=[];
 	this.onLoadComplete = function () {};
@@ -34,14 +34,14 @@ THREE.prototype = function() {
 		
 		// MORPHS
 		this.morphs = config.morphs;
-		console.log(this.morphs);
+		//console.log(this.morphs);
 		this.morphslimit=config.morphslimit;
 		this.morphslowlimit=config.morphslowlimit;
 		this.morphshighlimit=config.morphshighlimit;
 		// CHARACTER
 		var loader = new THREE.JSONLoader();
 		
-		console.log( config.baseUrl + config.character  );
+		//console.log( config.baseUrl + config.character  );
 		loader.load( config.baseUrl + config.character, function( geometry ) {
 			
 			geometry.computeBoundingBox();
@@ -74,7 +74,7 @@ THREE.prototype = function() {
 	
 	this.updateMorphs = function( influences,measurements) {
 	//this.morphslimit=measurements;
-	console.log(this.morphslimit);
+	//console.log(this.morphslimit);
 		if ( mesh ) {
 			for ( var i = 0; i < scope.numMorphs; i ++ ) {
 			

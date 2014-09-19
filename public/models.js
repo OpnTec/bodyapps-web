@@ -4,6 +4,7 @@
  */
 
 var MeasurementModel = Backbone.Model.extend({
+
   defaults: {
     height : '',
     head_girth: '',
@@ -106,15 +107,38 @@ var MeasurementModel = Backbone.Model.extend({
     },
     user_id :''
   },
+
   idAttribute: 'm_id',
 
-  /* Backbone automatically updates the model while running
-    POST request. As our REST call returns value in the form
-    of 'data:{key1:value1}', this function will take appropriate 
-    care of updating while parsing the data. 
-  */
   parse : function(resp, xhr) {
-    return resp.data; 
+    return resp.data;
+  },
+
+  /**
+   * Extracts the attributes of this models into an array of measurement points that can be used
+   * by the body vizualizer.
+   * @return {Array}
+   */
+  toMorphArray: function() {
+    return [
+      parseFloat(this.get('height')),
+      parseFloat(this.get('upper_chest_girth')),       
+      parseFloat(this.get('mid_neck_girth')),
+      parseFloat(this.get('neck_to_bustpoint')),
+      parseFloat(this.get('shoulder_girth')),
+      parseFloat(this.get('shoulder_slope_degree')),
+      parseFloat(this.get('bust_girth')),
+      parseFloat(this.get('stomach_shape')), // missing
+      parseFloat(this.get('waist_girth')), // missing
+      parseFloat(this.get('arm_length')),
+      parseFloat(this.get('upper_arm_girth')),
+      parseFloat(this.get('wrist_girth')),
+      parseFloat(this.get('hip_girth')),
+      parseFloat(this.get('hip_height')),
+      parseFloat(this.get('thigh_girth')),
+      parseFloat(this.get('knee_height')), // TODO: lower leg length is missing
+      parseFloat(this.get('calf_girt'))
+    ]
   }
 });
 

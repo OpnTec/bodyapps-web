@@ -37,7 +37,6 @@ var MeasurementListView = Backbone.View.extend({
   }
 });
 
-
 var MeasurementRowView = Backbone.View.extend({
   tagName: 'tr',
   template: _.template($('#measurement-item').html()),
@@ -122,14 +121,24 @@ var MeasurementView = Backbone.View.extend({
   }
 });
 
-
 var MeasurementHomeView = Backbone.View.extend({
 
   parent: null,
   tagName: 'div',
   template: _.template($('#measurement-home').html()),
+
   events: {
-    'click #edit-head': 'editHead'
+    'click #edit-head': 'editHead',
+    'click #edit-neck': 'editNeck',
+    'click #edit-shoulder': 'editShoulders',
+    'click #edit-chest': 'editChest',
+    'click #edit-arm': 'editArm',
+    'click #edit-hand': 'editHand',
+    'click #edit-waist': 'editHipNWaist',
+    'click #edit-leg': 'editLeg',
+    'click #edit-foot': 'editFoot',
+    'click #edit-trunk': 'editTrunk',
+    'click #edit-heights': 'editHeights'
   },
 
   initialize: function(options) {
@@ -147,8 +156,60 @@ var MeasurementHomeView = Backbone.View.extend({
   editHead: function(e) {
     e.preventDefault();
     this.parent.switchTo(EditHeadView);
+  },
+
+  editNeck: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditNeckView);
+  },
+
+  editShoulders: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditShoulderView);
+  },
+
+  editChest: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditChestView);
+  },
+
+  editArm: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditArmView);
+  },
+
+  editHand: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditHandView);
+  },
+
+  editHipNWaist: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditHipNwaistView);
+  },
+
+  editLeg: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditLegView);
+  },
+
+  editFoot: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditFootView);
+  },
+
+  editTrunk: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditTrunkView);
+  },
+
+  editHeights: function(e) {
+    e.preventDefault();
+    this.parent.switchTo(EditHeightsView);
   }
 });
+
+
 
 /**
  * Base view for all measurement editors. Renders the form for given measurement set and contains
@@ -158,6 +219,10 @@ var EditMeasurementBaseView = Backbone.View.extend({
 
   tagName: 'div',
   parent: null,
+
+  events: {
+    'click #btn-back': 'back'
+  },
 
   initialize: function(options) {
     this.parent = options.parent;
@@ -178,6 +243,10 @@ var EditMeasurementBaseView = Backbone.View.extend({
 
   next: function() {
     this.parent.next(this.constructor);
+  },
+
+  back: function() {
+    this.parent.switchTo(MeasurementHomeView);
   }
 });
 
@@ -296,11 +365,25 @@ var CreateMeasurementView = Backbone.View.extend({
 });
 
 var BodyVizView = Backbone.View.extend({
+
   model: null,
   bodyviz: null,
+
+  initialize: function(options) {
+    if (this.model) {
+      this.model.on('change', this._updateVizFrame.bind(this));
+    }
+  },
+
   render: function() {
     this.bodyviz = this.$el.bodyviz();
     return this;
+  },
+
+  _updateVizFrame: function() {
+    var morphs = this.model.toMorphArray();
+    console.log(morphs);
+    this.bodyviz.update(morphs);
   }  
 });
 

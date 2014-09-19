@@ -85,71 +85,49 @@
     </a>
   </script>
 
-    <!-- Template for Web Services Measurement Home view -->
+  <!-- Template for Web Services Measurement Home view -->
   <script type="text/template" id="measurement-home">
     <h3> Click on body part to view or edit it </h1>
     <table>
       <tr>
         <td>
-          <a href="#measurement/<%=m_id%>/headInfo" id="edit-head">
-            <img src="pics/head.png" width="62" height="62">
-          </a>
+          <img src="pics/head.png" width="62" height="62" id="edit-head">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/neckInfo" id="edit-neck">
-            <img src="pics/neck.png" width="62" height="62">
-          </a>
+          <img src="pics/neck.png" width="62" height="62" id="edit-neck">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/shoulderInfo" id="edit-shoulder">
-            <img src="pics/shoulders.png" width="62" height="62">
-          </a>
+          <img src="pics/shoulders.png" width="62" height="62" id="edit-shoulder">
         </td>
       </tr>
       <tr>
         <td>
-          <a href="#measurement/<%=m_id%>/chestInfo" id="edit-chest">
-            <img src="pics/chest.png" width="62" height="62">
-          </a>
+          <img src="pics/chest.png" width="62" height="62" id="edit-chest">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/armInfo" id="edit-arm">
-            <img src="pics/arm.png" width="62" height="62">
-          </a>
+          <img src="pics/arm.png" width="62" height="62" id="edit-arm">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/handInfo" id="edit-hand">
-            <img src="pics/hand.png" width="62" height="62">
-          </a>
+          <img src="pics/hand.png" width="62" height="62" id="edit-hand">
         </td>
       </tr>
       <tr>
         <td>
-          <a href="#measurement/<%=m_id%>/hipNwaistInfo" id="edit-waist">
-            <img src="pics/hip_waist.png" width="62" height="62">
-          </a>
+          <img src="pics/hip_waist.png" width="62" height="62" id="edit-waist">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/legInfo" id="edit-leg">
-            <img src="pics/leg.png" width="62" height="62">
-          </a>
+          <img src="pics/leg.png" width="62" height="62" id="edit-leg">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/footInfo" id="edit-foot">
-            <img src="pics/foot.png" width="62" height="62">
-          </a>
+          <img src="pics/foot.png" width="62" height="62" id="edit-foot">
         </td>
       </tr>
       <tr>
         <td>
-          <a href="#measurement/<%=m_id%>/trunkInfo" id="edit-trunk">
-            <img src="pics/trunk.png" width="62" height="62">
-          </a>
+          <img src="pics/trunk.png" width="62" height="62" id="edit-trunk">
         </td>
         <td>
-          <a href="#measurement/<%=m_id%>/heightsInfo" id="edit-heights">
-            <img src="pics/heights.png" width="62" height="62">
-          </a>
+          <img src="pics/heights.png" width="62" height="62" id="edit-heights">
         </td>
       </tr>
     </table>
@@ -209,6 +187,9 @@
 
     <!-- Template for Web Services Edit Measurement view for head details -->
   <script type="text/template" id="edit-measurement-headInfo">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <h3>Edit the head measurement</h3>
     <form>
       <div class="form-group">
@@ -228,6 +209,9 @@
     <!-- Template for Web Services Edit Measurement view for neck details -->
   <script type="text/template" id="edit-measurement-neckInfo">
     <h3> Edit the neck measurement </h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form id ="neckInfo">
       <div class="form-group">
         <label>Mid Neck Girth:</label>
@@ -248,6 +232,9 @@
    <!-- Template for Web Services Edit Measurement view for shoulder details -->
   <script type="text/template" id="edit-measurement-shoulderInfo">
     <h3> Edit the shoulder measurement </h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form id ="shoulderInfo">
       <div class="form-group">
         <label>Shoulder Girth:</label>
@@ -298,6 +285,9 @@
    <!-- Template for Web Services Edit Measurement view for chest details -->
   <script type="text/template" id="edit-measurement-chestInfo">
     <h3>Edit the chest measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form id ="chestInfo">
       <div class="form-group">
         <label>Upper Chest Girth:</label>
@@ -348,6 +338,9 @@
   <!-- Template for Web Services Edit Measurement view for arm details -->
   <script type="text/template" id="edit-measurement-armInfo">
     <h3>Edit the arm measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form id ="armInfo">
       <div class="form-group">
         <label>Armscye Girth:</label>
@@ -403,6 +396,9 @@
   <!-- Template for Web Services Edit Measurement view for hand details -->
   <script type="text/template" id="edit-measurement-handInfo">
     <h3>Edit the hand measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form id ="handInfo">
       <div class="form-group">
         <label>Hand Girth:</label>
@@ -508,6 +504,9 @@
    <!-- Template for Web Services Edit Measurement view for hip n waist details -->
   <script type="text/template" id="edit-measurement-hipNwaistInfo">
     <h3>Edit the hipNwaist measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form>
       <div class="form-group">
         <label>High Hip Girth:</label>
@@ -548,6 +547,9 @@
  <!-- Template for Web Services Edit Measurement view for leg details -->
   <script type="text/template" id="edit-measurement-legInfo">
     <h3>Edit the leg measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form>
       <div class="form-group">
         <label>Thigh Girth:</label>
@@ -603,6 +605,9 @@
  <!-- Template for Web Services Edit Measurement view for foot details -->
   <script type="text/template" id="edit-measurement-footInfo">
     <h3>Edit the leg measurement</h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form>
       <div class="form-group">
         <label>Foot Length:</label>
@@ -628,6 +633,9 @@
  <!-- Template for Web Services Edit Measurement view for trunk details -->
   <script type="text/template" id="edit-measurement-trunkInfo">
     <h3> Edit the trunk measurement </h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form>
       <div class="form-group">
         <label>Upper Back Width:</label>
@@ -653,6 +661,9 @@
  <!-- Template for Web Services Edit Measurement view for height details -->
   <script type="text/template" id="edit-measurement-heightsInfo">
     <h3> Edit the height measurement </h3>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+    </div>
     <form>
       <div class="form-group">
         <label>Height:</label>

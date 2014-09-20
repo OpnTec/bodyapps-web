@@ -55,23 +55,13 @@ var Router = Backbone.Router.extend({
     'login': 'login',
     'login/:userId': 'loginSuccess',
     'measurements': 'measurements',
-    'bodyviz': 'bodyViz',
-    'create_measurement': 'newMeasurement',
-    'measurement/:m_id': 'measurementHome',
-    // 'edit_measurement/:m_id/personalInfo': 'editPersonalInfo',
-    // 'edit_measurement/:m_id/headInfo': 'editHead',
-    // 'edit_measurement/:m_id/neckInfo': 'editNeck',
-    // 'edit_measurement/:m_id/shoulderInfo': 'editShoulder',
-    // 'edit_measurement/:m_id/chestInfo': 'editChest',
-    // 'edit_measurement/:m_id/armInfo': 'editArm',
-    // 'edit_measurement/:m_id/handInfo': 'editHand',
-    // 'edit_measurement/:m_id/hipNwaistInfo': 'editHipNwaist',
-    // 'edit_measurement/:m_id/legInfo': 'editLeg',
-    // 'edit_measurement/:m_id/footInfo': 'editFoot',
-    // 'edit_measurement/:m_id/trunkInfo': 'editTrunk',
-    // 'edit_measurement/:m_id/heightsInfo': 'editHeights',
+    'measurement/create': 'createMeasurement',
+    'measurement/:m_id': 'measurementHome'
   },
 
+  /**
+   * Override route method to hook in custom login check
+   */
   route: function(route, name, callback) {
     var router = this;
     if (!callback) callback = this[name];
@@ -104,11 +94,7 @@ var Router = Backbone.Router.extend({
     new MeasurementListView().render();
   },
 
-  // bodyViz: function() {
-  //   new BodyVizView().render();
-  // },
-
-  newMeasurement: function() {
+  createMeasurement: function() {
     new CreateMeasurementView().render();
   },
 
@@ -118,64 +104,8 @@ var Router = Backbone.Router.extend({
     model.fetch({headers:{'Accept': 'application/json'}, success: function() {
       new MeasurementMasterView({model: model}).render();
     }});
-  },
-
-  // editPersonalInfo: function(m_id) {
-  //   new CreateMeasurementView().render({m_id: m_id});
-  // },
-
-  // editHead: function(m_id) {
-  //   new EditHeadView().render({m_id: m_id});
-  // },
-
-  // editNeck: function(m_id) {
-  //   new EditNeckView().render({m_id: m_id});
-  // },
-
-  // editShoulder: function(m_id) {
-  //   new EditShoulderView().render({m_id: m_id});
-  // },
-
-  // editChest: function(m_id) {
-  //   new EditChestView().render({m_id: m_id});
-  // },
-
-  // editArm: function(m_id) {
-  //   new EditArmView().render({m_id: m_id});
-  // },
-
-  // editHand: function(m_id) {
-  //   new EditHandView().render({m_id: m_id});
-  // },
-
-  // editHipNwaist: function(m_id) {
-  //   new EditHipNwaistView().render({m_id: m_id});
-  // },
-
-  // editLeg: function(m_id) {
-  //   new EditLegView().render({m_id: m_id});
-  // },
-
-  // editFoot: function(m_id) {
-  //   new EditFootView().render({m_id: m_id});
-  // },
-
-  // editTrunk: function(m_id) {
-  //   new EditTrunkView().render({m_id: m_id});
-  // },
-
-  // editHeights: function(m_id) {
-  //   new EditHeightsView().render({m_id: m_id});
-  // }
+  }
 });
 
 var router = new Router();
 Backbone.history.start();
-
-// var measurement = [160, 98, 37, 39, 1, 1, 196, 1, 76.66, 26, 15, 16, 112, 36, 42, 38, 55];
-// var bodyviz = $('#bodyviz-container').bodyviz();
-
-// // Just for testing.
-// setTimeout(function() {
-//   bodyviz.update(measurement);
-// }, 1000);

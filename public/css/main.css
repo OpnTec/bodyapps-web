@@ -5,3 +5,12 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+
+.icon-grid {
+  padding-left: 0;
+  list-style: none;
+}
+
+.icon-grid li {
+  float: left;
+}

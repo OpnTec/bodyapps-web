@@ -3,6 +3,9 @@
  * Licensed under LGPL, Version 3
  */
 
+/**
+ * Backbone model represeting a single measurement set.
+ */
 var MeasurementModel = Backbone.Model.extend({
 
   defaults: {
@@ -110,38 +113,68 @@ var MeasurementModel = Backbone.Model.extend({
 
   idAttribute: 'm_id',
 
+  /**
+   * Server will return resources wrapped into a `data` element, we need to override `parse` to 
+   * extract the fields correctly.
+   */
   parse : function(resp, xhr) {
     return resp.data;
   },
 
   /**
    * Extracts the attributes of this models into an array of measurement points that can be used
-   * by the body vizualizer.
+   * by the body vizualizer. See bodyapps-viz/models/testconfig.json for details.
+   *
+   * Order of fields returned: 
+   * 0: height
+   * 1: upper_chest_girth
+   * 2: mid_neck_girth
+   * 3: neck_to_bustpoint
+   * 4: shoulder_girth
+   * 5: shoulder_slope_degree
+   * 6: bust_girth,
+   * 7: stomach_shape,
+   * 8: waist_girth,
+   * 9: arm_length,
+   * 10: upper_arm_girth,
+   * 11: wrist_girth,
+   * 12: hip_girth,
+   * 13: hip_height,
+   * 14: thigh_girth,
+   * 15: lower_leg_length,
+   * 16: calf_girth,
+   * 
    * @return {Array}
    */
   toMorphArray: function() {
+    // Defaults used by the vizualizer:
+    // [160,96.67,37,12.36,13.07,1,86,1,76.66,26,15,16,112,36,42,38,55];
     return [
-      parseFloat(this.get('height')),
-      parseFloat(this.get('upper_chest_girth')),       
-      parseFloat(this.get('mid_neck_girth')),
-      parseFloat(this.get('neck_to_bustpoint')),
-      parseFloat(this.get('shoulder_girth')),
-      parseFloat(this.get('shoulder_slope_degree')),
-      parseFloat(this.get('bust_girth')),
-      parseFloat(this.get('stomach_shape')), // missing
-      parseFloat(this.get('waist_girth')), // missing
-      parseFloat(this.get('arm_length')),
-      parseFloat(this.get('upper_arm_girth')),
-      parseFloat(this.get('wrist_girth')),
-      parseFloat(this.get('hip_girth')),
-      parseFloat(this.get('hip_height')),
-      parseFloat(this.get('thigh_girth')),
-      parseFloat(this.get('knee_height')), // TODO: lower leg length is missing
-      parseFloat(this.get('calf_girt'))
+      parseFloat(this.get('height')) || 160,
+      parseFloat(this.get('upper_chest_girth')) || 96.67,
+      parseFloat(this.get('mid_neck_girth')) || 37,
+      parseFloat(this.get('neck_to_bustpoint')) || 12.36,
+      parseFloat(this.get('shoulder_girth')) || 13.07,
+      parseFloat(this.get('shoulder_slope_degree')) || 1,
+      parseFloat(this.get('bust_girth')) || 86,
+      1, // parseFloat(this.get('stomach_shape')), // missing?
+      76.66, // parseFloat(this.get('waist_girth')), // missing?
+      parseFloat(this.get('arm_length')) || 26,
+      parseFloat(this.get('upper_arm_girth')) || 15,
+      parseFloat(this.get('wrist_girth')) || 16,
+      parseFloat(this.get('hip_girth')) || 112,
+      parseFloat(this.get('hip_height')) || 36,
+      parseFloat(this.get('thigh_girth')) || 42,
+      parseFloat(this.get('knee_height')) || 38, // lower leg length? 
+      parseFloat(this.get('calf_girt')) || 55
     ]
   }
 });
 
+/**
+ * Backbone model representing a system user. There's no collection for users so far, since we're
+ * only interested in the currently logged in user.
+ */
 var UserModel = Backbone.Model.extend({
   defaults:{
     name: '',
@@ -153,8 +186,9 @@ var UserModel = Backbone.Model.extend({
   }
 });
 
-//collections
-
+/**
+ * Collection of measurements.
+ */
 var Measurements = Backbone.Collection.extend({
   model:MeasurementModel,
 });

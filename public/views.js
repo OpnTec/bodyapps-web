@@ -71,19 +71,19 @@ var MeasurementView = Backbone.View.extend({
   currentView: null,
 
   initialize: function() {
-    // Order in which editors are shown
+    // Order in which editors are shown when using apply-button
     this.sequence = [
       MeasurementHomeView,
-      EditHeadView,
+      // EditHeadView,
       EditNeckView,
       EditShoulderView,
       EditChestView,
       EditArmView,
-      EditHandView,
+      // EditHandView,
       EditHipNwaistView,
       EditLegView,
-      EditFootView,
-      EditTrunkView,
+      // EditFootView,
+      // EditTrunkView,
       EditHeightsView
     ]
   },
@@ -298,69 +298,38 @@ var CreateMeasurementView = Backbone.View.extend({
 
   el:'#container',
   template: _.template($('#create-measurement').html()),
+  model: null,
+  $form: null,
 
-  intialize: function() {
-    _.bindAll(this, 'render', '_render', 'save');
+  initialize: function() {
+    _.bindAll(this, 'render', 'save');
+    this.model = new MeasurementModel();
   },
 
-  render:function(options) {
-    options = options || {};
+  render: function() {
     var userId = user.get('id');
-
-    if(!options.m_id) {
-      return this._render(null, userId);
-    } else {
-      this.model = new MeasurementModel();
-      this.model.url = '/api/v1/users/' + userId + '/measurements/' + options.m_id;
-      this.model.fetch({
-        headers: {
-          'Accept':'application/json'
-        },
-        success: function() {
-          var measurement = this.model.toJSON();
-          this._render(measurement, userId);
-        }.bind(this)
-      });
-    }
-  },
-
-  _render: function(measurement, userId) {
     this.$el.html(this.template({
       user_id: userId,
-      measurement: measurement
+      measurement: this.model
     }));
-    this.$('form').submit(this.save);
+    this.$form = this.$('form');
+    this.$form.submit(this.save);
     return this;
   },
 
   save: function(ev) {
     ev.preventDefault();
-    if(!this.model) {
-      var measurementDetails = $(ev.currentTarget).serializeJSON();
-      var measurement = new MeasurementModel();
-      measurement.url = '/api/v1/users/' + user.get('id') + '/measurements';
-      measurement.save(measurementDetails, {
-        type:'post',
-        success:function() {
-          var measurementId = measurement.get('m_id');
-          var url = '#edit_measurement/' + measurementId;
-          router.navigate(url, {trigger:true});
-        }
-      });
-    }
-    else {
-      var self = this;
-      var measurementDetails = $(ev.currentTarget).serializeJSON();
-      this.model.save(measurementDetails, {
-        success:function() {
-          var userId = self.model.get('user_id');
-          var measurementId = self.model.get('m_id');
-          router.navigate('/user/' + userId + '/edit_measurement/' 
-            + measurementId + '/headInfo', {trigger:true});
-        }
-      });
-    }
-    return false; //stop the default behaviour of form.
+    var measurementDetails = this.$form.serializeJSON();
+    // var measurement = new MeasurementModel();
+    this.model.url = '/api/v1/users/' + user.get('id') + '/measurements';
+    this.model.save(measurementDetails, {
+      type: 'post',
+      success: function() {
+        var measurementId = this.model.get('m_id');
+        var url = '#measurement/' + measurementId;
+        window.location.hash = url;
+      }.bind(this)
+    });
   }
 });
 
@@ -377,6 +346,7 @@ var BodyVizView = Backbone.View.extend({
 
   render: function() {
     this.bodyviz = this.$el.bodyviz();
+    this._updateVizFrame();
     return this;
   },
 

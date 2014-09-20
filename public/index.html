@@ -23,7 +23,7 @@
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li><a href="#measurements">Measurement List</a></li>
-          <li><a href="#create_measurement">Create Measurement</a></li>
+          <li><a href="#measurement/create">Create Measurement</a></li>
         </ul> 
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/logout">Logout</a></li>
@@ -88,148 +88,139 @@
   <!-- Template for Web Services Measurement Home view -->
   <script type="text/template" id="measurement-home">
     <h3> Click on body part to view or edit it </h1>
-    <table>
-      <tr>
-        <td>
-          <img src="pics/head.png" width="62" height="62" id="edit-head">
-        </td>
-        <td>
-          <img src="pics/neck.png" width="62" height="62" id="edit-neck">
-        </td>
-        <td>
-          <img src="pics/shoulders.png" width="62" height="62" id="edit-shoulder">
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <img src="pics/chest.png" width="62" height="62" id="edit-chest">
-        </td>
-        <td>
-          <img src="pics/arm.png" width="62" height="62" id="edit-arm">
-        </td>
-        <td>
-          <img src="pics/hand.png" width="62" height="62" id="edit-hand">
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <img src="pics/hip_waist.png" width="62" height="62" id="edit-waist">
-        </td>
-        <td>
-          <img src="pics/leg.png" width="62" height="62" id="edit-leg">
-        </td>
-        <td>
-          <img src="pics/foot.png" width="62" height="62" id="edit-foot">
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <img src="pics/trunk.png" width="62" height="62" id="edit-trunk">
-        </td>
-        <td>
-          <img src="pics/heights.png" width="62" height="62" id="edit-heights">
-        </td>
-      </tr>
-    </table>
+    <ul class="icon-grid col-md-6">
+      <!-- li>
+        <img src="pics/head.png" width="62" height="62" id="edit-head">
+      </li -->
+      <li>
+        <img src="pics/neck.png" width="62" height="62" id="edit-neck">
+      </li>
+      <li>
+        <img src="pics/shoulders.png" width="62" height="62" id="edit-shoulder">
+      </li>
+      <li>
+        <img src="pics/chest.png" width="62" height="62" id="edit-chest">
+      </li>
+      <li>
+        <img src="pics/arm.png" width="62" height="62" id="edit-arm">
+      </li>
+      <!-- li>
+        <img src="pics/hand.png" width="62" height="62" id="edit-hand">
+      </li -->
+      <li>
+        <img src="pics/hip_waist.png" width="62" height="62" id="edit-waist">
+      </li>
+      <li>
+        <img src="pics/leg.png" width="62" height="62" id="edit-leg">
+      </li>
+      <!-- li>
+        <img src="pics/foot.png" width="62" height="62" id="edit-foot">
+      </li -->
+      <!-- li>
+        <img src="pics/trunk.png" width="62" height="62" id="edit-trunk">
+      </li -->
+      <li>
+        <img src="pics/heights.png" width="62" height="62" id="edit-heights">
+      </li>
+    </ul>
   </script>
 
-    <!-- Template for Web Services Create Measurement view -->
+  <!-- Template for Web Services Create Measurement view -->
   <script type="text/template" id="create-measurement">
-    <h3>New Measurement Set</h3>
-    <form>
-      <fieldset>
-        <legend>General</legend>
-        <div class="form-group">
-          <label>Unit:</label>
-          <input type ="text" class="form-control" name = "m_unit" 
-            placeholder="cm" <%if(measurement) { %><%if(measurement.m_unit!=undefined) {%>
-            value="<%=measurement.m_unit%>" <%}%>  <%}%> />
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Details</legend>
-        <div class="form-group">
-          <label>Person Name:</label>
-          <input type ="text" class="form-control" name = "person[name]" 
-            placeholder="John Doe" <%if(measurement) { %> <%if(measurement.person.name!=
-            undefined) {%> value="<%=measurement.person.name%>"<% }%>  <% } %> />
-        </div>
-        <div class="form-group">
-          <label>Email:</label>
-          <input type ="email" class="form-control" name = "person[email]" 
-            placeholder="johndoe@email.com" required <%if(measurement) { %><%if(
-            measurement.person.email!=undefined) {%> value="<%=measurement.person.email%>"
-            <% }%>  <% } %> />
-        </div>
-        <div class="form-group">
-          <label>Date of Birth:</label>
-          <input type ="text" class="form-control" name = "person[dob]" 
-            placeholder="10/10/1990" <%if(measurement) { %><%if(measurement.person.dob!=
-            undefined) {%> value="<%=moment(measurement.person.dob).format('L')%>"<% }%>  <%
-            } %> />
-        </div>
-        <div class="form-group">
-          <label>Gender:</label>
-          <select class="form-control" name="person[gender]" required>
-            <option value="male"> male </option>
-            <option value="female"> female </option>
-          </select>
-        </div>
-      </fieldset>
-      <% if(user_id) { %>
+    <div class="col-md-6">
+      <h3>New Measurement Set</h3>
+      <form>
+        <fieldset>
+          <legend>Personal Details</legend>
+          <div class="form-group">
+            <label>Person Name:</label>
+            <input type="text" class="form-control" name="person[name]" placeholder="John Doe" 
+                   value="<%= measurement.person ? measurement.person.name : '' %>"/>
+          </div>
+          <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" name="person[email]" required 
+                   placeholder="johndoe@email.com" 
+                   value="<%= measurement.person ? measurement.person.email : '' %>"/>
+          </div>
+          <div class="form-group">
+            <label>Date of Birth:</label>
+            <input type="text" class="form-control" name="person[dob]" placeholder="10/10/1990" 
+                   value="<%= measurement.person && measurement.person.dob ? 
+                              moment(measurement.person.dob).format('L') : 
+                              '' %>"/>
+          </div>
+          <div class="form-group">
+            <label>Gender:</label>
+            <select class="form-control" name="person[gender]" required>
+              <option value="male">male</option>
+              <option value="female">female</option>
+            </select>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Settings</legend>
+          <div class="form-group">
+            <label>Unit:</label>
+            <input type="text" class="form-control" name="m_unit" placeholder="cm" 
+                   value="<%= measurement.m_unit ? measurement.m_unit : 'cm' %>"/>
+          </div>
+        </fieldset>
         <input type="hidden" name="user_id" value="<%= user_id %>" />
-      <% }; %>
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
-    </form>
+        <button type="submit" class="btn btn-primary">
+          Save & Continue
+        </button>
+      </form>
+    </div>
   </script>
 
-    <!-- Template for Web Services Edit Measurement view for head details -->
+  <!-- Template for Web Services Edit Measurement view for head details -->
   <script type="text/template" id="edit-measurement-headInfo">
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <h3>Edit the head measurement</h3>
     <form>
       <div class="form-group">
-        <label> Head Girth:</label>
-        <input type="number" class="form-control" name="head_girth" value="<%=measurement.head_girth%>"/>
+        <label>Head Girth:</label>
+        <input type="number" class="form-control" name="head_girth" placeholder="10" 
+               value="<%=measurement.head_girth%>"/>
       </div>
       <div class="form-group">
         <label>Head And Neck Length:</label>
-        <input type="number" class="form-control" name="head_and_neck_length" value="<%=measurement.head_and_neck_length%>"/>
+        <input type="number" class="form-control" name="head_and_neck_length" placeholder="10"
+               value="<%=measurement.head_and_neck_length%>"/>
       </div>
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
+      
     </form>
   </script>
 
-    <!-- Template for Web Services Edit Measurement view for neck details -->
+  <!-- Template for Web Services Edit Measurement view for neck details -->
   <script type="text/template" id="edit-measurement-neckInfo">
-    <h3> Edit the neck measurement </h3>
+    <h3>Edit Neck</h3>
     <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-submit">
+        Save & Continue
+      </button>
+      <button type="button" class="btn btn-default btn-sm" id="btn-apply">
+        Apply
+      </button>
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">
+        Back
+      </button>
     </div>
     <form id ="neckInfo">
       <div class="form-group">
         <label>Mid Neck Girth:</label>
-        <input type ="number" class="form-control" name = "mid_neck_girth" 
-          placeholder="10" value="<%=measurement.mid_neck_girth%>"/>
+        <input type="number" class="form-control" name="mid_neck_girth" placeholder="37" 
+               value="<%=measurement.mid_neck_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Neck Base Girth:</label>
-        <input type ="number" class="form-control" name = "neck_base_girth" 
-          placeholder="10" value="<%=measurement.neck_base_girth%>"/>
-      </div>
-      <button type="submit" class="btn btn-primary btn-large">
-        Save & Continue
-      </button>
+        <input type="number" class="form-control" name="neck_base_girth" placeholder="10" 
+               value="<%=measurement.neck_base_girth%>"/>
+      </div -->
     </form>
   </script>
 
-   <!-- Template for Web Services Edit Measurement view for shoulder details -->
+  <!-- Template for Web Services Edit Measurement view for shoulder details -->
   <script type="text/template" id="edit-measurement-shoulderInfo">
     <h3> Edit the shoulder measurement </h3>
     <div class="btn-group">
@@ -238,51 +229,51 @@
     <form id ="shoulderInfo">
       <div class="form-group">
         <label>Shoulder Girth:</label>
-        <input type ="number" class="form-control" name = "shoulder_girth"
-          placeholder="10" value="<%=measurement.shoulder_girth%>"/>
+        <input type="number" class="form-control" name="shoulder_girth" placeholder="13" 
+               value="<%=measurement.shoulder_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Shoulder Length:</label>
-        <input type ="number" class="form-control" name = "shoulder_length" 
-          placeholder="10" value="<%=measurement.shoulder_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="shoulder_length" placeholder="10" 
+               value="<%=measurement.shoulder_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Shoulder And Arm Length:</label>
-        <input type ="number" class="form-control" name = "shoulder_and_arm_length"
-          placeholder="10" value="<%=measurement.shoulder_and_arm_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="shoulder_and_arm_length" placeholder="10" 
+               value="<%=measurement.shoulder_and_arm_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Across Front Shoulder Width:</label>
-        <input type ="number" class="form-control" name ="across_front_shoulder_width"
-          placeholder="10" value="<%=measurement.across_front_shoulder_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="across_front_shoulder_width"
+               placeholder="10" value="<%=measurement.across_front_shoulder_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Across Back Shoulder Width:</label>
-        <input type ="number" class="form-control" name = "
-          across_back_shoulder_width" placeholder="10" value="<%=measurement.
-          across_back_shoulder_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="across_back_shoulder_width" 
+               placeholder="10" value="<%=measurement.across_back_shoulder_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Shoulder Width:</label>
-        <input type ="number" class="form-control" name = "shoulder_width" placeholder="10" value="<%=measurement.shoulder_width%>"/>
-      </div>
+        <input type="number" class="form-control" name="shoulder_width" placeholder="10" 
+               value="<%=measurement.shoulder_width%>"/>
+      </div -->
       <div class="form-group">
         <label>Shoulder Slope Degree:</label>
-        <input type ="number" class="form-control" name = "shoulder_slope_degree" 
-          placeholder="10" value="<%=measurement.shoulder_slope_degree%>"/>
+        <input type="number" class="form-control" name="shoulder_slope_degree" placeholder="1" 
+               value="<%=measurement.shoulder_slope_degree%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Shoulder Drop:</label>
-        <input type ="number" class="form-control" name = "shoulder_drop" 
-          placeholder="10" value="<%=measurement.shoulder_drop%>"/>
-      </div>
+        <input type="number" class="form-control" name="shoulder_drop" placeholder="10" 
+               value="<%=measurement.shoulder_drop%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary"> 
         Save & Continue
       </button>
     </form>
   </script>
 
-   <!-- Template for Web Services Edit Measurement view for chest details -->
+  <!-- Template for Web Services Edit Measurement view for chest details -->
   <script type="text/template" id="edit-measurement-chestInfo">
     <h3>Edit the chest measurement</h3>
     <div class="btn-group">
@@ -291,43 +282,43 @@
     <form id ="chestInfo">
       <div class="form-group">
         <label>Upper Chest Girth:</label>
-        <input type ="number" class="form-control" name = "upper_chest_girth"
-          placeholder="10" value="<%=measurement.upper_chest_girth%>"/>
+        <input type="number" class="form-control" name="upper_chest_girth" placeholder="97" 
+               value="<%=measurement.upper_chest_girth%>"/>
       </div>
       <div class="form-group">
         <label>Bust Girth:</label>
-        <input type ="number" class="form-control" name = "bust_girth" 
-          placeholder="10" value="<%=measurement.bust_girth%>"/>
+        <input type="number" class="form-control" name="bust_girth" placeholder="85" 
+               value="<%=measurement.bust_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Under Bust Girth:</label>
-        <input type ="number" class="form-control" name = "under_bust_girth"
-          placeholder="10" value="<%=measurement.under_bust_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="under_bust_girth" placeholder="10" 
+               value="<%=measurement.under_bust_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Upper Front Chest Width:</label>
-        <input type ="number" class="form-control" name = "upper_front_chest_width"
-          placeholder="10" value="<%=measurement.upper_front_chest_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="upper_front_chest_width" placeholder="10" 
+               value="<%=measurement.upper_front_chest_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Front Chest Width:</label>
-        <input type ="number" class="form-control" name = "front_chest_width"
-          placeholder="10" value="<%=measurement.front_chest_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="front_chest_width" placeholder="10" 
+               value="<%=measurement.front_chest_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Bustpoint To Bustpoint:</label>
-        <input type ="number" class="form-control" name = "bustpoint_to_bustpoint" 
-          placeholder="10" value="<%=measurement.bustpoint_to_bustpoint%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="bustpoint_to_bustpoint" placeholder="10" 
+               value="<%=measurement.bustpoint_to_bustpoint%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Halter Bustpoint To Bustpoint:</label>
-        <input type ="number" class="form-control" name = "halter_bustpoint_to_bustpoint" 
-          placeholder="10" value="<%=measurement.halter_bustpoint_to_bustpoint%>"/>
-      </div>
+        <input type="number" class="form-control" name="halter_bustpoint_to_bustpoint" 
+               placeholder="10" value="<%=measurement.halter_bustpoint_to_bustpoint%>"/>
+      </div -->
       <div class="form-group">
         <label>Neck To Bustpoint:</label>
-        <input type ="number" class="form-control" name = "neck_to_bustpoint" 
-          placeholder="10" value="<%=measurement.neck_to_bustpoint%>"/>
+        <input type="number" class="form-control" name="neck_to_bustpoint" placeholder="13" 
+               value="<%=measurement.neck_to_bustpoint%>"/>
       </div>
       <button type="submit" class="btn btn-primary">
         Save & Continue
@@ -342,51 +333,51 @@
       <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
     </div>
     <form id ="armInfo">
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Armscye Girth:</label>
-        <input type ="number" class="form-control" name = "armscye_girth"
-          placeholder="10" value="<%=measurement.armscye_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="armscye_girth" placeholder="10" 
+               value="<%=measurement.armscye_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Elbow Girth:</label>
-        <input type ="number" class="form-control" name = "elbow_girth" 
-          placeholder="10" value="<%=measurement.elbow_girth%>"/>
-      </div>
+        <input type="number" class="form-control" name="elbow_girth" placeholder="10" 
+               value="<%=measurement.elbow_girth%>"/>
+      </div -->
       <div class="form-group">
         <label>Upper Arm Girth:</label>
-        <input type ="number" class="form-control" name = "upper_arm_girth"
-          placeholder="10" value="<%=measurement.upper_arm_girth%>"/>
+        <input type="number" class="form-control" name="upper_arm_girth" placeholder="15" 
+               value="<%=measurement.upper_arm_girth%>"/>
       </div>
       <div class="form-group">
         <label>Wrist Girth:</label>
-        <input type ="number" class="form-control" name = "wrist_girth"
-          placeholder="10" value="<%=measurement.wrist_girth%>"/>
+        <input type="number" class="form-control" name="wrist_girth" placeholder="16" 
+               value="<%=measurement.wrist_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Underarm Length:</label>
-        <input type ="number" class="form-control" name = "underarm_length"
-          placeholder="10" value="<%=measurement.underarm_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="underarm_length" placeholder="26" 
+               value="<%=measurement.underarm_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Cervical To Wrist Length:</label>
-        <input type ="number" class="form-control" name = "cervical_to_wrist_length
-          "placeholder="10" value="<%=measurement.cervical_to_wrist_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="cervical_to_wrist_length "placeholder="10" 
+               value="<%=measurement.cervical_to_wrist_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Shoulder To Elbow Length:</label>
-        <input type ="number" class="form-control" name = "shoulder_to_elbow_length
-          "placeholder="10" value="<%=measurement.shoulder_to_elbow_length%>"/>
-      </div>
+        <input type="number" class="form-control" name="shoulder_to_elbow_length "placeholder="10" 
+               value="<%=measurement.shoulder_to_elbow_length%>"/>
+      </div -->
       <div class="form-group">
         <label>Arm Length:</label>
-        <input type ="number" class="form-control" name = "arm_length" 
-          placeholder="10" value="<%=measurement.arm_length%>"/>
+        <input type="number" class="form-control" name="arm_length" placeholder="26" 
+               value="<%=measurement.arm_length%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Scye depth:</label>
-        <input type ="number" class="form-control" name = "scye_depth" 
-          placeholder="10" value="<%=measurement.scye_depth%>"/>
-      </div>
+        <input type="number" class="form-control" name="scye_depth" placeholder="10" 
+               value="<%=measurement.scye_depth%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
@@ -400,151 +391,151 @@
       <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
     </div>
     <form id ="handInfo">
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Hand Girth:</label>
-        <input type ="number" class="form-control" name = "hand_girth"
-          placeholder="10" value="<%=measurement.hand_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="hand_girth" placeholder="10" 
+               value="<%=measurement.hand_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Hand Length:</label>
-        <input type ="number" class="form-control" name = "hand_length" 
-          placeholder="10" value="<%=measurement.hand_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="hand_length" placeholder="10" 
+               value="<%=measurement.hand_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Hand Width:</label>
-        <input type ="number" class="form-control" name = "hand_width"
-          placeholder="10" value="<%=measurement.hand_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="hand_width" placeholder="10" 
+               value="<%=measurement.hand_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Thumb Length:</label>
-        <input type ="number" class="form-control" name = "thumb_length"
-          placeholder="10" value="<%=measurement.thumb_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="thumb_length" placeholder="10" 
+               value="<%=measurement.thumb_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Underarm Length:</label>
-        <input type ="number" class="form-control" name = "underarm_length"
-          placeholder="10" value="<%=measurement.underarm_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="underarm_length" placeholder="10" 
+               value="<%=measurement.underarm_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Index Finger Length:</label>
-        <input type ="number" class="form-control" name = "index_finger_length"
-          placeholder="10" value="<%=measurement.index_finger_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="index_finger_length" placeholder="10" 
+               value="<%=measurement.index_finger_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Middle Finger Length:</label>
-        <input type ="number" class="form-control" name = "middle_finger_length" 
-          placeholder="10" value="<%=measurement.middle_finger_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="middle_finger_length" placeholder="10" 
+               value="<%=measurement.middle_finger_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Ring Finger Length:</label>
-        <input type ="number" class="form-control" name = "ring_finger_length" 
-          placeholder="10" value="<%=measurement.ring_finger_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="ring_finger_length" placeholder="10" 
+               value="<%=measurement.ring_finger_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Little Finger Length:</label>
-        <input type ="number" class="form-control" name = "little_finger_length" 
-          placeholder="10" value="<%=measurement.little_finger_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="little_finger_length" placeholder="10" 
+               value="<%=measurement.little_finger_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Thumb Width:</label>
-        <input type ="number" class="form-control" name = "thumb_width"
-          placeholder="10" value="<%=measurement.thumb_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="thumb_width" placeholder="10" 
+               value="<%=measurement.thumb_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Index Finger Width:</label>
-        <input type ="number" class="form-control" name = "index_finger_width"
-          placeholder="10" value="<%=measurement.index_finger_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="index_finger_width" placeholder="10" 
+               value="<%=measurement.index_finger_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Middle Finger Width:</label>
-        <input type ="number" class="form-control" name = "middle_finger_width" 
-          placeholder="10" value="<%=measurement.middle_finger_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="middle_finger_width" placeholder="10" 
+               value="<%=measurement.middle_finger_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Ring Finger Width:</label>
-        <input type ="number" class="form-control" name = "ring_finger_width" 
-          placeholder="10" value="<%=measurement.ring_finger_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="ring_finger_width" placeholder="10" 
+               value="<%=measurement.ring_finger_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Little Finger Width:</label>
-        <input type ="number" class="form-control" name = "little_finger_width"
-          placeholder="10" value="<%=measurement.little_finger_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="little_finger_width" placeholder="10" 
+               value="<%=measurement.little_finger_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Thumb Girth:</label>
-        <input type ="number" class="form-control" name = "thumb_girth" 
-          placeholder="10" value="<%=measurement.thumb_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="thumb_girth" placeholder="10" 
+               value="<%=measurement.thumb_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Index Finger Girth:</label>
-        <input type ="number" class="form-control" name = "index_finger_girth" 
-          placeholder="10" value="<%=measurement.index_finger_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="index_finger_girth" placeholder="10" 
+               value="<%=measurement.index_finger_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Middle Finger Girth:</label>
-        <input type ="number" class="form-control" name = "middle_finger_girth" 
-          placeholder="10" value="<%=measurement.middle_finger_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="middle_finger_girth" placeholder="10" 
+               value="<%=measurement.middle_finger_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Ring Finger Girth:</label>
-        <input type ="number" class="form-control" name = "ring_finger_girth" 
-          placeholder="10" value="<%=measurement.ring_finger_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="ring_finger_girth" placeholder="10" 
+               value="<%=measurement.ring_finger_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Little Finger Girth:</label>
-        <input type ="number" class="form-control" name = "little_finger_girth" 
-          placeholder="10" value="<%=measurement.little_finger_girth%>"/>
-      </div>
+        <input type="number" class="form-control" name="little_finger_girth" placeholder="10" 
+               value="<%=measurement.little_finger_girth%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
     </form>
   </script>
 
-   <!-- Template for Web Services Edit Measurement view for hip n waist details -->
+  <!-- Template for Web Services Edit Measurement view for hip n waist details -->
   <script type="text/template" id="edit-measurement-hipNwaistInfo">
     <h3>Edit the hipNwaist measurement</h3>
     <div class="btn-group">
       <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
     </div>
     <form>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>High Hip Girth:</label>
-        <input type ="number" class="form-control" name = "high_hip_girth"
-          placeholder="10" value="<%=measurement.high_hip_girth%>"/>
-      </div>
+        <input type="number" class="form-control" name="high_hip_girth" placeholder="10" 
+               value="<%=measurement.high_hip_girth%>"/>
+      </div -->
       <div class="form-group">
         <label>Hip Girth:</label>
-        <input type ="number" class="form-control" name = "hip_girth" 
-          placeholder="10" value="<%=measurement.hip_girth%>"/>
+        <input type="number" class="form-control" name="hip_girth" placeholder="112" 
+               value="<%=measurement.hip_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>High Hip Height:</label>
-        <input type ="number" class="form-control" name = "high_hip_height"
-          placeholder="10" value="<%=measurement.high_hip_height%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="high_hip_height" placeholder="10" 
+               value="<%=measurement.high_hip_height%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Crotch length:</label>
-        <input type ="number" class="form-control" name = "crotch_length" 
-          placeholder="10" value="<%=measurement.crotch_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="crotch_length" placeholder="10" 
+               value="<%=measurement.crotch_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Crotch Height:</label>
-        <input type ="number" class="form-control" name = "crotch_height"
-          placeholder="10" value="<%=measurement.crotch_height%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="crotch_height" placeholder="10" 
+               value="<%=measurement.crotch_height%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Rise Height:</label>
-        <input type ="number" class="form-control" name = "rise_height"
-          placeholder="10" value="<%=measurement.rise_height%>"/>
-      </div>
+        <input type="number" class="form-control" name="rise_height" placeholder="10" 
+               value="<%=measurement.rise_height%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
     </form>
   </script>
 
- <!-- Template for Web Services Edit Measurement view for leg details -->
+  <!-- Template for Web Services Edit Measurement view for leg details -->
   <script type="text/template" id="edit-measurement-legInfo">
     <h3>Edit the leg measurement</h3>
     <div class="btn-group">
@@ -553,112 +544,112 @@
     <form>
       <div class="form-group">
         <label>Thigh Girth:</label>
-        <input type ="number" class="form-control" name = "thigh_girth"
-          placeholder="10" value="<%=measurement.thigh_girth%>"/>
+        <input type="number" class="form-control" name="thigh_girth" placeholder="42" 
+               value="<%=measurement.thigh_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Mid Thigh Girth:</label>
-        <input type ="number" class="form-control" name = "mid_thigh_girth" 
-          placeholder="10" value="<%=measurement.mid_thigh_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="mid_thigh_girth" placeholder="10" 
+               value="<%=measurement.mid_thigh_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Knee Girth:</label>
-        <input type ="number" class="form-control" name = "knee_girth"
-          placeholder="10" value="<%=measurement.knee_girth%>"/>
-      </div>
+        <input type="number" class="form-control" name="knee_girth" placeholder="10" 
+               value="<%=measurement.knee_girth%>"/>
+      </div -->
       <div class="form-group">
         <label>Calf Girth:</label>
-        <input type ="number" class="form-control" name = "calf_girth" 
-          placeholder="10" value="<%=measurement.calf_girth%>"/>
+        <input type="number" class="form-control" name="calf_girth" placeholder="55" 
+               value="<%=measurement.calf_girth%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Ankle Girth:</label>
-        <input type ="number" class="form-control" name = "ankle_girth"
-          placeholder="10" value="<%=measurement.ankle_girth%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="ankle_girth" placeholder="10" 
+               value="<%=measurement.ankle_girth%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Cervical to knee height:</label>
-        <input type ="number" class="form-control" name = "cervical_to_knee_height"
-          placeholder="10" value="<%=measurement.cervical_to_knee_height%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="cervical_to_knee_height" placeholder="10" 
+               value="<%=measurement.cervical_to_knee_height%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Cervical height:</label>
-        <input type ="number" class="form-control" name = "cervical_height" 
-          placeholder="10" value="<%=measurement.cervical_height%>"/>
-      </div>
+        <input type="number" class="form-control" name="cervical_height" placeholder="10" 
+               value="<%=measurement.cervical_height%>"/>
+      </div -->
       <div class="form-group">
         <label>Knee height:</label>
-        <input type ="number" class="form-control" name = "knee_height"
-          placeholder="10" value="<%=measurement.knee_height%>"/>
+        <input type="number" class="form-control" name="knee_height" placeholder="38" 
+               value="<%=measurement.knee_height%>"/>
       </div>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Ankle height:</label>
-        <input type ="number" class="form-control" name = "ankle_height"
-          placeholder="10" value="<%=measurement.ankle_height%>"/>
-      </div>
+        <input type="number" class="form-control" name="ankle_height" placeholder="10" 
+               value="<%=measurement.ankle_height%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
     </form>
   </script>
 
- <!-- Template for Web Services Edit Measurement view for foot details -->
+  <!-- Template for Web Services Edit Measurement view for foot details -->
   <script type="text/template" id="edit-measurement-footInfo">
     <h3>Edit the leg measurement</h3>
     <div class="btn-group">
       <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
     </div>
     <form>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Foot Length:</label>
-        <input type ="number" class="form-control" name = "foot_length"
-          placeholder="10" value="<%=measurement.foot_length%>"/>
-      </div>
-      <div class="form-group">
+        <input type ="number" class="form-control" name="foot_length" placeholder="10" 
+               value="<%=measurement.foot_length%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Foot width:</label>
-        <input type ="number" class="form-control" name = "foot_width" 
-          placeholder="10" value="<%=measurement.foot_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="foot_width" placeholder="10" 
+               value="<%=measurement.foot_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Foot across top:</label>
-        <input type ="number" class="form-control" name = "foot_across_top"
-          placeholder="10" value="<%=measurement.foot_across_top%>"/>
-      </div>
+        <input type="number" class="form-control" name="foot_across_top" placeholder="10" 
+               value="<%=measurement.foot_across_top%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
     </form>
   </script>
 
- <!-- Template for Web Services Edit Measurement view for trunk details -->
+  <!-- Template for Web Services Edit Measurement view for trunk details -->
   <script type="text/template" id="edit-measurement-trunkInfo">
     <h3> Edit the trunk measurement </h3>
     <div class="btn-group">
       <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
     </div>
     <form>
-      <div class="form-group">
+      <!-- div class="form-group">
         <label>Upper Back Width:</label>
-        <input type ="number" class="form-control" name = "upper_back_width"
-          placeholder="10" value="<%=measurement.upper_back_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="upper_back_width" placeholder="10" 
+               value="<%=measurement.upper_back_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Back Width:</label>
-        <input type ="number" class="form-control" name = "back_width" 
-          placeholder="10" value="<%=measurement.back_width%>"/>
-      </div>
-      <div class="form-group">
+        <input type="number" class="form-control" name="back_width" placeholder="10" 
+               value="<%=measurement.back_width%>"/>
+      </div -->
+      <!-- div class="form-group">
         <label>Trunk Girth:</label>
-        <input type ="number" class="form-control" name = "trunk_girth"
-          placeholder="10" value="<%=measurement.trunk_girth%>"/>
-      </div>
+        <input type="number" class="form-control" name="trunk_girth" placeholder="10" 
+               value="<%=measurement.trunk_girth%>"/>
+      </div -->
       <button type="submit" class="btn btn-primary">
         Save & Continue
       </button>
     </form>
   </script>
 
- <!-- Template for Web Services Edit Measurement view for height details -->
+  <!-- Template for Web Services Edit Measurement view for height details -->
   <script type="text/template" id="edit-measurement-heightsInfo">
     <h3> Edit the height measurement </h3>
     <div class="btn-group">
@@ -667,13 +658,13 @@
     <form>
       <div class="form-group">
         <label>Height:</label>
-        <input type ="number" class="form-control" name = "height"
-          placeholder="10" value="<%=measurement.height%>"/>
+        <input type="number" class="form-control" name="height" placeholder="160" 
+               value="<%=measurement.height%>"/>
       </div>
       <div class="form-group">
         <label>Hip Height:</label>
-        <input type ="number" class="form-control" name = "hip_height" 
-          placeholder="10" value="<%=measurement.hip_height%>"/>
+        <input type="number" class="form-control" name="hip_height" placeholder="36" 
+               value="<%=measurement.hip_height%>"/>
       </div>
       <button type="submit" class="btn btn-primary">
         Save & Continue

@@ -40,10 +40,23 @@ var MeasurementListView = Backbone.View.extend({
 var MeasurementRowView = Backbone.View.extend({
   tagName: 'tr',
   template: _.template($('#measurement-item').html()),
+
+  events: {
+    'click #deleteMeasurement': 'delete'
+  },
+
+  initialize: function() {
+    this.listenTo(this.model, 'destroy', this.remove.bind(this));
+  },
+
   render: function(options) {
     this.$el.html(this.template({measurement: this.model.toJSON()}));
     return this;
-  } 
+  },
+
+  delete: function() {
+    this.model.destroy();
+  }
 });
 
 var MeasurementMasterView = Backbone.View.extend({

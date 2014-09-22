@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
     <meta name="copyright" content="&copy; 2014 Fashiontec"/>
     
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.flatly.min.css"/>
+    <!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"/> -->
     <link rel="stylesheet" href="css/main.css"/>
 
 </head>
 <body>
 
   <!-- Main navigation -->
-  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <a href="#" class="navbar-brand">BodyApps</a>
@@ -68,10 +68,15 @@
     <td><%= measurement.person.gender %></td>
     <td><%= moment(measurement.person.dob).format('L') %></td>
     <td>
-      <a href="#edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-primary btn-large">Edit</a>
-      <a href="#measurement/<%= measurement.m_id%>" class="btn btn-primary btn-large">Details</a>
-      <button id ="deleteMeasurement" class="btn btn-primary btn-large">
-        Delete</button>
+      <a href="#edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-edit"></span>
+      </a>
+      <a href="#measurement/<%= measurement.m_id%>" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-th"></span>
+      </a>
+      <a id ="deleteMeasurement" href="#" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-remove"></span>
+      </a>
     </td>
   </script>
 

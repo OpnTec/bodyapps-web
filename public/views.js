@@ -42,7 +42,7 @@ var MeasurementRowView = Backbone.View.extend({
   template: _.template($('#measurement-item').html()),
 
   events: {
-    'click #deleteMeasurement': 'delete'
+    'click #delete-measurement': 'delete'
   },
 
   initialize: function() {
@@ -54,7 +54,8 @@ var MeasurementRowView = Backbone.View.extend({
     return this;
   },
 
-  delete: function() {
+  delete: function(e) {
+    e.preventDefault();
     this.model.destroy();
   }
 });

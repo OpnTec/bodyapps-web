@@ -68,13 +68,13 @@
     <td><%= measurement.person.gender %></td>
     <td><%= moment(measurement.person.dob).format('L') %></td>
     <td>
-      <a href="#edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-default btn-sm">
+      <a href="#edit_measurement/<%= measurement.m_id%>/personalInfo" class="btn btn-default btn-sm" title="Edit">
         <span class="glyphicon glyphicon-edit"></span>
       </a>
-      <a href="#measurement/<%= measurement.m_id%>" class="btn btn-default btn-sm">
+      <a href="#measurement/<%= measurement.m_id%>" class="btn btn-default btn-sm" title="Details">
         <span class="glyphicon glyphicon-th"></span>
       </a>
-      <a id ="deleteMeasurement" href="#" class="btn btn-default btn-sm">
+      <a id="delete-measurement" href="#" class="btn btn-default btn-sm" title="Delete">
         <span class="glyphicon glyphicon-remove"></span>
       </a>
     </td>

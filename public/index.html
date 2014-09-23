@@ -181,6 +181,18 @@
     </div>
   </script>
 
+  <!-- Template for toolbar on views of different body parts -->
+  <script type="text/template" id="toolbar-template">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary btn-sm" id="btn-save-continue">
+        Save & Continue </button>
+      <button type="button" class="btn btn-default btn-sm" id="btn-save">
+        Save </button>
+      <button type="button" class="btn btn-default btn-sm" id="btn-back">
+        Back </button>
+    </div>
+  </script>
+
   <!-- Template for Web Services Edit Measurement view for head details -->
   <script type="text/template" id="edit-measurement-headInfo">
     <h3>Edit the head measurement</h3>
@@ -202,17 +214,6 @@
   <!-- Template for Web Services Edit Measurement view for neck details -->
   <script type="text/template" id="edit-measurement-neckInfo">
     <h3>Edit Neck</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary btn-sm" id="btn-submit">
-        Save & Continue
-      </button>
-      <button type="button" class="btn btn-default btn-sm" id="btn-apply">
-        Apply
-      </button>
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">
-        Back
-      </button>
-    </div>
     <form id ="neckInfo">
       <div class="form-group">
         <label>Mid Neck Girth:</label>
@@ -230,9 +231,6 @@
   <!-- Template for Web Services Edit Measurement view for shoulder details -->
   <script type="text/template" id="edit-measurement-shoulderInfo">
     <h3> Edit the shoulder measurement </h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form id ="shoulderInfo">
       <div class="form-group">
         <label>Shoulder Girth:</label>
@@ -274,18 +272,12 @@
         <input type="number" class="form-control" name="shoulder_drop" placeholder="10" 
                value="<%=measurement.shoulder_drop%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary"> 
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for chest details -->
   <script type="text/template" id="edit-measurement-chestInfo">
     <h3>Edit the chest measurement</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form id ="chestInfo">
       <div class="form-group">
         <label>Upper Chest Girth:</label>
@@ -327,18 +319,12 @@
         <input type="number" class="form-control" name="neck_to_bustpoint" placeholder="13" 
                value="<%=measurement.neck_to_bustpoint%>"/>
       </div>
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for arm details -->
   <script type="text/template" id="edit-measurement-armInfo">
     <h3>Edit the arm measurement</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form id ="armInfo">
       <!-- div class="form-group">
         <label>Armscye Girth:</label>
@@ -385,18 +371,12 @@
         <input type="number" class="form-control" name="scye_depth" placeholder="10" 
                value="<%=measurement.scye_depth%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for hand details -->
   <script type="text/template" id="edit-measurement-handInfo">
     <h3>Edit the hand measurement</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form id ="handInfo">
       <!-- div class="form-group">
         <label>Hand Girth:</label>
@@ -493,18 +473,12 @@
         <input type="number" class="form-control" name="little_finger_girth" placeholder="10" 
                value="<%=measurement.little_finger_girth%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for hip n waist details -->
   <script type="text/template" id="edit-measurement-hipNwaistInfo">
     <h3>Edit the hipNwaist measurement</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form>
       <!-- div class="form-group">
         <label>High Hip Girth:</label>
@@ -536,18 +510,12 @@
         <input type="number" class="form-control" name="rise_height" placeholder="10" 
                value="<%=measurement.rise_height%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for leg details -->
   <script type="text/template" id="edit-measurement-legInfo">
     <h3>Edit the leg measurement</h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form>
       <div class="form-group">
         <label>Thigh Girth:</label>
@@ -594,9 +562,6 @@
         <input type="number" class="form-control" name="ankle_height" placeholder="10" 
                value="<%=measurement.ankle_height%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
@@ -622,18 +587,12 @@
         <input type="number" class="form-control" name="foot_across_top" placeholder="10" 
                value="<%=measurement.foot_across_top%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for trunk details -->
   <script type="text/template" id="edit-measurement-trunkInfo">
     <h3> Edit the trunk measurement </h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form>
       <!-- div class="form-group">
         <label>Upper Back Width:</label>
@@ -650,18 +609,12 @@
         <input type="number" class="form-control" name="trunk_girth" placeholder="10" 
                value="<%=measurement.trunk_girth%>"/>
       </div -->
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 
   <!-- Template for Web Services Edit Measurement view for height details -->
   <script type="text/template" id="edit-measurement-heightsInfo">
     <h3> Edit the height measurement </h3>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm" id="btn-back">Back</button>
-    </div>
     <form>
       <div class="form-group">
         <label>Height:</label>
@@ -673,9 +626,6 @@
         <input type="number" class="form-control" name="hip_height" placeholder="36" 
                value="<%=measurement.hip_height%>"/>
       </div>
-      <button type="submit" class="btn btn-primary">
-        Save & Continue
-      </button>
     </form>
   </script>
 

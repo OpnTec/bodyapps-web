@@ -230,12 +230,15 @@ var MeasurementHomeView = Backbone.View.extend({
  * the required logic to save the record to the server.
  */
 var EditMeasurementBaseView = Backbone.View.extend({
-
   tagName: 'div',
   parent: null,
 
+  toolbarTemplate:_.template($('#toolbar-template').html()),
+
   events: {
-    'click #btn-back': 'back'
+    'click #btn-back': 'back',
+    'click #btn-save': 'save',
+    'click #btn-save-continue': 'saveContinue'
   },
 
   initialize: function(options) {
@@ -243,16 +246,27 @@ var EditMeasurementBaseView = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.html(this.template({ measurement: this.model.toJSON() }));
-    this.$('form').submit(this.save.bind(this));
+    this.$el.html(this.template({ measurement: this.model.toJSON() })).find('form').
+      prepend(this.toolbarTemplate);
     return this;
+  },
+
+  saveContinue: function(ev) {
+    ev.preventDefault();
+    var measurementDetails = this.$('form').serializeJSON();
+    this.$('#btn-submit').text('Saving...').attr('disabled', 'disabled');
+    this.model.save(measurementDetails, {success: this.next.bind(this)});
   },
 
   save: function(ev) {
     ev.preventDefault();
-    var measurementDetails = $(ev.currentTarget).serializeJSON();
-    this.$('.btn-primary').text('Saving...').attr('disabled', 'disabled');
-    this.model.save(measurementDetails, {success: this.next.bind(this)});
+    var measurementDetails = this.$('form').serializeJSON();
+    this.$('#btn-save').text('Saving...');
+    this.model.save(measurementDetails, {
+      success: function() {
+        this.$('#btn-save').text('Save');
+      }
+    }).bind(this);
   },
 
   next: function() {

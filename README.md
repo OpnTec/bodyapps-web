@@ -12,19 +12,20 @@ Web service and web application components of #bodyapps project
 ### Running the Server
 
  * You will need a Google Account and create Google OAuth client credentials (see below)
- * Create a file `.env.yaml` in your project directory 
- * Enter your local config as shown below
- * After this you can run `grunt s` to start the server
+ * Some evironment variables need to be set to configure the system. Use your OSes native mechanism 
+   to set them to the correct values before starting the server:
 
-```yaml
-MONGO_URI: 'mongodb://localhost/bodyapps-service-dev' 
-SMTP_USER: '{my_gmail_user}'
-SMTP_PASS: '{my_gmail_password}'
-GOOGLE_CLIENT_ID: '{google_client_id}'
-GOOGLE_CLIENT_SECRET: '{google_client_secret}'
+| Variable Name | Meaning |
+|---------------|---------|
+| MONGO_URI | URI of MongoDB to connect to, e.g. "mongodb://localhost/bodyapps-service" |
+| SMTP_USER | GMail account to use for sending emails |
+| SMTP_PASS | Matching password |
+| GOOGLE_CLIENT_ID | Google client ID obtained from Google Developer Console |
+| GOOGLE_CLIENT_SECRET | Matching client secret |
 ```
 
- * To run from CLI directly, use your OSes native mechanism to define environment variables
+ * Top: create a local script `setenv.sh` containing your local settings and run 
+   `source ./setenv.sh && grunt s` to start the server. 
 
 ### Tests
 

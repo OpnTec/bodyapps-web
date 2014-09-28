@@ -265,8 +265,8 @@ var EditMeasurementBaseView = Backbone.View.extend({
     this.model.save(measurementDetails, {
       success: function() {
         this.$('#btn-save').text('Save');
-      }
-    }).bind(this);
+      }.bind(this)
+    });
   },
 
   next: function() {

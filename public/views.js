@@ -11,6 +11,7 @@ var MeasurementListView = Backbone.View.extend({
 
   el: '#container',
   template: _.template($('#measurement-list').html()),
+  navbarTemplate: _.template($('#navigation-bar').html()),
 
   initialize: function() {
     this.collection = new Measurements();
@@ -22,7 +23,7 @@ var MeasurementListView = Backbone.View.extend({
     var url = '/api/v1/users/' + id + '/measurements';
     var addOne = this.addOne.bind(this);
 
-    this.$el.html(this.template());
+    this.$el.html(this.template()).prepend(this.navbarTemplate);
     this.collection.url = url;
     this.collection.fetch({success: function(records, response) {
       records.each(addOne);
@@ -64,12 +65,13 @@ var MeasurementMasterView = Backbone.View.extend({
 
   el: '#container',
   template: _.template($('#measurement-master').html()),
+  navbarTemplate: _.template($('#navigation-bar').html()),
   model: null,
   measurementPane: null,
   bodyvizPane: null,
 
   render: function() {
-    this.$el.html(this.template());
+    this.$el.html(this.template()).prepend(this.navbarTemplate);
     this.measurementPane = this.$('#measurement-pane');
     this.bodyvizPane = this.$('#bodyviz-pane');
     new BodyVizView({el: this.bodyvizPane, model: this.model}).render();
@@ -234,6 +236,7 @@ var EditMeasurementBaseView = Backbone.View.extend({
   parent: null,
 
   toolbarTemplate:_.template($('#toolbar-template').html()),
+  navbarTemplate: _.template($('#navigation-bar').html()),
 
   events: {
     'click #btn-back': 'back',
@@ -247,7 +250,7 @@ var EditMeasurementBaseView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template({ measurement: this.model.toJSON() })).find('form').
-      prepend(this.toolbarTemplate);
+      prepend(this.toolbarTemplate).prepend(this.navbarTemplate);
     return this;
   },
 
@@ -326,6 +329,7 @@ var CreateMeasurementView = Backbone.View.extend({
 
   el:'#container',
   template: _.template($('#create-measurement').html()),
+  navbarTemplate: _.template($('#navigation-bar').html()),
   model: null,
   $form: null,
 
@@ -339,7 +343,7 @@ var CreateMeasurementView = Backbone.View.extend({
     this.$el.html(this.template({
       user_id: userId,
       measurement: this.model
-    }));
+    })).prepend(this.navbarTemplate);
     this.$form = this.$('form');
     this.$form.submit(this.save);
     return this;
@@ -390,9 +394,11 @@ var WelcomeView = Backbone.View.extend({
   el:'#container',
 
   template: _.template($('#welcome-message').html()),
+  navbarTemplate: _.template($('#navigation-bar').html()),
 
   render:function() {
-    this.$el.html(this.template({user: user.toJSON()}));
+    this.$el.html(this.template({user: user.toJSON()})).
+      prepend(this.navbarTemplate);
     return this;
   }
 });

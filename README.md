@@ -12,7 +12,7 @@ Web service and web application components of #bodyapps project
 ### Running the Server
 
  * You will need a Google Account and create Google OAuth client credentials (see below)
- * Some evironment variables need to be set to configure the system. Use your OSes native mechanism 
+ * Some evironment variables need to be set to configure the system. Use your OSes native mechanism
    to set them to the correct values before starting the server:
 
 | Variable Name | Meaning |
@@ -24,8 +24,8 @@ Web service and web application components of #bodyapps project
 | GOOGLE_CLIENT_SECRET | Matching client secret |
 ```
 
- * Top: create a local script `setenv.sh` containing your local settings and run 
-   `source ./setenv.sh && grunt s` to start the server. 
+ * Top: create a local script `setenv.sh` containing your local settings and run
+   `source ./setenv.sh && grunt s` to start the server.
 
 ### Tests
 
@@ -34,7 +34,7 @@ Web service and web application components of #bodyapps project
  * Via Mocha, execute `mocha test/my-test-case`, or use any documented [mocha options](http://visionmedia.github.io/mocha/#usage)
 
 ### Obtaining Google OAuth client credentials
- 
+
  * Create a new project in [Google Developer Console](https://console.developers.google.com/)
  * Go to APIs & auth > Credentials > Create new Client ID
  * Application type: "Web application",
@@ -47,6 +47,7 @@ Web service and web application components of #bodyapps project
 
 ## Coding Conventions
 
+ * Please install [EditorConfig](http://editorconfig.org/) support for your editor/IDE
  * Use 2 spaces for indenting your code.
  * Use UNIX-style newlines (`\n`), and a newline character as the last character of a file.
  * Limit your lines to 100 characters.

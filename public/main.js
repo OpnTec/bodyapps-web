@@ -56,7 +56,8 @@ var Router = Backbone.Router.extend({
     'login/:userId': 'loginSuccess',
     'measurements': 'measurements',
     'measurement/create': 'createMeasurement',
-    'measurement/:m_id': 'measurementHome'
+    'measurement/:m_id': 'measurementHome',
+    'edit_measurement/:m_id': 'editMeasurement'
   },
 
   /**
@@ -104,7 +105,16 @@ var Router = Backbone.Router.extend({
     model.fetch({headers:{'Accept': 'application/json'}, success: function() {
       new MeasurementMasterView({model: model}).render();
     }});
+  },
+
+  editMeasurement: function(mId) {
+    var model = new UserModel();
+    model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + mId;
+    model.fetch({headers:{'Accept': 'application/json'}, success: function() {
+        new EditMeasurementView({model: model}).render();
+    }});
   }
+
 });
 
 var router = new Router();

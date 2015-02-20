@@ -108,7 +108,7 @@ var MeasurementView = Backbone.View.extend({
     return this.next();
   },
 
-  next: function(current) {    
+  next: function(current) {
     var viewClass = this._getNextView(current);
     return this.switchTo(viewClass);
   },
@@ -361,6 +361,43 @@ var CreateMeasurementView = Backbone.View.extend({
   }
 });
 
+var EditMeasurementView = Backbone.View.extend({
+
+  el:'#container',
+  template: _.template($('#edit-measurement').html()),
+  model: null,
+  $form: null,
+
+  initialize: function() {
+    _.bindAll(this, 'render', 'save');
+  },
+
+  render: function() {
+    var userId = user.get('id');
+    this.$el.html(this.template({
+      user_id: userId,
+      measurement: this.model.attributes
+    }));
+    this.$form = this.$('form');
+    this.$form.submit(this.save);
+    return this;
+  },
+
+  save: function(ev) {
+    ev.preventDefault();
+    var measurementDetails = this.$form.serializeJSON();
+    this.model.url = '/api/v1/users/' + user.get('id') + '/measurements/' + this.model.get('m_id');
+    this.model.save(measurementDetails, {
+      type: 'put',
+      success: function() {
+        var measurementId = this.model.get('m_id');
+        var url = '#measurements';
+        window.location.hash = url;
+      }.bind(this)
+    });
+  }
+});
+
 var BodyVizView = Backbone.View.extend({
 
   model: null,
@@ -382,7 +419,7 @@ var BodyVizView = Backbone.View.extend({
     var morphs = this.model.toMorphArray();
     console.log(morphs);
     this.bodyviz.update(morphs);
-  }  
+  }
 });
 
 var WelcomeView = Backbone.View.extend({

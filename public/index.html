@@ -15,7 +15,7 @@
 <body>
 
   <!-- Main navigation -->
-  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation" id="navbar">
     <div class="container">
       <div class="navbar-header">
         <a href="#" class="navbar-brand">BodyApps</a>
@@ -90,6 +90,9 @@
     <a href="/auth/google" class="btn btn-danger">
       <span class="google-plus"></span>Google Sign in
     </a>
+  <script type="text/javascript">
+  document.getElementById("navbar").style.visibility="hidden";
+  </script>
   </script>
 
   <!-- Template for Web Services Measurement Home view -->

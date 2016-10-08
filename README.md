@@ -1,6 +1,15 @@
 # bodyapps-service
 
 [![Build Status](https://travis-ci.org/fossasia/bodyapps-web.svg?branch=master)](https://travis-ci.org/fossasia/bodyapps-web)
+[![Join the chat at https://gitter.im/fossasia/bodyapps-android](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fossasia/bodyapps?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## Communication
+
+Please join our communication channels.
+
+Mailing List at: https://groups.google.com/forum/#!forum/bodyapps
+
+Gitter chat at: https://gitter.im/fossasia/bodyapps
 
 ## **Software Stack**
 The software stack for our application includes following technologies:

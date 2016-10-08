@@ -1,6 +1,6 @@
 # bodyapps-service
 
-[![Build Status](https://travis-ci.org/fossasia/bodyapps-service.svg?branch=master)](https://travis-ci.org/fossasia/bodyapps-service)
+[![Build Status](https://travis-ci.org/fossasia/bodyapps-webapp.svg?branch=master)](https://travis-ci.org/fossasia/bodyapps-webapp)
 
 ## **Software Stack**
 The software stack for our application includes following technologies:

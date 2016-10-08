@@ -1,6 +1,6 @@
 # bodyapps-service
 
-[![Build Status](https://travis-ci.org/fossasia/bodyapps-webapp.svg?branch=master)](https://travis-ci.org/fossasia/bodyapps-webapp)
+[![Build Status](https://travis-ci.org/fossasia/bodyapps-web.svg?branch=master)](https://travis-ci.org/fossasia/bodyapps-web)
 
 ## **Software Stack**
 The software stack for our application includes following technologies:
@@ -28,7 +28,7 @@ Let me share few advantages we had considered before coming to this decision:
 * NPM: It is the official package manager for Node.js. It helps maintaining the complexity of project without much problem. In addition, it is easy for someone to create their own library/module and share it in npm registry. We can download any module from npm registry ,and use the module in our project without recreating the same stuff over and over again, which makes development pretty fast and clean in Node.js. It also makes the process of extending functionality of backend services simple, and a new contributor should find this functionality useful when starting with this project.
 
 Also,  there are many modules used in this project too :) and you can find the list here:
-[package.json](https://github.com/fashiontec/bodyapps-service/blob/master/package.json)
+[package.json](https://github.com/fossasia/bodyapps-web/blob/master/package.json)
 
 ### **Why Backbone?**
 
@@ -197,7 +197,7 @@ The system depends on some environment variables to operate correctly. Since act
 
 The mechanism of environment variables is simple and generic and works on any UNIX'ish platform w/o relying on a specific environment, runtime monitor, etc. Thus, it should work with PM2, upstart/monit, etc.
 
-For a detailed list of possible environment variables, check out [config.js](https://github.com/fashiontec/bodyapps-service/blob/replace_config/config.js)
+For a detailed list of possible environment variables, check out [config.js](https://github.com/fossasia/bodyapps-web/blob/replace_config/config.js)
 
 ### Example Deployment
 
@@ -245,7 +245,7 @@ In addition, we are using Message API for sending mails.
 
 1.`POST /api/API_VERSION/users `
 
-_This is used for creating an user entity/resource in the database. The fields stored in user can be found here:[User Model](https://github.com/fashiontec/bodyapps-service/blob/master/app/models/user.js)_
+_This is used for creating an user entity/resource in the database. The fields stored in user can be found here:[User Model](https://github.com/fossasia/bodyapps-web/blob/master/app/models/user.js)_
 
 2.`GET /api/API_VERSION/users/:user_id`
 
@@ -257,7 +257,7 @@ _It returns a user whose object id(i.e. _id) matches user_id._
 
 1.`POST /api/API_VERSION/users/:user_id/measurements`
 
-_It creates a new measurement record in the database. The fields stored in measurement record can be found here:[Measurement Model](https://github.com/fashiontec/bodyapps-service/blob/master/app/models/measurement.js)._
+_It creates a new measurement record in the database. The fields stored in measurement record can be found here:[Measurement Model](https://github.com/fossasia/bodyapps-web/blob/master/app/models/measurement.js)._
 
 2.`GET /api/API_VERSION/users/:user_id/measurements/:measurement_id`
 

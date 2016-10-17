@@ -1,0 +1,34 @@
+{
+  "name": "bodyapps",
+  "description": "Fashiontec Bodyapps Backend Service",
+  "website": "http://freelayers.org/",
+  "repository": "https://github.com/fossasia/bodyapps-web",
+  "env": {
+    "SMTP_USER": {
+      "require": true
+    },
+    "SMTP_PASSWORD": {
+      "require": true
+    },
+    "GOOGLE_CLIENT_ID": {
+      "require": true
+    },
+    "GOOGLE_CLIENT_SECRET": {
+      "require": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "Free"
+    }
+  },
+  "addons": [
+    "mongolab:sandbox"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

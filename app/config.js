@@ -3,7 +3,7 @@ var env = process.env;
 var config = module.exports = {
 
   mongo: {
-    uri: env.MONGO_URI || 'mongodb://localhost/bodyapps-service-test',
+    uri: env.MONGODB_URI || 'mongodb://localhost/bodyapps-service-test',
   },
 
   google_oauth: {

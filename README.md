@@ -96,7 +96,7 @@ Talking about the BodyApps Web Service it is developed in complete JavaScript us
 
 | Variable Name | Meaning |
 |---------------|---------|
-| MONGO_URI | URI of MongoDB to connect to, e.g. "mongodb://localhost/bodyapps-service" |
+| MONGODB_URI | URI of MongoDB to connect to, e.g. "mongodb://localhost/bodyapps-service" |
 | SMTP_USER | GMail account to use for sending emails |
 | SMTP_PASS | Matching password |
 | GOOGLE_CLIENT_ID | Google client ID obtained from Google Developer Console |
@@ -214,7 +214,7 @@ On a dedicated server, we can simply set the variables in file called `~/.bodyap
 
 ```bash
 # /home/bodyapps/.bodyappsrc
-export MONGO_URI='mongodb://localhost/bodyapps-service'
+export MONGODB_URI='mongodb://localhost/bodyapps-service'
 export SMTP_USER='liamg@gmail.com'
 export SMTP_PASS='...'
 export GOOGLE_CLIENT_ID='...'
